@@ -1,0 +1,281 @@
+//namespace Shof.modules
+ 
+    using System;  using System.IO;
+    using System.Data;
+    using System.Drawing;
+    using System.Web;
+    using System.Web.UI.WebControls;
+    using System.Web.UI.HtmlControls;
+    using System.Configuration;
+    using System.Collections;
+    using System.Collections.Specialized;
+    using System.Globalization;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+ 
+    //using D3DM.ECom.BusinessLogic;
+
+    /// <summary>
+    ///		Summary description for detail.
+    /// </summary>
+    public partial class detail : System.Web.UI.UserControl
+    {
+        BLCustomer cust;
+        protected static string relatedFileUrl =   System.Configuration.ConfigurationSettings.AppSettings["RelatedFile_URL"];
+
+        protected int categoryID;
+        protected int productID;
+        protected int listPriceQuantity;
+
+        #region Controls
+
+		protected System.Web.UI.HtmlControls.HtmlGenericControl spanPriceDefTo;
+		protected System.Web.UI.WebControls.Label Label1;
+
+        #endregion
+
+        #region Web Form Designer generated code
+        override protected void OnInit(EventArgs e)
+        {
+            //
+            // CODEGEN: This call is required by the ASP.NET Web Form Designer.
+            //
+            InitializeComponent();
+            base.OnInit(e);
+        }
+		
+        /// <summary>
+        ///		Required method for Designer support - do not modify
+        ///		the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+			this.ibtBuy.Click += new System.Web.UI.ImageClickEventHandler(this.ibtBuy_Click);
+
+		}
+        #endregion
+
+        protected void Page_Load(object sender, System.EventArgs e)
+        {
+             System.Collections.Specialized.NameValueCollection queryString = Page.Request.QueryString;
+            try
+            {
+                this.categoryID = System.Convert.ToInt32(queryString.Get("idc"));
+            }
+            catch{}
+            try
+            {
+                this.productID = System.Convert.ToInt32(queryString.Get("idp"));
+            }
+            catch{}
+            //			if (this.productID>0)
+            //			{
+            //				BLProduct.AddToCustomer(this.productID,cust.ID,"recviewed",3);
+            //			}
+
+            //			BLCategory wCategory = new BLCategory();
+            //			wCategory.ID = this.categoryID;
+            //			wCategory.Retrieve();
+            //spanNameCat.InnerText = wCategory.Name;
+
+            BLProduct product = new BLProduct();
+            product.ID = productID;
+            product.Retrieve();
+            if (product.ID>0)
+            {
+                spanPrdName.InnerText = product.Name;
+                spanPrdDescription.InnerHtml = product.Description.Replace(""+(char)13,"<br/>");
+                spanPriceDef.InnerText = product.Price.ToString("c");
+				
+                txtQuantity.Text = product.DefQuantity.ToString();
+				if( product.Inventory > 0)
+				{
+					txtQuantityRangeValidator.MaximumValue = product.Inventory.ToString();
+                    txtQuantityRangeValidator.MinimumValue = product.MinQuantity.ToString();
+					//spanInventory.InnerText = product.Inventory.ToString();
+				}
+				else
+				{
+					txtQuantityRangeValidator.MaximumValue = "0";
+					txtQuantityRangeValidator.MinimumValue = "0";
+					txtQuantity.Text = "0";
+					spanInventory.InnerText = "0";
+					ibtBuy.Visible = false;
+				}
+
+                txtQuantityRangeValidator.Text = "Error, please check quantity!";
+                txtQuantityRangeValidator.Text += "<br/>There are only " + product.Inventory + " items available in stock.";
+                txtQuantityRangeValidator.Text += "<br/>Minimum order for this product is " + product.MinQuantity + " items.";
+
+                this.listPriceQuantity = product.MinQuantity;
+              System.Data.DataSet dsPrice = BLPrice.GetList(product.ID, product.MinQuantity);
+                rptPrice.DataSource = dsPrice.Tables["Price"];
+                rptPrice.DataBind();
+                spanPriceDefFrom.InnerText = this.listPriceQuantity.ToString();
+				if(product.AmountPerCase > 1)
+				{
+					decimal prPerItem = product.Price / (decimal)product.AmountPerCase;
+					this.lblRegPricePer.Text = " Per Package " + prPerItem.ToString("c") + " Per Item";
+				}
+
+                //spanPrdPrice.InnerText = this.GeneratePrice(System.Convert.ToDouble(product.Price));
+                if (product.OnSale)
+                {
+                    if (product.RegPrice>0)
+                    {
+                        spanPrdRegPrice.InnerText = string.Format("{0:#0.00}",product.RegPrice);
+                        //spanPrdRegPrice.InnerText = this.GeneratePrice(System.Convert.ToDouble(product.RegPrice));
+                        RRPPanel.Visible=true;
+                    }
+                    if (product.SaleText.Length>0)
+                    {
+                        spanPrdSaleText.InnerText = product.SaleText;
+                        SaleTextPanel.Visible=true;
+                    }
+                    OnSalePanel.Visible=true;
+                }
+                if (product.Personalize)
+                {
+                    spanPersPrice.InnerText = product.PersPrice.ToString("c");
+                    pnPersPrice.Visible = true;
+                    chbPersonalize.Checked = product.PersRequired;
+                    chbPersonalize.Enabled = !product.PersRequired;
+                }
+                else
+                {
+                    pnPersPrice.Visible = false;
+                }
+
+                BLImageGallery imageGallery = new BLImageGallery();
+                this.imgPrdImage.Src = imageGallery.GetimgInfo("productdetail",this.productID.ToString());
+                this.imgPrdImage.Width = imageGallery.Width;
+                this.imgPrdImage.Height = imageGallery.Height;	
+                this.imgPrdImage.Visible = ((imgPrdImage.Src != "") && (imgPrdImage.Src != null));
+
+                if (imageGallery.GetimgInfo("productZoom",this.productID.ToString())!="")
+                {
+                    aImgPrdZoomImage.Visible = true;
+                    aImgPrdZoomImage.Attributes["OnClick"] = "window.open('zoom.aspx?idp="+productID+"','Zoom','menubar=no,scrollbars=no,width="+imageGallery.Width+",height="+imageGallery.Height+"');return false;";
+                }
+                else
+                    aImgPrdZoomImage.Visible = false;
+
+                DataSet dsRelatedlink = BLRelatedInfo.GetList(this.productID);
+                if (dsRelatedlink.Tables[0].Rows.Count>0)
+                {
+                    rptRelatedlinkList.DataSource = dsRelatedlink.Tables["RelatedInfo"];
+                    rptRelatedlinkList.DataBind();
+                }
+                else
+                {
+                    Relatedlinkspanel.Visible=false;
+                }
+
+                DataSet dsRelatedFile = BLRelatedFile.GetList(this.productID);
+                if (dsRelatedFile.Tables[0].Rows.Count>0)
+                {
+                    rptRelatedFileList.DataSource = dsRelatedFile.Tables["RelatedFile"];
+                    rptRelatedFileList.DataBind();
+                }
+                else
+                {
+                    RelatedFilespanel.Visible=false;
+                }
+            }
+            else
+            {
+                NoItemPanel.Visible = true;
+                ItemPanel.Visible = false;
+            }
+            //////cust.navPage = "list";
+            //categoryPathPlaceHolder.Controls.Add(LoadControl("category_path.ascx"));
+
+        }
+
+        protected void rptRelatedlinkList_OnItemDataBound(object sender, RepeaterItemEventArgs e) 
+        {
+            switch(e.Item.ItemType)	
+            {
+                case ListItemType.Item:
+                case ListItemType.AlternatingItem:
+					
+                    HtmlAnchor aRlinkName = (HtmlAnchor) e.Item.FindControl("aRlinkName");
+                    HtmlContainerControl spanRlinkDesc = (HtmlContainerControl) e.Item.FindControl("spanRlinkDesc");
+
+                    DataRowView dtRow = ((DataRowView)e.Item.DataItem);
+                    aRlinkName.HRef = dtRow["rlnfURL"].ToString();
+                    aRlinkName.InnerText = dtRow["rlnfName"].ToString();
+
+                    spanRlinkDesc.InnerHtml = dtRow["rlnfDescription"].ToString().Replace(""+(char)13,"<br/>");;
+                    break;
+            }
+        }
+
+        protected void rptRelatedFileList_OnItemDataBound(object sender, RepeaterItemEventArgs e) 
+        {
+            switch(e.Item.ItemType)	
+            {
+                case ListItemType.Item:
+                case ListItemType.AlternatingItem:
+					
+                    HtmlAnchor aRFileName = (HtmlAnchor) e.Item.FindControl("aRFileName");
+                    HtmlContainerControl spanRFileDesc = (HtmlContainerControl) e.Item.FindControl("spanRFileDesc");
+
+                    DataRowView dtRow = ((DataRowView)e.Item.DataItem);
+                    aRFileName.HRef = "." + relatedFileUrl + dtRow["rlflFileName"].ToString() +"."+ dtRow["rlflFileExtension"].ToString();
+                    aRFileName.InnerText = dtRow["rlflFileName"].ToString() +"."+ dtRow["rlflFileExtension"].ToString();
+
+                    spanRFileDesc.InnerHtml = dtRow["rlflDescription"].ToString().Replace(""+(char)13,"<br/>");;
+                    break;
+            }
+        }
+
+        protected void rptPrice_OnItemDataBound(object sender, RepeaterItemEventArgs e) 
+        {
+			switch(e.Item.ItemType)	
+			{
+				case ListItemType.Item:
+				case ListItemType.AlternatingItem:
+					
+					HtmlContainerControl spanRpPriceFrom = (HtmlContainerControl) e.Item.FindControl("spanRpPriceFrom");
+					HtmlContainerControl spanRpPriceTo = (HtmlContainerControl) e.Item.FindControl("spanRpPriceTo");
+					HtmlContainerControl spanRpPrice = (HtmlContainerControl) e.Item.FindControl("spanRpPrice");
+					HtmlContainerControl lblPerCase = (HtmlContainerControl)e.Item.FindControl("lblPerCase");
+					//Label lblPerCase = (Label)e.Item.FindControl("lblPerCase");
+
+					spanRpPriceFrom.InnerText = this.listPriceQuantity.ToString();
+					spanRpPriceTo.InnerText = ((DataRowView)e.Item.DataItem)["Quantity"].ToString();
+					spanRpPrice.InnerText = ((decimal)((DataRowView)e.Item.DataItem)["Price"]).ToString("c");
+					
+					BLProduct product = new BLProduct();
+					product.ID = productID;
+					product.Retrieve();
+
+					if(product.AmountPerCase == 1)
+					{
+						lblPerCase.InnerText = " Each";
+					}
+					else if(product.AmountPerCase > 1)
+					{
+						decimal PricePer = ((decimal)((DataRowView)e.Item.DataItem)["Price"]) / product.AmountPerCase;
+						lblPerCase.InnerText = "Per Package " + PricePer.ToString("C") + " Per Item";
+					}
+
+					this.listPriceQuantity = ((int)((DataRowView)e.Item.DataItem)["Quantity"]) + 1;
+
+					break;
+			}
+        }
+
+        private void ibtBuy_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            if( Page.IsValid )
+            {
+                int quantity = int.Parse(txtQuantity.Text);
+                if( quantity > 0 )
+                    if( cust.ShoppingCart.AddProductStockCheck(this.productID, quantity, pnPersPrice.Visible && chbPersonalize.Checked) )
+                        Response.Redirect(".?page=cart&id=8");
+            }
+        }
+    }
+//}

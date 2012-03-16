@@ -1,0 +1,813 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DonateExl>
+  <DonatePage9 PageIcon="bsd.gif">
+    <DonateBottomimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DBBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DBBdonateText>
+    </DonateBottomimages>
+    <DonateBottomimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DBBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DBBdonateText>
+    </DonateBottomimages>
+    <DonateBottomimages>
+      <DIdonatename>text gevald</DIdonatename>
+      <DIimagesrc>homeBanner_imprint.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>large</DIimgID>
+      <DBBdonateText>
+      </DBBdonateText>
+    </DonateBottomimages>
+    <DonateTopBanner>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>blank </DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>
+      </DIImgPhotoSrc>
+      <DIimgID>45px</DIimgID>
+      <DTBdonateText>&lt;ol&gt;
+    &lt;li&gt;&lt;a href="http://DonatePage2.aspx"&gt;&lt;em&gt;&lt;strong&gt;Repregte&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ergtaqergt&lt;/p&gt;</DTBdonateText>
+    </DonateTopBanner>
+    <DonateTopBanner>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>blank </DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>
+      </DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DTBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTBdonateText>
+    </DonateTopBanner>
+    <DonateTopBanner>
+      <DIdonatename>
+      </DIdonatename>
+      <DIimagesrc>
+      </DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>
+      </DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DTBdonateText>&lt;p&gt;&lt;em&gt;&lt;strong&gt;testing&amp;nbsp; 123&lt;/strong&gt;&lt;/em&gt;AAA YYYYYYYYYYYY&lt;/p&gt;</DTBdonateText>
+    </DonateTopBanner>
+    <DonateWallIcon>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DWWIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DWWIdonateText>
+    </DonateWallIcon>
+    <DonateWallIcon>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DWWIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DWWIdonateText>
+    </DonateWallIcon>
+    <DonateWallIcon>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DWWIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DWWIdonateText>
+    </DonateWallIcon>
+    <DonateRightimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIimgID>
+      </DIimgID>
+      <DRIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DRIdonateText>
+    </DonateRightimages>
+    <DonateRightimages>
+      <DIdonatename>
+      </DIdonatename>
+      <DIimagesrc>homeBanner_imprint.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIImgPhotoSrc>homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DRIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DRIdonateText>
+    </DonateRightimages>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>flash.jpg,homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>flash.jpg,homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>flash.jpg,homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>FC_logo.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>FC_logo.gif,FC_logo.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>
+      </DIdonatename>
+      <DIimagesrc>bsd.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>bsd.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>banner_parentsupportnetwork.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>banner_volunteer.jpg,banner_walk.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateWall>
+      <DIimgID>
+      </DIimgID>
+      <DIImgPhotoSrc>Itty01.jpg,pic_rebbe.jpg</DIImgPhotoSrc>
+      <DIAmount>
+      </DIAmount>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIdonatename>Moishe   Moish,Moishe   Moish</DIdonatename>
+      <DonateWall>donated by Moishe   Moish in honor  of baruch bruchTETSTWSTST</DonateWall>
+    </DonateWall>
+    <DonateInfo>
+      <donatehonor>
+      </donatehonor>
+      <linknumber>10</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>
+      </donatehonor>
+      <linknumber>10</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>
+      </donatehonor>
+      <linknumber>10</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>207</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>282</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>303</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>101</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>328</linknumber>
+      <donatename>Dovid   Nusebaum</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>in honor of Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>323</linknumber>
+      <donatename>Dovid   Nusebaum</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>in honor of Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>326</linknumber>
+      <donatename>Dovid   Nusebaum</donatename>
+    </DonateInfo>
+    <DonateImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DIdonateText>
+    </DonateImg>
+    <Donateimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DIdonateText>
+    </Donateimages>
+    <Donateimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default2.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picParent.gif</DIImgPhotoSrc>
+      <DIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DIdonateText>
+    </Donateimages>
+    <DonateText>
+      <DTimgID>dvText</DTimgID>
+      <DTpos>absolute</DTpos>
+      <DTwidth>150px</DTwidth>
+      <DTheight>120px</DTheight>
+      <DTtop>130px</DTtop>
+      <DTleft>230px</DTleft>
+      <DTAmount>
+      </DTAmount>
+      <DTdonatename>Moishe   Moish</DTdonatename>
+      <DTimagesrc>Moishe   Moish</DTimagesrc>
+      <DTdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTdonateText>
+    </DonateText>
+    <DonateLeftimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DLIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DLIdonateText>
+    </DonateLeftimages>
+    <DonateLeftimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DLIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DLIdonateText>
+    </DonateLeftimages>
+    <DonateTopImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTIdonateText>
+    </DonateTopImg>
+    <DonateTopRightImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTRIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTRIdonateText>
+    </DonateTopRightImg>
+    <DonateTopLeftImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTLIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTLIdonateText>
+    </DonateTopLeftImg>
+    <DonateSecondBanner>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>
+      </DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DSBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DSBdonateText>
+    </DonateSecondBanner>
+    <DonateThirdBanner>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>
+      </DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTHBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTHBdonateText>
+    </DonateThirdBanner>
+  </DonatePage9>
+  <DonatePage2 PageIcon="anchor.gif">
+    <DonateCenterImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.gif</DIImgPhotoSrc>
+      <DCIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.gif</DIImgPhotoSrc>
+      <DCIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DCIdonateText>
+    </DonateCenterImg>
+  </DonatePage2>
+  <DonatePage4 PageIcon="iconEmail.gif">
+    <DonateBottomimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DBBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DBBdonateText>
+    </DonateBottomimages>
+  </DonatePage4>
+  <DonatePage7>
+    <DonateBottomimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DBBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DBBdonateText>
+    </DonateBottomimages>
+  </DonatePage7>
+  <DonatePage5>
+    <DonateBottomimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DBBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DBBdonateText>
+    </DonateBottomimages>
+    <DonateBottomimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DBBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DBBdonateText>
+    </DonateBottomimages>
+    <DonateBottomimages>
+      <DIdonatename>text gevald</DIdonatename>
+      <DIimagesrc>homeBanner_imprint.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>large</DIimgID>
+      <DBBdonateText>
+      </DBBdonateText>
+    </DonateBottomimages>
+    <DonateTopBanner>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>blank </DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>
+      </DIImgPhotoSrc>
+      <DIimgID>45px</DIimgID>
+      <DTBdonateText>&lt;ol&gt;
+    &lt;li&gt;&lt;a href="http://DonatePage2.aspx"&gt;&lt;em&gt;&lt;strong&gt;Repregte&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ergtaqergt&lt;/p&gt;</DTBdonateText>
+    </DonateTopBanner>
+    <DonateTopBanner>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>blank </DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>
+      </DIImgPhotoSrc>
+      <DIimgID>dvText</DIimgID>
+      <DTBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTBdonateText>
+    </DonateTopBanner>
+    <DonateTopBanner>
+      <DIdonatename>
+      </DIdonatename>
+      <DIimagesrc>
+      </DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>
+      </DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DTBdonateText>&lt;p&gt;&lt;em&gt;&lt;strong&gt;testing&amp;nbsp; 123&lt;/strong&gt;&lt;/em&gt;AAA YYYYYYYYYYYY&lt;/p&gt;</DTBdonateText>
+    </DonateTopBanner>
+    <DonateWallIcon>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DWWIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DWWIdonateText>
+    </DonateWallIcon>
+    <DonateWallIcon>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DWWIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DWWIdonateText>
+    </DonateWallIcon>
+    <DonateWallIcon>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DWWIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DWWIdonateText>
+    </DonateWallIcon>
+    <DonateRightimages>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIimgID>
+      </DIimgID>
+      <DRIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DRIdonateText>
+    </DonateRightimages>
+    <DonateRightimages>
+      <DIdonatename>
+      </DIdonatename>
+      <DIimagesrc>homeBanner_imprint.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIImgPhotoSrc>homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DRIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DRIdonateText>
+    </DonateRightimages>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>flash.jpg,homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>picChild.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>flash.jpg,homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>Itty01.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>flash.jpg,homeBanner_imprint.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>FC_logo.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>FC_logo.gif,FC_logo.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>
+      </DIdonatename>
+      <DIimagesrc>bsd.gif</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>bsd.gif</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateCenterImg>
+      <DIdonatename>,</DIdonatename>
+      <DIimagesrc>banner_parentsupportnetwork.jpg</DIimagesrc>
+      <DIAmount>
+      </DIAmount>
+      <DIImgPhotoSrc>banner_volunteer.jpg,banner_walk.jpg</DIImgPhotoSrc>
+      <DIimgID>
+      </DIimgID>
+      <DCIdonateText>
+      </DCIdonateText>
+    </DonateCenterImg>
+    <DonateWall>
+      <DIimgID>
+      </DIimgID>
+      <DIImgPhotoSrc>Itty01.jpg,pic_rebbe.jpg</DIImgPhotoSrc>
+      <DIAmount>
+      </DIAmount>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIdonatename>Moishe   Moish,Moishe   Moish</DIdonatename>
+      <DonateWall>donated by Moishe   Moish in honor  of baruch bruchTETSTWSTST</DonateWall>
+    </DonateWall>
+    <DonateInfo>
+      <donatehonor>
+      </donatehonor>
+      <linknumber>10</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>
+      </donatehonor>
+      <linknumber>10</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>
+      </donatehonor>
+      <linknumber>10</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>207</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>282</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>303</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>101</linknumber>
+      <donatename>Eli   Barber</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>328</linknumber>
+      <donatename>Dovid   Nusebaum</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>in honor of Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>323</linknumber>
+      <donatename>Dovid   Nusebaum</donatename>
+    </DonateInfo>
+    <DonateInfo>
+      <donatehonor>in honor of Chani &amp; Tzvi Yakov</donatehonor>
+      <linknumber>326</linknumber>
+      <donatename>Dovid   Nusebaum</donatename>
+    </DonateInfo>
+    <DonateImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DIdonateText>
+    </DonateImg>
+    <Donateimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DIdonateText>
+    </Donateimages>
+    <Donateimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default2.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picParent.gif</DIImgPhotoSrc>
+      <DIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DIdonateText>
+    </Donateimages>
+    <DonateText>
+      <DTimgID>dvText</DTimgID>
+      <DTpos>absolute</DTpos>
+      <DTwidth>150px</DTwidth>
+      <DTheight>120px</DTheight>
+      <DTtop>130px</DTtop>
+      <DTleft>230px</DTleft>
+      <DTAmount>
+      </DTAmount>
+      <DTdonatename>Moishe   Moish</DTdonatename>
+      <DTimagesrc>Moishe   Moish</DTimagesrc>
+      <DTdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTdonateText>
+    </DonateText>
+    <DonateLeftimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DLIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DLIdonateText>
+    </DonateLeftimages>
+    <DonateLeftimages>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DLIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DLIdonateText>
+    </DonateLeftimages>
+    <DonateTopImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTIdonateText>
+    </DonateTopImg>
+    <DonateTopRightImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTRIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTRIdonateText>
+    </DonateTopRightImg>
+    <DonateTopLeftImg>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>R1C3.jpg</DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTLIdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTLIdonateText>
+    </DonateTopLeftImg>
+    <DonateSecondBanner>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>
+      </DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DSBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DSBdonateText>
+    </DonateSecondBanner>
+    <DonateThirdBanner>
+      <DIimgID>dvText</DIimgID>
+      <DIAmount>
+      </DIAmount>
+      <DInextpage>Default.aspx</DInextpage>
+      <DIdonatename>Moishe   Moish</DIdonatename>
+      <DIimagesrc>
+      </DIimagesrc>
+      <DIImgPhotoSrc>images/picChild.jpg</DIImgPhotoSrc>
+      <DTHBdonateText>donated by Moishe   Moish in honor  of baruch bruch</DTHBdonateText>
+    </DonateThirdBanner>
+  </DonatePage5>
+</DonateExl>

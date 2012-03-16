@@ -1,0 +1,123 @@
+<%@ Reference Page="~/indexNew.aspx" %>
+<%@ Control Language="c#" Inherits="Shof.modules.cart" CodeFile="cart.ascx.cs" %>
+<div style="FONT-WEIGHT: bold; FONT-SIZE: 100%; MARGIN-BOTTOM: 5px; COLOR: #505050; MARGIN-RIGHT: 5px"
+	align="right">SHOPPING CART</div>
+<asp:panel id="Itemspanel" runat="server">
+	<table cellspacing="0" cellpadding="0" width="428" border="0">
+		<TR>
+			<td><IMG height="1" src="../main/img/dot_white.gif" width="5"></td>
+			<td valign="top" width="418">
+				<table cellspacing="0" cellpadding="0" width="100%" border="0">
+					<TR>
+						<td bgcolor="#006496">
+							<table cellspacing="1" cellpadding="2" width="100%" align="center" border="0">
+								<TR>
+									<td class="head" valign="middle" bgcolor="#ffffff" height="30">
+										<div style="PADDING-LEFT: 8px"><span id="spanItemsCount" runat="server">1</span> items 
+											in your shopping cart:</div>
+									</td>
+									<td class="head" valign="middle" align="center" bgcolor="#ffffff">Price</td>
+									<td class="head" valign="middle" align="center" bgcolor="#ffffff">Personalize
+									</td>
+									<td class="head" valign="middle" align="center" bgcolor="#ffffff">Quantity</td>
+									<td class="head" valign="middle" align="center" bgcolor="#ffffff">Total</td>
+									<td class="head" valign="middle" align="center" bgcolor="#ffffff">Delete</td>
+								</tr>
+								<asp:repeater id="rptProductList" runat="server" onitemdatabound="rptProductList_OnItemDataBound">
+									<itemtemplate>
+										<tr height="24">
+											<td bgcolor="#ffffff" width="70%" valign="middle"><div class="smallProduct">
+													<div class="prodhead"><a id="aProductName" runat="server"></a></div>
+													<a id="aImghref" runat="server"><img id="imgList" runat="server" border="0"></a>
+													<input type="hidden" runat="server" id="prdid">
+												</div>
+											</td>
+											<td align="center" bgcolor="#ffffff" width="10%" valign="middle"><span id="spanProductPrice" runat="server" class="number">$</span>
+											</td>
+											<td bgcolor="#ffffff" valign="middle" width="5%" align="center">
+												<asp:checkbox id="chbPersonalize" runat="server"></asp:checkbox><br/>
+												<asp:label id="lblPersPrice" runat="server" CssClass="number"></asp:label><br/>
+												<br/>
+											</td>
+											<td nowrap bgcolor="#ffffff" width="50px" valign="middle" align="center">
+												<div class="cartdata">
+													<input class="number" id="inputQuantity" runat="server" size="4"> <span id="spanQuantityError" runat="server" class="number">
+														BLA-BLA</span>
+												</div>
+											</td>
+											<td align="center" bgcolor="#ffffff" valign="middle" width="10%"><span id="spanProductTotalPrice" runat="server" class="number">$</span></td>
+											<td bgcolor="#ffffff" valign="middle" width="5%" align="center"><input type="checkbox" id="chbProductdelete" runat="server" name="chbProductdelete">
+											</td>
+										</tr>
+									</itemtemplate>
+									<separatortemplate>
+									</separatortemplate>
+								</asp:repeater>
+								<TR class="even" height="24">
+									<td valign="middle" align="right" bgcolor="#ffffff" colspan="4">
+										<div class="info"><b>Total:</b>&nbsp;</div>
+									</td>
+									<td valign="middle" align="center" width="20%" bgcolor="#ffffff"><span class="number" id="spanTotalPrice" runat="server">$</span>
+									</td>
+									<td valign="middle" width="10%" bgcolor="#ffffff">
+										<div class="cartdata" align="center"><a onclick="checkALL(); return false;" href="#"><IMG height="16" alt="Check All" src="img/all.gif" width="55" border="0"></a></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td><IMG height="1" src="../main/img/dot_white.gif" width="5"></td>
+		</tr>
+	</table>
+	<br/>
+	<table cellspacing="0" cellpadding="0" align="center" border="0">
+		<TR>
+			<td valign="top" align="right"><a 
+      href="<%=Request.UrlReferrer.AbsoluteUri%>"><IMG height="27" alt="Continue Shopping" src="img/btn-continue.gif" width="132" border="0"></a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td valign="top" width="1">
+				<asp:imagebutton id="ibtUpdate" runat="server" height="27px" width="65px" alternatetext="Update"
+					imageurl="img/btn-update.gif" CausesValidation="False"></asp:imagebutton></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td valign="top">
+				<asp:imagebutton id="ibtCheckout" runat="server" height="27px" width="81px" alternatetext="Checkout"
+					imageurl="img/btn-checkout.gif" CausesValidation="False"></asp:imagebutton></td>
+		</tr>
+	</table>
+</asp:panel><asp:panel id="NoItemspanel" runat="server" visible="False">
+	<table id="table1" cellspacing="0" cellpadding="0" align="center" border="0">
+		<TR>
+			<td><FONT size="4"><STRONG>No items in your shopping cart</STRONG></FONT></td>
+		</tr>
+	</table>
+	<br/>
+	<div align="center"><IMG src="img/Shoppin%20Cart%20with%20so1.jpg" align="middle">
+	</div>
+	<br/>
+	<br/>
+	<div align="center"><a href="<%=Request.UrlReferrer.AbsoluteUri%>"><IMG src="img/continueShopping.GIF" border="0"></a></div>
+</asp:panel>
+<script language="javascript" type="text/javascript">
+  function checkALL(){
+ var flag_focus;
+		var count_forms;
+		var count_elements;
+		var i, j;
+	    flag_focus=0;
+		count_forms=document.forms.length;
+		if(count_forms!=0){
+		   for(i=0;i<count_forms;i++){
+			  count_elements = document.forms[i].elements.length;
+			  if(count_elements!=0){
+                 for(j=0;j<count_elements;j++){
+				      if(document.forms[i].elements[j].type=='checkbox'){
+					    document.forms[i].elements[j].checked=true;
+					  }
+				 }
+			  }
+			}
+		}  
+  }
+</script>

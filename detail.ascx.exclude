@@ -1,0 +1,124 @@
+<%@ Reference Page="~/indexNew.aspx" %>
+<%@ Control Language="c#" Inherits="detail" CodeFile="detail.ascx.cs" %>
+<div style="FONT-WEIGHT: bold; FONT-SIZE: 100%; MARGIN-BOTTOM: 5px; COLOR: #505050; MARGIN-RIGHT: 5px"
+	align="right">PRODUCT DETAILS</div>
+<asp:panel id="ItemPanel" runat="server">
+	<table cellspacing="0" cellpadding="0" border="0">
+		<TR>
+			<td style="WIDTH: 3px"><IMG height="1" src="../main/img/dot_white.gif" width="5"></td>
+			<td valign="top">
+				<table cellspacing="0" cellpadding="3" border="0">
+					<TR>
+						<td valign="top">
+							<table cellspacing="0" cellpadding="0" align="left" border="0">
+								<TR>
+									<td bgcolor="#006496" rowspan="3"><IMG height="162" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+									<td bgcolor="#006496"><IMG height="1" alt="" src="/img/transparent.gif" width="160" border="0"></td>
+									<td bgcolor="#006496" rowspan="3"><IMG height="162" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+									<td rowspan="3"><IMG height="162" alt="" src="/img/transparent.gif" width="4" border="0"></td>
+								</tr>
+								<TR height="160">
+									<td align="center" width="160" height="160"><IMG id="imgPrdImage" src="" vspace="16" border="0" runat="server"><br/>
+										<a id="aImgPrdZoomImage" style="DISPLAY: none" href="#" runat="server">Zoom</a></td>
+								</tr>
+								<TR>
+									<td bgcolor="#006496"><IMG height="1" alt="" src="/img/transparent.gif" width="160" border="0"></td>
+								</tr>
+							</table>
+							<b><span class="detailname" id="spanPrdName" runat="server">SELMA LONG MONO</span></b>
+							<br/>
+							<br/>
+							<span class="detaildesc" id="spanPrdDescription" runat="server">standerdedsNikon 
+								-N80 35mm SLR Autofocus Camera Kit with Nikon 28-80mm 3.3-5.6 G-AF Lens A 
+								farkakte shtic a pain by anyones standersds</span>
+							<br/>
+							<br/>
+							<br/>
+							<br/>
+							<br/>
+							<br/>
+							<br/>
+							Price:
+							<br/>
+							<table style="HEIGHT: 23px" cellspacing="0" cellpadding="2" border="0">
+								<asp:repeater id="rptPrice" runat="server" onitemdatabound="rptPrice_OnItemDataBound">
+									<itemtemplate>
+										<tr>
+											<td><b><span class="number" id="spanRpPriceFrom" runat="server"></span></b></td>
+											<td align="center">&nbsp;-&nbsp;</td>
+											<td><b><span class="number" id="spanRpPriceTo" runat="server"></span></b></td>
+											<td>&nbsp;=&nbsp;</td>
+											<td><b><span class="number" id="spanRpPrice" runat="server"></span></b></td>
+											<td nowrap>&nbsp;<span id="lblPerCase" runat="server">Label</span></td>
+										</tr>
+									</itemtemplate>
+								</asp:repeater>
+								<TR>
+									<td><b><span class="number" id="spanPriceDefFrom" runat="server"></span></b></td>
+									<td colspan="4">&nbsp;and more&nbsp;<b><span class="number" id="spanPriceDef" runat="server"></span></b>
+									</td>
+									<td>
+										<asp:Label id="lblRegPricePer" runat="server">Each</asp:Label></span></td>
+								</tr>
+							</table>
+							Quantity:
+							<asp:textbox class="number" id="txtQuantity" runat="server" columns="4" maxlength="7"></asp:textbox>
+							<asp:RangeValidator id="txtQuantityRangeValidator" runat="server" EnableClientScript="False" errormessage="CompareValidator"
+								controltovalidate="txtQuantity" type="Integer" MinimumValue="1"><br/>Please enter valid number</asp:RangeValidator><!--<br/>
+							Available items on stock: <span class="number" id="spanInventory" runat="server"></span>!-->
+							<asp:panel id="OnSalePanel" runat="server" visible="False">
+								<br/>
+								<asp:panel id="RRPPanel" runat="server" visible="False">RRP: <S>$<span class="number" id="spanPrdRegPrice" runat="server"></span></S><br/></asp:panel>
+								<asp:panel id="SaleTextPanel" runat="server" visible="False">
+									<span class="number" id="spanPrdSaleText" runat="server"></span>
+								</asp:panel>
+							</asp:panel>
+							<asp:panel id="pnPersPrice" runat="server"><br/>Personalize Price: <span class="number" id="spanPersPrice" runat="server">
+								</span><br/>
+<asp:checkbox id="chbPersonalize" runat="server" textalign="Left" text="Personalize:"></asp:checkbox></asp:panel>
+							<div align="center"><br/>
+								<asp:imagebutton id="ibtBuy" runat="server" imageurl="img/buy_button.gif" width="63" height="27"
+									alternatetext="buy now"></asp:imagebutton></div>
+						</td>
+					</tr>
+					<TR>
+						<td style="WIDTH: 458px">
+							<asp:panel id="Relatedlinkspanel" runat="server">
+								<hr color="#006496" noShade SIZE="1">
+								<b>Related links:</b><br/>
+								<asp:repeater id="rptRelatedlinkList" runat="server" onitemdatabound="rptRelatedlinkList_OnItemDataBound">
+									<itemtemplate>
+										<br/>
+										<strong><a id="aRlinkName" target="_blank" runat="server" class="link1"></a></strong>
+										<br/>
+										<span id="spanRlinkDesc" runat="server"></span>
+										<br/>
+									</itemtemplate>
+								</asp:repeater>
+							</asp:panel>
+							<asp:panel id="RelatedFilespanel" runat="server">
+								<hr color="#006496" noShade SIZE="1">
+								<b>Related Files:</b><br/>
+								<asp:repeater id="rptRelatedFileList" runat="server" onitemdatabound="rptRelatedFileList_OnItemDataBound">
+									<itemtemplate>
+										<br/>
+										<strong><a id="aRFileName" runat="server" target="_blank" class="link1"></a></strong>
+										<br/>
+										<span id="spanRFileDesc" runat="server"></span>
+										<br/>
+									</itemtemplate>
+								</asp:repeater>
+							</asp:panel></td>
+					</tr>
+				</table>
+			</td>
+			<td style="WIDTH: 2px"><IMG height="1" src="../main/img/dot_white.gif" width="5"></td>
+		</tr>
+	</table>
+</asp:panel><asp:panel id="NoItemPanel" runat="server" visible="False">
+	<table cellspacing="0" cellpadding="0" align="center" border="0">
+		<TR>
+			<td>No item</td>
+		</tr>
+	</table>
+</asp:panel>

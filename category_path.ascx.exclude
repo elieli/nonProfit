@@ -1,0 +1,27 @@
+<%@ Reference Page="~/indexNew.aspx" %>
+<%@ Control Language="c#" Inherits="Shof.modules.category_path" CodeFile="category_path.ascx.cs" %>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#006496">
+	<tr>
+		<td background=""><img src="../main/img/spacer.gif" width="22" height="25"></td>
+		<td id="PTitle" runat="server" width="100%" class="InnerTitle" valign="top" background="">
+		</td>
+		<td background=""><a href="index.aspx?id=8&amp;page=cart"><img src="img/basket.gif" width="68" height="16" border="0"></a></td>
+		<td background=""><img src="../main/img/spacer.gif" width="10" height="25"></td>
+	</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#006496">
+	<tr>
+		<td background=""><img src="../main/img/spacer.gif" width="24" height="15"></td>
+		<td width="100%" valign="top" class="path" background="">
+			<a class="path" href="../main/default.asp">Home</a>&nbsp;<img align="bottom" src="../main/img/arrow_path.gif" alt="" width="12" height="6" border="0">
+			<a class="path" href="index.aspx?id=8">Catalog</a>
+			<asp:repeater id="rptCategoryList" OnItemDataBound="rptCategoryList_OnItemDataBound" Runat="server">
+				<ItemTemplate>
+					<img align="bottom" src="../main/img/arrow_path.gif" alt="" width="12" height="6" border="0">&nbsp;<a id="aCat" runat="server" class="path"></a>
+				</ItemTemplate>
+			</asp:repeater>
+			<asp:panel id="panelPathPageName" Runat="server" Visible="False" HorizontalAlign="Left"><IMG height="6" alt="" src="../main/img/arrow_path.gif" width="12" align="bottom" border="0">&nbsp;<a class="path" id="aPathPageName" runat="server"></a>
+					</asp:panel>
+		</td>
+	</tr>
+</table>

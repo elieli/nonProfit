@@ -1,0 +1,129 @@
+﻿<%@ Page Title="JomaDeals.com Order Information and Checkout - Step 2" Language="C#"
+    MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Checkout_step2.aspx.cs"
+    Inherits="checkout_Checkout_step2" %>
+
+<%@ Register TagPrefix="msc" TagName="PayPalCheckout" Src="~/mainstreet/controls/PayPalCheckout.ascx" %>
+<%@ Register Src="../controls/ShoppingCart.ascx" TagName="ShoppingCart" TagPrefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="Headers" runat="Server">
+    <meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
+    <meta name="GOOGLEBOT" content="NOARCHIVE" />
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="Body" runat="Server">
+    <table width="660px">
+        <tr>
+            <td style="padding-left: 40px; padding-right: 20px">
+                <a href="/default.aspx">Deal Of The Day</a> &gt; <a href="Checkout_step1.aspx">Checkout</a>
+                > Step 2
+                <br />
+                <br />
+                <table style="width:600px">
+                    <tr>
+                        <td style="width:600px">
+                            <table cellpadding="4px" cellspacing="4px" style="clear: both; width:600px; border-collapse: separate;
+                                background-color: White; padding-bottom: 0px; position: relative; left: 8px;">
+                                <tr>
+                                    <td class="iqHeaderBoxBlock" style="width:300px">
+                                        <b>Billing Information</b>
+                                    </td>
+                                    <td class="iqHeaderBoxBlock" style="width:300px">
+                                        <b>Shipping Information</b>
+                                    </td>
+                                </tr>
+                                <tr valign="top">
+                                    <td class="iqBodyBoxBlock" style="padding-left: 30px; padding-top: 20px; padding-right: 30px;
+                                        padding-bottom: 20px; width:300px;">
+                                        <%=BillingInformation %><br />
+                                        <asp:DataList ID="dlPayment" runat="server" RepeatDirection="Horizontal" RepeatLayout="Table"
+                                            Width="100%" OnItemDataBound="dlPayment_ItemDataBound">
+                                            <ItemStyle VerticalAlign="Top" />
+                                            <ItemTemplate>
+                                                <table class="mscReviewTable">
+                                                    <tr class="mscPaymentType">
+                                                        <td class="mscLabel">
+                                                        </td>
+                                                        <td class="mscValue">
+                                                            <asp:Literal ID="lblPaymentType" runat="server" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="trPaymentAmount" runat="server" class="mscPaymentAmount">
+                                                        <td class="mscLabel">
+                                                        </td>
+                                                        <td class="mscValue">
+                                                            <asp:Literal ID="lblPaymentAmount" runat="server" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="trPaymentName" runat="server" class="mscPaymentName">
+                                                        <td class="mscLabel">
+                                                        </td>
+                                                        <td class="mscValue">
+                                                            <asp:Literal ID="lblPaymentName" runat="server" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="trPaymentNumber" runat="server" class="mscPaymentNumber">
+                                                        <td class="mscLabel">
+                                                        </td>
+                                                        <td class="mscValue">
+                                                            <asp:Literal ID="lblPaymentNumber" runat="server" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="trPaymentExp" runat="server" class="mscPaymentExpiration">
+                                                        <td class="mscLabel">
+                                                        </td>
+                                                        <td class="mscValue">
+                                                            <asp:Literal ID="lblPaymentExp" runat="server" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="trPaymentAddress" runat="server" class="mscPaymentAddressZip">
+                                                        <td class="mscLabel">
+                                                        </td>
+                                                        <td class="mscValue">
+                                                            <asp:Label ID="lblPaymentAddress" runat="server" CssClass="mscPaymentAddress" /><br />
+                                                            <asp:Label ID="lblPaymentZip" runat="server" CssClass="mscPaymentPostalCode" />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </ItemTemplate>
+                                        </asp:DataList>
+                                    </td>
+                                    <td class="iqBodyBoxBlock" style="padding-left: 30px; padding-right: 30px; padding-top: 20px;
+                                        padding-bottom: 20px; width:300px;">
+                                        <%=ShippingInformation %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="right">
+                                        <msc:FlexButton ID="btnEdit" runat="server" BackColor="#c0e6fc" Font-Bold="True" Text="< Edit"
+                                            Width="160px" Height="25px" OnClick="btnEdit_Click" />&nbsp;
+                                        <br />
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <uc1:ShoppingCart ID="ShoppingCart1" runat="server" Editable="false" CalculateOthers="true" ShowTotal="true" CheckActualNotCartQuantities="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <msc:FlexButton ID="btnPrevious" runat="server" BackColor="#c0e6fc" Font-Bold="True"
+                                Text="< Previous" Width="160px" Height="25px" OnClick="btnPrevious_Click" />
+                            &nbsp;<msc:FlexButton ID="btnSubmit" runat="server" BackColor="#fed9a2" Font-Bold="True"
+                                Text="Submit" Width="120px" Height="25px" OnClick="btnSubmit_Click" />
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <msc:PayPalCheckout ID="PayPalCheckout2" runat="server" Behavior="AutoRedirect" CustomerMode="MatchupEmailOrCreate"
+                    ShippingAddress="Editable" CancelUrl="~/checkout/checkout_step1.aspx" ReturnUrl="~/checkout/checkout_step2.aspx"
+                    PostReturnUrl="~/checkout/checkout_step3.aspx" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

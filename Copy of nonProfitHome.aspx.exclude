@@ -1,0 +1,225 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Copy of nonProfitHome.aspx.cs"  MasterPageFile="MasterPage.master"            Inherits="nonProfitHome" %>
+
+
+
+
+           
+
+
+
+
+            <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"> </asp:Content>
+            <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="Server">
+
+
+    <form id="form1"   >
+    <div  style=" margin-left:3%; margin-right:5%;">
+    
+    
+    
+    <div  style="position:relative;"> 
+    
+    
+    
+        		
+					 							
+						 
+        
+        	 <%--<div style= " padding-left:20px; float:left; ">
+        	 <asp:Button runat="server" ID="btnMatch" OnClick= "chgsts"  Text="View"/>
+        	 
+        	 </div>
+        --%>
+        
+        
+        </div>
+        
+        
+        
+        <hr />
+        
+        <asp:Button  id="btnCnfApprove"    runat="server" OnClick="approveOrg"   Text="Confirm Approve"  />
+       
+          
+    <div  style= " text-align:left;  float:left; ">  
+            <asp:Label runat="server" ID="lblsts" Text="Org status"></asp:Label><br />
+        <asp:DropDownList   ID="drplstEmailSts"    OnSelectedIndexChanged="chgsts" runat="server">
+        <asp:ListItem  runat="server" Text="Pending" Value="pending"></asp:ListItem>  
+         <asp:ListItem   runat="server" Text="Approved" Value="approved"></asp:ListItem> 
+          <asp:ListItem   runat="server" Text="Canceled" Value="canceled"></asp:ListItem> 
+           <asp:ListItem   runat="server"  Selected="True" Text="All"  ></asp:ListItem>
+        </asp:DropDownList>
+        
+         </div> 
+        <hr />
+        
+        
+      
+      
+      
+      
+      
+      
+        
+        
+    <div   style= " clear:left; " > 
+         <h4>     <span  style="border-top:solid 3px pink;" >   <%= SubGmachTitle     %>          </span>
+         
+         
+         
+  
+        
+          </h4> 
+        
+  <%--
+    <asp:GridView ID="grdvSubGmach" OnRowDataBound="SubGmachBind"   OnRowCancelingEdit="emailsub" OnRowUpdating="RowUpdating"   OnRowUpdated="Row_Updating"   OnSelectedIndexChanging="indexchange"  OnRowDeleting="Delete"  OnRowEditing="Edit"  OnRowCommand="RowCommand" runat="server" 
+  --%> 
+  
+  
+  <asp:DataList AlternatingItemStyle-BackColor="AntiqueWhite" ID="grdvSubGmach"  OnItemDataBound="rptProductList_OnItemDataBound"   OnSelectedIndexChanged="rptProductList_OnSelectedIndexChanged"   RepeatColumns="4" runat="server" RepeatDirection="Horizontal" RepeatLayout="Table" >
+   
+   
+ 
+   <ItemStyle   Width="190px"    />
+ <SeparatorStyle Width="6px" Height="7px" />
+       
+   
+   <ItemTemplate>
+   
+   
+      <div style="border:solid 10px white;" >
+   
+   
+    <%-- <div  >
+    <asp:Label runat="server" id="id" Text='<%#DataBinder.Eval(Container.DataItem, "orgID") %>'></asp:Label>
+     <%#DataBinder.Eval(Container.DataItem, "orgID")%>
+   
+
+   
+  
+      <a   href=''>     </a> 
+   
+    </div>--%>
+      <div  id="dv_Emil"  style="float:left; " runat="server"> 
+      
+        
+  <%#DataBinder.Eval(Container.DataItem, "orgTitle")%>  
+    
+    <p   style=" margin-left:-40px;    vertical-align:text-top; text-align:left; ">
+       <div  id="Div1" style="float:left;"   runat="server">
+ <%--   <img  src="Images/contact/submit_button.jpg" alt="" id="Img1" /> --%>
+  
+  
+ <a href='Default2.aspx'>  <img  src='' alt="" id="imgorgLogo" runat="server" /></a> 
+ 
+ <%--  <span style=" background-image:url(<%# Eval("orgLogo")%>); "></span>
+   --%>
+   
+    </div>
+  
+   <%-- <asp:TextBox id="orgTitle"     Text='<%# Eval("orgTitle")%>'  runat="server" />--%>
+ 
+    
+   <%--
+     <asp:Label     Text='<%# Eval("orgFucnionality")%>'  runat="server" />
+   
+     
+  
+   <div   runat="server">
+   
+    <asp:TextBox id="orgFunct"     Text='<%# Eval("orgFucnionality")%>'  runat="server" />
+     
+   
+    </div>--%>
+   
+   <%-- <asp:Label ID="orgDesc_"  Enabled="false"    Text='<%# Eval("orgDescription")%>'  runat="server" />
+   --%>
+   
+  
+ <%--  <div  id="d1" runat="server"     style="float:left; ">--%>
+    <%#DataBinder.Eval(Container.DataItem, "orgDescription")%>  
+     <%--  <asp:TextBox id="orgDesc"     Text='<%# Eval("orgDescription")%>'  runat="server" />
+  --%>
+   
+   <%-- </div>--%>
+   </p>
+   
+   <%-- <asp:TextBox id="orgTaxID_"     Text='<%# Eval("org_TaxID")%>'  runat="server" />
+   
+    
+    
+   <div  id="d2" runat="server">
+   
+     <asp:TextBox id="orgTaxID"     Text='<%# Eval("org_TaxID")%>'  runat="server" />
+    
+   
+    </div>
+   
+   
+      <asp:TextBox id="orgEmail_"     Text='<%# Eval("org_email")%>'  runat="server" />
+ 
+     
+   
+   <div  id="d3" runat="server">
+   
+      <asp:TextBox id="orgEmail"     Text='<%# Eval("org_email")%>'  runat="server" />
+   
+   
+    </div>
+   
+   
+    <asp:TextBox id="orgPaypal_"     Text='<%# Eval("org_paypalAccount")%>'  runat="server" />
+   
+   
+   <div  id="d5" runat="server">
+   
+      <asp:TextBox id="orgPaypal"     Text='<%# Eval("org_paypalAccount")%>'  runat="server" />
+   
+   
+    </div>
+   
+   
+      <asp:TextBox id="orgLogo_"     Text='<%# Eval("orgLogo")%>'  runat="server" />
+  --%>
+    
+  
+    
+   
+  <%-- <div  id="f6" runat="server">
+   
+      <asp:TextBox id="orgLogo"     Text='<%# Eval("orgLogo")%>'  runat="server" />
+   
+   
+    </div>--%>
+    
+      </div>
+  </ItemTemplate>
+    
+  <%-- </EditItemTemplate>--%>
+   <%--  </asp:TemplateField>--%>
+     
+     
+     
+     
+     
+    
+   
+  
+   
+    
+    
+    </asp:DataList>
+    
+   <%-- </asp:GridView>--%>
+    
+      </div> </div>   
+    
+    </form></asp:Content>
+<%--</body>
+</html>--%>
+<%--
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Untitled Page</title>
+</head>
+<body>--%>

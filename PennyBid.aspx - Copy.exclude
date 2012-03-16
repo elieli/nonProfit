@@ -1,0 +1,671 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="PennyBid.aspx.cs" MasterPageFile="~/Site.master"  Inherits="PennyBid" %>
+  
+
+
+
+            <asp:Content ID="Content1" ContentPlaceHolderID="Headers" runat="Server"> </asp:Content>
+            <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="Server">
+                
+         <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional"> 
+                    <ContentTemplate> 
+                    <%= Message %>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <title>Jomadeals</title><link href="app_themes/yekatheme/style.css" rel="stylesheet" type="text/css" />
+                    <style type="text/css">
+                    .secondnav_strip ul li{background:url('App_Themes/YekaTheme/images/nav_seperator.jpg') no-repeat right 50%;}
+                    .body_parttwo{          background:#580000 url(<%= ResolveUrl("App_Themes/YekaTheme/images/bodyseperator.jpg") %>  no-repeat 50% top; }           
+           #footer{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/footerbg.jpg") %>) repeat-x;
+            }
+            .footer_container{
+            background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/footer.jpg") %>) no-repeat center top;
+            }
+            .box{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/box.jpg") %>) no-repeat; 
+            }
+            .box_one{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/box.jpg") %>) no-repeat; 
+            }
+            .iconbg{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/facebookbg.jpg") %>) no-repeat; 
+            }
+            .greyboxtop{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxtop.jpg") %>) no-repeat 50% top; 
+            }
+            .greyboxtopmid{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxback.jpg") %>) no-repeat;
+            }
+            .greyboxbottom{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxbottom.jpg") %>)no-repeat 50% bottom;
+            }
+            .white_heading{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/arrow.jpg") %>) no-repeat left 50%;
+            }
+          .greyboxseperator{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/dottedseperator.jpg") %>) no-repeat 50% bottom;
+            } 
+            .whitebox{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/whitebox_bg.jpg") %>) repeat-y; 
+            }
+            
+            .greybox{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxbg.jpg") %>) repeat-y;
+width:266px;
+float:left;
+}
+            
+            .whiteboxtop{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxtop.jpg") %>) no-repeat 50% top; 
+            }   
+               .whiteboxbottom{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/whitebox_bottom.jpg") %>)  no-repeat 50% bottom; 
+            }   
+            .logo{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:13px;
+            color:#434343;
+            text-decoration:none;
+            font-weight:bold;
+            border-top:1px solid #dbdbdb;
+            border-collapse:collapse;
+            }
+                  
+                .greybox{
+            background:url('App_Themes/YekaTheme/images/boxbg.jpg') repeat-y;
+            width:266px;
+            float:left;
+            }
+  
+               .greyboxseperator{
+background: url('App_Themes/YekaTheme/images/dottedseperator.jpg') no-repeat 50% bottom;
+width:222px;
+float:left;left:0px; margin-left:15px; padding-left:30px;
+height:1px;
+margin:10px 0px;
+}   
+                     
+                    </style> 
+        
+        
+        
+                        <div runat="server" id="body_partone_1"  style="position:relative;"   class="body_partone_1">
+                 
+                <input id="prefex1d"  name="prefex1" type="hidden"  value='<asp:Literal   runat="server" ID="prefexD"></asp:Literal>'   /><div style=" max-width:233;  overflow:hidden; " align="center"><a id="lnkFullImage" href='<%=LinkToFullImage %>' rel="lightbox" title='<%=ImageDesc %>'
+                                                    rev="" class="styleLightBox">
+                                                   <img id="imgMediumImage" style=" border:solid 0px;" src='<%=MediumImageUrl %>' alt='<%=ImageDesc %>'  height="439"/></a></div> 
+                <div align="center"><a href="#"><img src='<%= ResolveUrl("App_Themes/YekaTheme/images/zoom.jpg") %>' alt="jomadeals" width="174" height="26" border="0" /></a></div>
+
+ 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                <p  runat="server" style="padding-left:25px;clear:left;"   id="pOtherViews" class="normaltext_bold">Other Views</p>
+
+
+
+
+                <input id="MediumImageUrl1" type="hidden"/><input id="MediumImageUrl2" type="hidden"/><input id="MediumImageUrl3" type="hidden"/><input id="FullImageUrl1" type="hidden"/><input id="FullImageUrl2" type="hidden"/><input id="FullImageUrl3" type="hidden"/>
+
+                
+                 
+                 
+
+                <div   style="  width:500px;  padding-left:2px; left:0px; margin-left:42px; position:absolute;"> 
+                 
+                <div style="  float:left;  position:relative;   top:13px;    "> 
+                <asp:ImageButton  ID="ImgBtnOvleft"    CommandName="ImgBtnOvleft" CommandArgument="left"  OnCommand="otherView" runat="server" src="App_Themes/YekaTheme/images/leftarrow.jpg"   SkinID="iqViewOtherrightarrow"      height="73" alt="jomadeals"  class="img2"/>
+                </div>
+
+                <div style="float:left;   position:relative;  "  class="watchbox"  > 
+
+                 
+
+
+
+
+                    <asp:ListView ID="iqImagesThumb" runat="server">
+                                   
+                                       <LayoutTemplate>
+                                        <asp:PlaceHolder id="itemPlaceholder" runat="server" /> 
+                                    </LayoutTemplate>
+                                   
+                                 
+                                    <ItemTemplate>
+                                  
+                                        <div style=" width:80px;   float:left;  ">
+                                            <a href='<%# Eval("FullImageUrl") %>'  title='<%# Eval("ImageDesc") %>'
+                                                rev="" class="styleLightBox" >
+                                                <img class="img2" 
+                                                style=" border:solid 2px white; padding-right:0px;  max-height:80px;  max-width:63px; min-height:80px; min-width:63px;"  
+                                                id="imgThumb<%# Eval("Id") %>" src='<%# Eval("ThumbImageUrl") %>' alt='Deal <%# Eval("ImageDesc") %>'
+                                                    
+                                                
+                                                
+                                                onmouseover='javascript:changeMainImage("<%# Eval("MediumImageUrl") %>","<%# Eval("FullImageUrl") %>");' /></a></div>
+                                    </ItemTemplate>
+                                 
+                                 
+                            </asp:ListView>
+
+
+
+                     </div>
+
+                       <div style="  float:left;   top:13px;  padding-top:10px; padding-left:1px;  "> 
+                    <asp:ImageButton  ID="ImgBtnOvright" runat="server" src='App_Themes/YekaTheme/images/rightarrow.jpg'  OnCommand="otherView"  CommandArgument="right"  SkinID="iqViewOtherrightarrow"       height="73" alt="jomadeals"  />
+                    </div>
+
+
+                    </div>
+
+
+                   
+               
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                    <%-- style='<%# Eval("style") %>; display:block; border:solid 2px black; width:12px; height:12px;'>--%>
+                 
+                
+                 
+                  <div  style="    float:left;   padding-left:34px;  position:relative; top:0px; margin-top:102px; clear:left;">
+
+ 
+
+                    <asp:DataList ID="lvDisplayVariations"  RepeatColumns="8"  RepeatDirection="Horizontal"   OnItemDataBound="lvDisplayVariations_OnItemDataBound"  runat="server" GroupItemCount="3" 
+                                                        onitemcommand="lvDisplayVariations_ItemCommand">
+                                    <ItemTemplate>
+                                    <div style=" float:left;  padding:8px 8px 8px 8px;">
+                                    <input runat="server"  
+                                            id="hdnIndex" type="hidden"   />
+                                    
+                                           
+                                       <a    href='#'    >
+                                          
+                                         
+                                     <div  id="vv" runat="server"  class='<%# Eval("CSSClass") %>'    
+                                              style='  display:block; border:solid 2px black; width:12px; height:12px;'> 
+                                                
+                                            </div>
+                                           </a>
+
+                                            <asp:LinkButton   runat="server" Visible="false"   OnClick= "lvItemCommand" 
+                                                       ID="btnChangeVariation" Width="32" Height="32"  CommandName="ChangeVariation" 
+                                                       CommandArgument='<%# Eval("ItemGuid") %>' ><div class='<%# Eval("CSSClass") %>' 
+                                                       style='display:block; border:solid 2px black;  '></div>
+                                            </asp:LinkButton><br /><br />
+                                      </ItemTemplate>
+
+                </asp:DataList>
+
+                  </div>
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                  </div>
+                 
+                 
+                 
+                 
+                 
+                 
+                 <div  class="body_partone_2">
+                <h1 class="headingone"   > <asp:Label CssClass="headingone" ID="lblProductTitles" runat="server"   
+                                              ></asp:Label></h1>
+
+                <div class="box1">
+                <div runat="server" id="box1_one" class="box1_one">
+               
+               
+               
+                <p class="normaltext_bold">Retail Price : </p> 
+                <p style=" vertical-align:baseline; padding-top:1px;"   class="normaltext_bold">Sale Price :</p>
+                <p style=" padding-top:6px;"  class="normaltext_bold">You Save : </p>
+                 <h2  class="normaltext_bold"  runat="server" id="freeship" ></b><b></b>Free Shipping<b></b></h2> 
+                   </div>
+
+                <div style=" position:relative;" class="box1_two">
+                    <p class="normaltext_bold">
+                        <asp:Label ID="lblRetailPrice" runat="server" Text="" ForeColor="#3C3C3C" Font-Size="10pt" Font-Bold="true"></asp:Label>
+                    </p>
+                    
+                    
+                      <p class="normaltext_bold">
+                          <p class="normaltext_bold">End Date : </p>    <asp:Label ID="lblEndDate" runat="server" Text="" ForeColor="#3C3C3C" Font-Size="10pt" Font-Bold="true"></asp:Label>
+                    </p>
+                   
+                   
+                   
+                    <p class="red_normaltext_bold">   Start Bid Price    <asp:Label ID="lblStartBidPrice" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+              
+              
+              
+                    <p class="red_normaltext_bold">   Current Bid Price    <asp:Label ID="lblCurrentBidPrice" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+              
+              
+              
+              
+              
+                    <p class="red_normaltext_bold">   Condition    <asp:Label ID="lblCondition" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+              
+              
+              
+              
+              
+                    <p class="red_normaltext_bold">   Handling time    <asp:Label ID="lblHandling" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+              
+              
+              
+              
+              
+                    <p class="red_normaltext_bold">   Shipping Cost    <asp:Label ID="lblShipping" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+              
+              
+              
+              
+              
+                    <p class="red_normaltext_bold">   Auction Type    <asp:Label Visible="false" ID="lblAuctiontype" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+               
+              
+              
+              
+              
+                    <p class="red_normaltext_bold">   Bid Amount    <asp:TextBox  id="txtBidamount"  BorderColor="White" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:TextBox></p>
+              
+              
+              
+              
+              
+              
+              
+                    <p class="red_normaltext_bold">   Return Days    <asp:Label ID="lblReturndays" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+              
+              
+                    <p class="red_normaltext_bold">   Buy it Now   $ <asp:Label ID="lblBuyitNow" runat="server" Text="" ForeColor="Red"  
+                                                Font-Bold="true"></asp:Label></p>
+              
+              
+             
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                <p  class="normaltext_bold"><asp:Label ID="lblYouSave" runat="server" Text="" ForeColor="#3C3C3C"
+                                                Font-Size="10pt" Font-Bold="True"></asp:Label></p>
+                <p class="normaltext_bold">
+
+ 
+        </p>
+
+
+
+
+       
+
+ 
+
+ 
+             <table visible="false" > 
+             
+               <tr valign="middle" visible="false" id="trNormalItem" runat="server">
+                                     
+                                     
+                                    <td>
+                                         <asp:Image ID="imagesoldOuta" runat="server" SkinID="iqSoldOut" Visible="false" ImageAlign="AbsMiddle" />
+                                            </td>    </tr>
+                                
+                                 
+                                 <tr valign="middle" id="trOutofStocka" runat="server" visible="false">
+
+                                    <td valign="middle" align="left">
+                                        <br />
+                                         
+                                    </td>
+                                </tr>
+             
+             
+              </table>
+             
+
+
+                      <div id="trOutofStock"  runat="server" style=" z-index:100;  top:0px; margin-top:30px; left:0px; margin-left:-140px;  width:290px; background-color: #F7FEBA; border: solid 1px black; padding: 4px 4px 4px 4px;">
+                                                     
+                             You waited too long, and now we’re sold out. You must be devastated. At least you
+                                can hold on to the hope that tomorrow we’ll have another awesome luxury deal on
+                                the table. Now wipe your tears and go buy yourself a cookie. You’ll feel better
+                                tomorrow.   </div>
+                                
+                                <div>
+                                
+                                     <asp:Image ID="imagesoldOut" runat="server" SkinID="iqSoldOut" Visible="false" ImageAlign="AbsMiddle" />
+                    </div>
+
+                    </div>
+
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <asp:ImageButton runat="server" AlternateText="Bidder"   ImageUrl="App_Themes/YekaTheme/images/buynow.jpg"  onclick="btnBidNow_Click" id="btnBidder"   ></asp:ImageButton>
+                     
+   
+   
+   
+   <%--
+                   <asp:ImageButton id="btnBuyNow" runat="server"     ImageUrl="App_Themes/YekaTheme/images/buynow.jpg" CommandName="BuyNow" CssClass="img4"
+                        CommandArgument='<%# Eval("ItemGuid").ToString() %>' onclick="btnBuyNow_Click"  ></asp:ImageButton>
+                 --%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     <div class="day"  id="day"  runat="server"  style="background:url('App_Themes/YekaTheme/images/daybg.jpg') no-repeat;" >
+                    <span class="heading_small"><%=DateTime.Today.Date%></span><br />
+                    <span class="heading"><b>Deal of the day</b></span><br />
+                    <span class="heading_grey">Time Left: </span><divclass="heading_red"><span  id="countbox" style="font-size: 15pt; color: Red; font-family: Arial Black;
+                                                                            display: inline">
+                    </span></div>
+
+ 
+                <div class="iconbg">
+                 <div    onclick="javascript:navto('http://facebook.com/jomashop_com');" class="smallbox">  <img  src="App_Themes/YekaTheme/images/facebook1.jpg"  onclick="javascript:navto('http://facebook.com/jomashop_com');" width="26" height="30" alt="jomadeals" class="img3" /><span onmouseover="this.style.text-decoration='underline'"  style=" padding-left:5px; "> &nbsp  Facebook </span> </div>
+            <div class="smallbox"> <img src="App_Themes/YekaTheme/images/twitter.jpg" onclick="javascript:navto('http://twitter.com/jomashop_com');" width="27" height="30" alt="jomadeals"  class="img3" /><span class="addthis_button_favorites" onmouseover="javascript:this.style.text-decoration='underline'" style=" padding-left:5px; "> &nbsp   Twitter </span> </div>
+               <div  style=" position:relative;" class="smallbox">
+                <div onmouseover="this.style.text-decoration='underline'"  style=" display:inline">&nbsp  &nbsp <a class="addthis_button_favorites"><img style="left:0px; margin-left:2px; position:absolute; " src="App_Themes/YekaTheme/images/bookmark.jpg" width="27" height="23" alt="jomadeals"   class="img3" /> &nbsp &nbsp  &nbsp  &nbsp Bookmark   </a><br />
+                   
+                      <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js?pub=xa-4a32917b7eef9453"></script>
+                 
+               &nbsp  &nbsp  &nbsp  &nbsp &nbsp  &nbsp this page</div></div>
+               <div class="smallbox">  <img src="App_Themes/YekaTheme/images/email.jpg" onclick="javascript:navto('mailto:orders@jomadeals.com');" width="33" height="30" alt="jomadeals"  class="img3"  /> <div class="addthis_button_email"  onmouseover="this.style.text-decoration='underline'" style=" display:inline;" >&nbsp  &nbsp Email to <br />
+                      &nbsp   &nbsp  a friend</div> 
+                   </div>
+                          <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js?pub=xa-4a32917b7eef9453"></script>
+
+                  
+                  <div  class="smallbox" style="  float:left; position:relative;  right:0px; margin-right:-30px; font-family:Sans-Serif; min-width:210px; text-decoration:underline; font-size:small; left:0px; margin-left:0px; vertical-align:bottom; bottom:0px; margin-bottom:0px; font-size:small; color:Red;"><a style="color:Red;" href='<%=relLink%>'>Click here to view other products from this brand</a></div>
+
+                  
+                </div>
+                 
+                </div> 
+ 
+
+ 
+
+
+
+                <div class="body_partone_3"  >
+
+                <div   class="greybox"    style="background:url('App_Themes/YekaTheme/images/boxbg.jpg') repeat-y;
+            width:266px;
+            float:left;"  >
+
+
+                <div class="greyboxtop"    style=" background: url('App_Themes/YekaTheme/images/boxtop.jpg')  no-repeat 50% top;"               ><p class="white_heading"  style=" background:url('App_Themes/YekaTheme/images/arrow.jpg') no-repeat left 50%;" >Other Deals</p></div>
+                  <div   runat="server" id="greyboxtopmid"   style=" background:url('App_Themes/YekaTheme/images/boxback.jpg')  no-repeat;" > 
+               
+               <asp:Panel   runat="server">
+               
+         
+              
+              
+                    <asp:ListView ID="rptOthviews" runat="server">
+                                   
+                                       <LayoutTemplate> 
+                                      
+                                        <asp:PlaceHolder  id="itemPlaceholder" runat="server" /> 
+                                 
+                                      <asp:TableFooterRow>
+                                                <div style="left:0px;      margin-left:0px;   top:0px; background: url('App_Themes/YekaTheme/images/boxbottom.jpg') no-repeat 50% bottom;"   class="greyboxbottom "  ></div>              
+                                        </asp:TableFooterRow>
+                                 
+                                    </LayoutTemplate>
+              
+              
+              
+               <ItemTemplate  > 
+             
+                 
+                      <div id = "othDeals1" style=" position:relative;background:url('App_Themes/YekaTheme/images/boxback.jpg') no-repeat;   "  runat="server"  class="textwatch      greyboxtopmid ">
+           
+                
+                 
+                 
+                 
+                 <span     style=" width:121px; overflow:hidden; height:127px;" > 
+                   <img src='<%# Eval("ImageUrl")%>' style="max-width:121px;" height="127"  alt=""  class="img" />
+                   </span>    <%#   Eval("ImageTitle") %>  <br />
+                   
+                    <a  style="bottom:0px;margin-bottom:0px;text-decoration:none ; z-index:999;" 
+                    href='<%#   Eval(" Link ")   %>' target="_top"><span style="bottom:0px;position:absolute; "  class="red_normaltext_bold">
+                  
+                  <%#   Eval("PanelImageUrl")%> </span></a>
+
+                  
+                 
+                 
+                 
+                   </div>
+                 
+               
+                  
+                  
+                  </ItemTemplate>
+                    
+                     
+                    
+                    
+                   
+                    <ItemSeparatorTemplate>   
+                       <div id = "sepDeals"  runat="server" class="greybox   "> <span  runat="server" style=" font-size:large;  font-weight:bold; z-index:900; background: url('App_Themes/YekaTheme/images/dottedseperator.jpg') no-repeat 50% bottom;
+width:222px;
+float:left;left:0px; margin-left:15px; padding-left:30px;
+height:1px;
+margin:10px 0px;             " class="  greyboxseperator "></span>             </div>
+             </ItemSeparatorTemplate>
+ 
+                    
+                    
+                    
+                    </asp:ListView>
+                 </asp:Panel>
+                     </div>  </div>
+   <asp:Panel id="Panel1"  Visible="false" runat="server">
+                    <div    class="whitebox"   style="  background:url('App_Themes/YekaTheme/images/whitebox_bg.jpg')   repeat-y;" >
+                    <div    class="whiteboxtop"     style="  background: url('App_Themes/YekaTheme/images/boxtop.jpg')   no-repeat 50% top;"             ><p class="white_heading"  style=" background:url('App_Themes/YekaTheme/images/arrow.jpg') no-repeat left 50%;" >Compare and Save</p></div>
+                    <div   class="whiteboxmid">
+
+                    <asp:Repeater ID="iqCompareSaveListView"     runat="server">
+                                        
+                                                     
+                                                    <ItemTemplate> 
+                                                     
+                                                         <div id="logo1"  style=" overflow:hidden; "   class="whiteboxmid logo"  
+  runat="server"  >
+                                                         <a href='<%# Eval("ProductURL") %>" ' target="_blank">
+                                                                    <asp:Image ID="Image3"  runat="server" ImageUrl='<%# Eval("ImageLogoURL").ToString() %>' AlternateText='<%# Eval("CompanyName") %>' />
+                                                                </a> 
+                                                            
+
+                                                                <span   style="float:right">
+                                                                   <%#Eval("PriceFormated")%></span> <br />
+                                                  </div>        
+                                              </ItemTemplate> 
+                    </asp:Repeater>
+
+                    </div>
+                    <div class="whiteboxbottom"  
+                            style="background: url('App_Themes/YekaTheme/images/whitebox_bottom.jpg')   no-repeat 50% bottom; "  ></div>
+
+                    </div>
+      </asp:Panel>
+                    </div>
+
+                    <!--end footer here--> 
+                      </ContentTemplate>
+                        </asp:UpdatePanel> 
+                    </asp:Content>
+
+ <asp:Content ID="Content5" ContentPlaceHolderID="Scripts" Runat="Server">
+     <!-- Google Code for Watches Remarketing List -->
+<script type="text/javascript">
+<!--
+    var google_conversion_id = 1026211208;
+    var google_conversion_language = "en";
+    var google_conversion_format = "3";
+    var google_conversion_color = "666666";
+    var google_conversion_label = "BE3wCOKVrgEQiPuq6QM";
+    var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+
+
+<script type="text/javascript" >
+function  getvalue()
+{ alert ( document.getElementById('hdnIndex')) ;
+alert ( document.getElementById('hdnIndex')).value;
+   return document.getElementById('hdnIndex').value;
+ 
+}
+
+
+
+
+function  setvalue(ddlist)
+{  
+ 
+  var ddDisplayVariations_client =    '<%= ddDisplayVariations.ClientID %>' ; //   document.getElementById('ddDisplayVariations');
+
+ var ddDisplayVariations =  document.getElementById(ddDisplayVariations_client);
+ddDisplayVariations.selectedIndex =ddlist ;
+forcePost();
+
+}
+           
+           
+           
+           function forcePost()
+           {
+ 
+            __doPostBack('<%= ddDisplayVariations.ClientID %>', '');
+            
+            window.location.reload(); 
+            
+            }
+
+
+
+
+function GetClientId(strid)
+{  
+     var count=document.getElementsByTagName ('*').length; //<-- gets all elements, instead of Forms as this only returns FORM elements
+     var i=0;
+     var eleName;
+     for (i=0; i < count; i++ )
+     {
+       eleName=document.getElementsByTagName ('*')[i].id;
+       pos=eleName.indexOf(strid);
+       if(pos>=0)  break;          
+     }
+    return eleName;
+} 
+
+
+
+ 
+
+function navto(url)
+{  
+ document.location.href=url;
+ 
+}
+</script>
+
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1026211208/?label=BE3wCOKVrgEQiPuq6QM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+ </asp:Content>
+ 
+
+ 

@@ -1,0 +1,177 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true"  EnableTheming="true"  CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Untitled Page</title>
+    
+     <link rel="stylesheet" type="text/css" href="App_Themes/professional.css" />
+    <script type="text/javascript">
+    if(top!=self&&!location.href.match("page"))
+    {
+        top.location = self.location;
+    }
+    <!--//--><![CDATA[//><!--
+
+sfHover = function() {
+	var sfEls = document.getElementById("menu").getElementsByTagName("LI");
+	for (var i=0; i<sfEls.length; i++) {
+		sfEls[i].onmouseover=function() {
+			this.className+=" sfhover";
+		}
+		sfEls[i].onmouseout=function() {
+			this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+		}
+	}
+}
+
+if (window.attachEvent) window.attachEvent("onload", sfHover);
+
+//--><!]]></script>
+
+    
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>  
+    <script src='javascript/Master.js'  type="text/javascript"></script>
+    <form id="form1" runat="server" >
+    <div  id="main" >
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+      
+   
+    
+        <div class="logo p5">
+            <img alt="logo" title="logo" src="images/logo.gif" height="73" width="111" id="imgLogo"
+                runat="server" /></div>
+        <div class="logoTxt">
+            <span class="HomeTITLE">Sub Gmach Management System</span><br />
+            <span class="HomeSubTITLE"></span></div>
+            
+            <div style=" text-align:center; "><a href='http://www.systemoriginals.com' >Developed by System Originals LLC.</a></div>
+     <%--   <asp:Substitution ID="SubsitUserName" runat="server" EnableViewState="False" MethodName="GetWelcomeUser" />--%>
+       <%-- <asp:Button ID="btnSignOut" runat="server" Text="logout" CausesValidation="false"
+            OnClick="btnSignOut_Click"></asp:Button>--%>
+    <%--    <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" ShowStartingNode="False" />--%>
+        <ul id="menu">
+            <li><a href="javascript:void(0)" class="parent" title="Administration">Administration</a>
+                <ul>
+                    <li     id="ullog"><a  href="#"  onclick="window.open('Login.aspx','','scrollbars=no,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Log In</a></li>
+                    <li      id="ulsubs"><a href="SubingGmach.aspx?prm=4" title="View Subs">
+                        View Subs</a></li>
+                    <li      id="ulplace"><a href="SubingGmach.aspx?prm=5" title="View Placements">
+                        View Placements</a></li>
+                    
+                </ul>
+            </li>
+            <li><a href="javascript:void(0)" class="parent" title="Website Design">Sub Application</a>
+                <ul>
+                    <li><a href="#"  onclick="window.open('default.htm?prm=1','','scrollbars=no,menubar=no,height=680,width=560,resizable=no,toolbar=no,location=no,status=no'); " >
+                        Sub Form</a></li>
+                    <li><a href="SubingGmach.aspx?prm=2" title="Sub Matches">
+                        Sub Matches</a></li>
+                </ul>
+            </li>
+          
+          
+          
+          
+          
+         
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <%--
+            <li><a href="javascript:void(0)" class="parent" title="Management">Management</a>
+                <ul>
+                    <li><a href="<%=Request.ApplicationPath %>/Coordinator/people/peopleV.aspx" title="Manage People">
+                        Manage People</a></li>
+                    <li><a href="<%=Request.ApplicationPath %>/Coordinator/people/Registration.aspx"
+                        title="Registration">Registration</a></li>
+                    <li><a href="<%=Request.ApplicationPath %>/Coordinator/EdtEvents.aspx" title="Manage Events">
+                        Manage Events</a></li>
+                    <li><a href="<%=Request.ApplicationPath %>/AddUsers/Preferences.aspx" title="Data Preferences">
+                        Data Preferences</a></li>
+                            <li><a href="<%=Request.ApplicationPath %>/Coordinator/Donations.aspx" title="Donations">
+                        Donations</a></li>
+        
+                </ul>
+            </li>
+            <li><a href="javascript:void(0)" class="parent" title="Photo Album Utility">Photo Album</a>
+                <ul>
+                    <li><a href="<%=Request.ApplicationPath %>/albums/default.aspx" title="Photo Album Utility">
+                        Photo Album Utility (IE only)</a></li>
+                </ul>
+            </li>
+            <li><a href="javascript:void(0)" class="parent" title="Help">Help</a>
+                <ul>
+                    <li><a href="<%=Request.ApplicationPath %>/help/help.aspx" title="How-To">How-To</a></li>
+                    <li><a href="<%=Request.ApplicationPath %>/help/issues.aspx" title="Support">Support</a></li>
+                </ul>
+            </li>--%>
+        </ul>
+        <div id="sitemappath" style="width: 670px; clear: both;">
+          <%--  <asp:SiteMapPath runat="server" ID="SiteMapPath1" PathSeparator=" : " Font-Size="10px"
+                Font-Names="Verdana">
+                <PathSeparatorStyle ForeColor="#507CD1" Font-Bold="True" />
+                <CurrentNodeStyle ForeColor="#333333" />
+                <NodeStyle ForeColor="#284E98" Font-Bold="True" />
+                <RootNodeStyle ForeColor="#507CD1" Font-Bold="True" />
+            </asp:SiteMapPath>--%>
+        </div>
+        <div style="width: 670px; height: auto;">
+            <asp:ContentPlaceHolder runat="server" ID="ContentPlaceHolder2">
+            </asp:ContentPlaceHolder>
+        </div>
+        <div class="copyright">
+            &copy;
+            <%=DateTime.Now.Year.ToString() %>
+            System Orginals LLC</div>
+       
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+        
+        
+        
+        </asp:ContentPlaceHolder>
+        
+         <div>
+                                      <asp:ContentPlaceHolder ID="Body" runat="server"></asp:ContentPlaceHolder>
+                                     </div> 
+
+        
+        
+    </div>
+    </form>
+ 
+
+ 
+</body>
+
+</html>

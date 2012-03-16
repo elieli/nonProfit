@@ -1,0 +1,59 @@
+<%@ Page Title="JomaDeals.com Order Information and Checkout - Step 3" Language="C#"
+    MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Checkout_step3.aspx.cs"
+    Inherits="checkout_Checkout_step3" %>
+
+<%@ Register TagPrefix="iq" TagName="iqSpacerControl" Src="~/controls/iqSpacerControl.ascx" %>
+<%@ Register Src="../mainstreet/controls/CartFinishView.ascx" TagName="CartFinishView"
+    TagPrefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="Headers" runat="Server">
+    <meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
+    <meta name="GOOGLEBOT" content="NOARCHIVE" />
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="Server">
+    <table width="660px">
+        <tr>
+            <td style="padding-left: 40px; padding-right: 20px">
+                <a href='<%=ResolveUrl("~/default.aspx") %>'>Deal Of The Day</a> &gt; Order Confirmed
+                <br />
+                <p class="iqPheader">
+                    Order Confirmed for Order# &nbsp  <%= OrderId %></p>
+                <iq:iqSpacerControl ID="IqSpacerControl1" runat="server" Width="600px" Height="5px" />
+                <span class="iqText">Congratulations, your order has been confirmed. You can login at
+                    anytime to view the status of your order. You will recieve an email confirming this
+                    order as well as another email when the product ships.<br />
+                    <br />
+                    Your order will typically ship in the estimated time on the product detail page.
+                    If there are any delays we will contact you.
+                    <br />
+                    <br />
+                    Click <a href='print_order.aspx?order_guid=<%=OrderGuid %>&order_id=<%=OrderId %>' target='_blank'>here</a> to print the sales order.
+                    <br />
+                    <br />
+                    <%=Output %>
+                </span>
+            </td>
+        </tr>
+    </table>
+</asp:Content>
+
+
+<%--<asp:Content ID="Content5" ContentPlaceHolderID="Scripts" Runat="Server">
+<!-- Google Code for Order Confirmation/Thank You Page Remarketing List -->
+<script type="text/javascript">
+<!--
+var google_conversion_id = 1026211208;
+var google_conversion_language = "en";
+var google_conversion_format = "3";
+var google_conversion_color = "666666";
+var google_conversion_label = "FfNaCMqYrgEQiPuq6QM";
+var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/1026211208/?label=FfNaCMqYrgEQiPuq6QM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</asp:Content>--%>

@@ -1,0 +1,141 @@
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Drawing;
+using System.IO;
+
+
+
+//namespace D3DM.ECom.BusinessLogic
+//{
+	/// <summary>
+	/// Summary description for BLImageGalleryConfig.
+	/// </summary>
+	public class BLImageGalleryConfig
+	{
+		
+		#region Fields
+
+		private static int maxWidth;
+		private static int maxHeight;
+		private static int maxCount;
+
+		//private static bool isLoad;
+		
+		private static DataTable thumbnailConfig;
+		
+		#endregion
+
+		#region Constants
+
+		public const string ALIAS_MAIN_IMAGE = "MAIN";
+		
+		#endregion
+		
+		#region Properties
+
+
+		public int MaxWidth 
+		{
+			get
+			{ 
+				return maxWidth; 
+			}
+		}
+	
+		public int MaxHeight
+		{
+			get
+			{ 
+
+				return maxHeight; 
+			}
+		}
+
+		public int MaxCount
+		{
+			get
+			{ 
+	
+				return maxCount; 
+			}
+		}
+
+		/*
+
+		public DataTable ThumbnailConfig
+		{
+			get
+			{ 
+				if(!isLoad)	
+				{
+					LoadParams();
+				}
+				
+				return thumbnailConfig; 
+			}
+		}
+
+		*/
+
+
+
+		#endregion
+
+		
+		#region Methods
+
+		public void LoadParams()
+		{
+			LoadParams(ALIAS_MAIN_IMAGE);
+		}
+		public void LoadParams(string imageType)
+		{
+			DataSet dataSet = null;
+			
+			dataSet = DALCImageGalleryConfig.GetConfigOption(imageType);
+
+			if( dataSet.Tables.Count > 0 && dataSet.Tables["ImageGallerySettings"].Rows.Count > 0 )
+			{
+				DataView dataView = dataSet.Tables["ImageGallerySettings"].DefaultView;
+
+				//dataView.RowFilter = " Alias = '" + ALIAS_MAIN_IMAGE + "'";
+
+				if( dataView.Count > 0 )
+				{
+					maxWidth = Convert.ToInt32( dataView[0]["maxWidth"] );
+					maxHeight = Convert.ToInt32( dataView[0]["maxHeight"] );
+					maxCount = Convert.ToInt32( dataView[0]["maxCount"] );
+				}
+
+				dataView.RowFilter = " Alias <> '" + ALIAS_MAIN_IMAGE + "'";
+
+				if( dataView.Count > 0 )
+				{
+					thumbnailConfig = dataView.Table.Clone();
+					
+					for(int j = 0; j < dataView.Count; ++j)
+					{
+						DataRow newRow = thumbnailConfig.NewRow();
+						for(int i = 0; i < thumbnailConfig.Columns.Count; ++i)
+						{
+							newRow[i] = dataView[j][i];
+						}
+						thumbnailConfig.Rows.Add(newRow);
+					}
+				}
+			}
+			
+			//isLoad = true;
+		}
+		
+		#endregion
+
+
+		public BLImageGalleryConfig()
+		{
+			
+		}
+	}
+//}

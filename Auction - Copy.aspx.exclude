@@ -1,0 +1,1402 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Auction.aspx.cs" MasterPageFile="~/Site.master"  Inherits="Auction" %>
+  
+
+   <%@ Register src="orgProducts.ascx" tagname="orgProducts" tagprefix="uc1" %>
+  
+
+
+
+            <asp:Content ID="Content1" ContentPlaceHolderID="Headers" runat="Server"> </asp:Content>
+            <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="Server">
+                
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional"> 
+                    <ContentTemplate> 
+                 <%--   <%= Message %>--%>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <title>Jomadeals</title><link href="app_themes/yekatheme/style.css" rel="stylesheet" type="text/css" />
+                    <style type="text/css">
+                    .secondnav_strip ul li{background:url('App_Themes/YekaTheme/images/nav_seperator.jpg') no-repeat right 50%;}
+                    .body_parttwo{          background:#580000 url(<%= ResolveUrl("App_Themes/YekaTheme/images/bodyseperator.jpg") %>  no-repeat 50% top; }           
+           #footer{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/footerbg.jpg") %>) repeat-x;
+            }
+            .footer_container{
+            background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/footer.jpg") %>) no-repeat center top;
+            }
+            .box{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/box.jpg") %>) no-repeat; 
+            }
+            .box_one{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/box.jpg") %>) no-repeat; 
+            }
+            .iconbg{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/facebookbg.jpg") %>) no-repeat; 
+            }
+            .greyboxtop{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxtop.jpg") %>) no-repeat 50% top; 
+            }
+            .greyboxtopmid{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxback.jpg") %>) no-repeat;
+            }
+            .greyboxbottom{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxbottom.jpg") %>)no-repeat 50% bottom;
+            }
+            .white_heading{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/arrow.jpg") %>) no-repeat left 50%;
+            }
+          .greyboxseperator{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/dottedseperator.jpg") %>) no-repeat 50% bottom;
+            } 
+            .whitebox{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/whitebox_bg.jpg") %>) repeat-y; 
+            }
+            
+            .greybox{background:url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxbg.jpg") %>) repeat-y;
+width:266px;
+float:left;
+}
+            
+            .whiteboxtop{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/boxtop.jpg") %>) no-repeat 50% top; 
+            }   
+               .whiteboxbottom{background: url(<%= ResolveUrl("App_Themes/YekaTheme/images/whitebox_bottom.jpg") %>)  no-repeat 50% bottom; 
+            }   
+            .logo{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:13px;
+            color:#434343;
+            text-decoration:none;
+            font-weight:bold;
+            border-top:1px solid #dbdbdb;
+            border-collapse:collapse;
+            }
+                  
+                .greybox{
+            background:url('App_Themes/YekaTheme/images/boxbg.jpg') repeat-y;
+            width:266px;
+            float:left;
+            }
+  
+               .greyboxseperator{
+background: url('App_Themes/YekaTheme/images/dottedseperator.jpg') no-repeat 50% bottom;
+width:222px;
+float:left;left:0px; margin-left:15px; padding-left:30px;
+height:1px;
+margin:10px 0px;
+}   
+                     
+                    </style> 
+        
+        
+        
+        <div style=" border:solid 1px white; width:880; height:2020;  position:relative;" > 
+        
+        
+        <div    class="body_partone_inner" style=" border:solid 1px white; width:880; height:2020;  position:relative;" >
+        
+        
+        
+                        <div runat="server" id="body_partone_1"  style=" border:solid 0px pink;position:relative;"   class="body_partone_1">
+                 
+                <input id="prefex1d"  name="prefex1" type="hidden"  value='<asp:Literal   runat="server" ID="prefexD"></asp:Literal>'   />
+                <div style=" max-width:233;  overflow:hidden; " align="center"><a id="lnkFullImage" href='<%=LinkToFullImage %>' rel="lightbox" title='<%=ImageDesc %>'
+                                                    rev="" class="styleLightBox">
+                                                   <img id="imgMediumImage" style=" border:solid  0px pink;" src='<%=MediumImageUrl %>' alt='<%=ImageDesc %>'  height="439"/></a></div> 
+                <div   style=" border:solid 0px pink;" align="center"><a href="#"><img src='<%= ResolveUrl("App_Themes/YekaTheme/images/zoom.jpg") %>' alt="jomadeals" width="174" height="26" border="0" /></a></div>
+
+ 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                
+                    
+                  <%--  <asp:HyperLink runat="server"   OnClick="buyCredits" Text="Buy Now" />       </p>
+--%>
+
+
+
+
+
+               <%-- <div   id="BuyCredits"  style=" width:250px; height:350px;"    >
+                
+                
+                </div>
+--%>
+
+
+
+
+                <input id="MediumImageUrl1" type="hidden"/><input id="MediumImageUrl2" type="hidden"/><input id="MediumImageUrl3" type="hidden"/><input id="FullImageUrl1" type="hidden"/><input id="FullImageUrl2" type="hidden"/><input id="FullImageUrl3" type="hidden"/>
+                   <div   style="  width:500px;  padding-left:2px; left:0px; margin-left:42px; position:absolute;"> 
+                 
+                <div style="  float:left;  position:relative;   top:13px;    "> 
+                <asp:ImageButton  ID="ImgBtnOvleft"    CommandName="ImgBtnOvleft" CommandArgument="left"  OnCommand="otherView" runat="server" src="App_Themes/YekaTheme/images/leftarrow.jpg"   SkinID="iqViewOtherrightarrow"      height="73" alt="jomadeals"  class="img2"/>
+                </div>
+                <div style="float:left;   position:relative;  "  > 
+               
+
+                    <asp:ListView ID="iqimagesThumb"   runat="server">
+                                   
+                                       <LayoutTemplate>
+                                        <asp:PlaceHolder id="itemPlaceholder" runat="server" /> 
+                                    </LayoutTemplate>
+                                   
+                                  
+                                    <ItemTemplate>
+                                  
+                                        <div style=" width:80px;   float:left;  ">
+                                            <a href='<%# Eval("FullImageUrl") %>'  title='<%# Eval("ImageDesc") %>'
+                                                rev="" class="styleLightBox" >
+                                                <img class="img2" 
+                                                style=" border:solid 2px white; padding-right:0px;  max-height:80px;  max-width:63px; min-height:80px; min-width:63px;"  
+                                                
+                                                id="imgThumb<%# Eval("Id") %>" src='<%# Eval("ThumbImageUrl") %>' alt='Deal <%# Eval("ImageDesc") %>'
+                                                    
+                                                
+                                                
+                                                onmouseover='javascript:changeMainImage("<%# Eval("MediumImageUrl") %>","<%# Eval("FullImageUrl") %>");' /></a></div>
+                                    </ItemTemplate>
+                                 
+                                 
+                            </asp:ListView>
+
+
+
+                     </div>
+
+                       <div style="  float:left;   top:13px;  padding-top:10px; padding-left:1px;  "> 
+                    <asp:ImageButton  ID="ImgBtnOvright" runat="server" src='App_Themes/YekaTheme/images/rightarrow.jpg'  OnCommand="otherView"  CommandArgument="right"  SkinID="iqViewOtherrightarrow"       height="73" alt="jomadeals"  />
+                    </div>
+
+
+           
+
+
+                   
+               
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                    <%-- style='<%# Eval("style") %>; display:block; border:solid 2px black; width:12px; height:12px;'>--%>
+                 
+                
+                 
+                  <div  style="    float:left;   padding-left:34px;  position:relative;   clear:left;">
+
+ 
+
+                    <asp:DataList ID="lvDisplayVariations"  RepeatColumns="8"  RepeatDirection="Horizontal"   OnItemDataBound="lvDisplayVariations_OnItemDataBound"  runat="server" GroupItemCount="3" 
+                                                        onitemcommand="lvDisplayVariations_ItemCommand">
+                                    <ItemTemplate>
+                                    <div style=" float:left;  padding:8px 8px 8px 8px;">
+                                    <input runat="server"  
+                                            id="hdnIndex" type="hidden"   />
+                                    
+                                           
+                                       <a    href='#'    >
+                                          
+                                         
+                                     <div  id="vv" runat="server"  class='<%# Eval("CSSClass") %>'    
+                                              style='  display:block; border:solid 2px black; width:12px; height:12px;'> 
+                                                
+                                            </div>
+                                           </a>
+
+                                            <asp:LinkButton   runat="server" Visible="false"   OnClick= "lvItemCommand" 
+                                                       ID="btnChangeVariation" Width="32" Height="32"  CommandName="ChangeVariation" 
+                                                       CommandArgument='<%# Eval("ItemGuid") %>' ><div class='<%# Eval("CSSClass") %>' 
+                                                       style='display:block; border:solid 2px black;  '></div>
+                                            </asp:LinkButton><br /><br />
+                                      </ItemTemplate>
+
+                </asp:DataList>
+
+                  </div>
+                 
+                 
+                 
+                 
+                 
+                 
+                          </div>
+                 
+                  </div>
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 <div  style="  border:solid 1px green;" class="body_partone_2">
+                 
+                 
+                 
+                 
+                 
+                 
+                 <div class="box1_one"> 
+                 
+                <h1 class="headingone"   > <asp:Label CssClass="headingone" ID="lblProductTitles" runat="server"   
+                                              ></asp:Label></h1>
+
+                <div class="">
+                <%--<div runat="server" id="box1_one" class="box1_one">
+               
+               
+               
+                <p class="normaltext_bold">Retail Price : </p> 
+                <p style=" vertical-align:baseline; padding-top:1px;"   class="normaltext_bold">Sale Price :</p>
+                <p style=" padding-top:6px;"  class="normaltext_bold">You Save : </p>
+                 <h2  class="normaltext_bold"  runat="server" id="freeship" ></b><b></b>Free Shipping<b></b></h2> 
+                   </div>--%>
+
+                <div style=" position:relative;" class="box1_two">
+                    <p class="normaltext_bold">
+                        <asp:Label ID="lblRetailPrice" runat="server" Text="" ForeColor="#3C3C3C" Font-Size="10pt" Font-Bold="true"></asp:Label>
+                    </p>
+                   
+                      <p class="normaltext_bold">
+                         <%-- <p class="normaltext_bold">End Date : </p>    <asp:Label ID="lblEndDate" runat="server" Text="" ForeColor="#3C3C3C" Font-Size="10pt" Font-Bold="true"></asp:Label>
+                          <p>
+                          </p>--%>
+                          <p class="red_normaltext_bold">
+                              Start Bid Price
+                           <span style="text-align:right;">    <asp:Label ID="lblStartBidPrice" runat="server" Font-Bold="true" 
+                                  ForeColor="" Text=""></asp:Label></span>
+                          </p>
+                          <p class="red_normaltext_bold">
+                              Current Bid Price
+                              <asp:Label ID="lblCurrentBidPrice"   runat="server" Font-Bold="true" 
+                                  ForeColor="" Text=""></asp:Label>
+                                    <input id="CurrentBidPrice" type="text" />
+                          </p>
+                          <%--<p class="red_normaltext_bold">
+                              Condition
+                              <asp:Label ID="lblCondition" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:Label>
+                          </p>--%>
+                          <p class="red_normaltext_bold">
+                              Handling time
+                              <asp:Label ID="lblHandling" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:Label>
+                          </p>
+                          <p class="red_normaltext_bold">
+                              Shipping Cost
+                            
+                          </p>
+                        <%--  <p class="red_normaltext_bold">
+                              Auction Type
+                              <asp:Label ID="lblAuctiontype" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:Label>
+                          </p>--%>
+                          <p  style="visibility:hidden";> class="red_normaltext_bold">
+                              Bid Amount
+                              <asp:TextBox ID="txtBidamount" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:TextBox>
+                                  
+                                  <input id="Bidamount" type="text" />
+                          </p> 
+                          <p class="red_normaltext_bold">
+                              Return Days
+                              <asp:Label ID="lblReturndays" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:Label>
+                          </p>
+                         <%-- <p class="red_normaltext_bold">
+                              Buy it Now $
+                              <asp:Label ID="lblBuyitNow" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:Label>
+                          </p>--%>
+                          <p class="normaltext_bold">
+                              <asp:Label ID="lblYouSave" runat="server" Font-Bold="True" Font-Size="10pt" 
+                                  ForeColor="#3C3C3C" Text=""></asp:Label>
+                          </p>
+                          <p class="normaltext_bold">
+                          </p>
+                          <%--<div style="left:0px; margin-left:0px; position:relative;">
+                              <asp:Panel ID="pChildItems" runat="server" visible="false">
+                                  <div>
+                                      <div align="right" style="float:left;">
+                                          <span style="color: #3C3C3C; font-size: 10pt; font-weight: bold;">Color:</span></div>
+                                      <span>&nbsp;</span><div align="left" style="float:left;">
+                                          <asp:Panel ID="pStyleDisplayVariations" runat="server" visible="false">
+                                          </asp:Panel>
+                                          <asp:DropDownList ID="ddDisplayVariations" runat="server" AutoPostBack="true" 
+                                              class="normaltext_bold" EnableViewState="true" Height="25px" 
+                                              onselectedindexchanged="ddDisplayVariations_SelectedIndexChanged" Width="152px">
+                                          </asp:DropDownList>
+                                      </div>
+                                      <div style=" top:0px; margin-top:35px;  padding-top:10px;  position:relative; left:0px; margin-left:-123px;">
+                                          <asp:ImageButton ID="btnBuyNowChild" runat="server" alt="jomadeals" border="0" 
+                                              class="img4" CommandArgument='<%# Eval("ItemGuid").ToString() %>' 
+                                              CommandName="BuyNow" height="28" 
+                                              ImageUrl="App_Themes/YekaTheme/images/buynow.jpg" 
+                                              onclick="btnBuyNowChild_Click" Text="Buy Now" width="147" />
+                                      </div>
+                                  </div>
+                                  <div>
+                                      <div style="float:left;">
+                                          <asp:Image ID="Image1" runat="server" ImageAlign="AbsMiddle" SkinID="iqSoldOut" 
+                                              Visible="false" />
+                                      </div>
+                                  </div>
+                              </asp:Panel>
+                          </div>--%>
+                          <table visible="false">
+                              <tr ID="trNormalItem" runat="server" valign="middle" visible="false">
+                                  <td>
+                                      <asp:Image ID="imagesoldOuta" runat="server" ImageAlign="AbsMiddle" 
+                                          SkinID="iqSoldOut" Visible="false" />
+                                  </td>
+                              </tr>
+                              <tr ID="trOutofStocka" runat="server" valign="middle" visible="false">
+                                  <td align="left" valign="middle">
+                                      <br />
+                                  </td>
+                              </tr>
+                          </table>
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                         <%-- <div ID="trOutofStock"   runat="server" 
+                              style=" z-index:100;  top:0px; margin-top:30px; left:0px; margin-left:-140px;  width:290px; background-color: #F7FEBA; border: solid 1px black; padding: 4px 4px 4px 4px;">
+                              You waited too long, and now we’re sold out. You must be devastated. At least 
+                              you can hold on to the hope that tomorrow we’ll have another awesome luxury deal 
+                              on the table. Now wipe your tears and go buy yourself a cookie. You’ll feel 
+                              better tomorrow.
+                          </div>--%>
+                         
+                         
+                         
+                          <div><h1><asp:Label    runat="server" ID="lblSold"  ></asp:Label>    </h1>  
+                              <asp:Image ID="imagesoldOut"    runat="server" ImageAlign="AbsMiddle" 
+                                  SkinID="iqSoldOut" Visible="false" />
+                          </div>
+                          <p>
+                          </p>
+                          <p>
+                          </p>
+                          <p>
+                          </p>
+                          <p>
+                          </p>
+                          <p>
+                          </p>
+                    </p>
+                   
+                   
+                   
+                    </div>
+
+                    </div>
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                    
+                    
+   
+   
+   
+   <%--
+                   <asp:ImageButton id="btnBuyNow" runat="server"     ImageUrl="App_Themes/YekaTheme/images/buynow.jpg" CommandName="BuyNow" CssClass="img4"
+                        CommandArgument='<%# Eval("ItemGuid").ToString() %>' onclick="btnBidNow_Click"  ></asp:ImageButton>
+                 --%>
+
+
+
+
+
+
+
+
+
+ </div>
+
+
+ <div class="box1_one "> 
+ 
+ 
+    <%--<div id="hdnTimer"  style="visibility:hidden;" runat="server"   >     </div>     
+                   <div id="hdnTimer1"  style="visibility:hidden;"  runat="server"   >     </div>     
+                   <div id="hdnTimer2"   style="visibility:hidden;" runat="server"   >     </div>  
+              <div id="hdnTimer3"   style="visibility:hidden;" runat="server"   >     </div>     
+             
+                  <div id="dvAuction"   style="visibility:hidden;" runat="server"   >     </div>     
+             
+                  <div id="dvBuyer"   style="visibility:hidden;" runat="server"   >     </div>     
+                   <div id="hdnamount"   style="visibility:hidden;" runat="server"   >     </div>     --%>
+             
+ 
+ <h4>  <asp:Button runat="server"  Text="Refresh" ID="btnRefresh" />  </h4>
+                    
+                    
+                    
+                    
+                    <input id="totNbids" type="hidden" />
+                    
+                    
+                    
+                    <div style=" font-size:large; text-align:center;" > <p> Price  &nbsp; &nbsp; &nbsp; &nbsp;    <asp:Label runat="server" ID="lblCartPrice" ></asp:Label> 
+                      <input id="CartPrice" type="text" />
+                    </p> </div>
+                    
+                    
+                   
+                    
+                       <div style=" text-align:center;" ><p> Shipping &nbsp; &nbsp; &nbsp; &nbsp;  <asp:Label ID="lblShipping" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:Label></p>  </div>
+                       <br /><br />
+                 
+ 
+ 
+                       <div style=" text-align:center ;" ><h2> Current Highest Bidder</h2> &nbsp; &nbsp;  
+                     <p>  <asp:Label ID="lblHighestBidder" runat="server" Font-Bold="true" ForeColor="" 
+                                  Text=""></asp:Label>
+                                  <input id="HighestBidder" type="text" />
+                                   </p>  </div>
+                       
+ 
+ 
+ 
+ 
+ </div>
+
+
+
+
+                     <div class="day"  id="day"  runat="server"  style="   background:url('App_Themes/YekaTheme/images/daybg.jpg') no-repeat;" >
+                    <span class="heading_small"><%=DateTime.Today.Date%></span><br />
+                          
+                      
+ 
+                    
+                    <span class="heading"><b>Penny Bidding</b></span><br />
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+          
+             
+             
+             
+             
+             
+                    
+                    <span class="heading_grey">Time Left: </span><divclass="heading_red">
+                    <span  id="countbox" style="font-size:  15pt; color: Red; font-family: Arial Black;
+                                                                            display: inline">
+                    </span>
+                    
+                    
+<script type="text/javascript">
+  GetCount();
+  </script>
+  
+  
+  
+                    </div>
+
+ 
+                
+                <div style="height:10px; width:2px; "></div>
+                
+                  <div  id="dvBid">
+                  <input type="button" value="GEVALDIKKKKKK" onclick= "javascript:GetCount();return false; " />
+                  
+                      <span class="heading_small"><input type="button" value="BBBBBBBBBBID" onclick= "  javascript:setBids(); return false; " />
+                    <asp:ImageButton runat="server" AlternateText="Bidder"   CommandName='bid'  OnClientClick="  javascript:getamount();  "  ImageUrl="App_Themes/YekaTheme/images/buynow.jpg"  onclick="btnBidNow_Click" id="btnBidder"   ></asp:ImageButton></span><br />
+                    </div>
+                
+                        
+                    
+                
+                 
+                </div> 
+ 
+                
+                              
+                
+                
+                
+                
+
+                                     <div   id="dvCreditLog" class="body_partone_3"  style="  border:solid 1px brown; width:250px;  height:350px;"    >
+                                                    
+                                                   <p  runat="server" style="padding-left:25px;clear:left;"   id="pOtherViews" class="normaltext_bold">
+                                                       Other Views
+
+
+
+        
+        
+        </p>
+                    
+                    
+                    
+                    
+                    <div style="text-align:center;"> <a     href="#" onclick= "window.open('BuyCredits.aspx','','scrollbars=yes,menubar=no,height=560,width=650,resizable=no,toolbar=no,location=no,status=no');"   >  Buy Now  </a>  
+</div>
+                     
+                                                   
+                                                   <div style=" border:solid 1px black;" >
+                                                   
+                                                   <div style=" border:solid 1px black; text-align:center; height:40px; width:250px;"><p>  Bidding Log</p>  </div>
+                                                   
+                                                   
+                                                     <div style=" overflow:scroll; border:solid 1px black; padding:5,5,5,5; width:250px; height:200px;" >
+                                                     <asp:Repeater  runat="server" id="lstCreditLog"   OnItemDataBound="rptData_ItemDataBound"  >
+                                                     <ItemTemplate>
+                                                    <div style=" font-size:small;position:relative;" > 
+                                                     
+                                                     <div style=" border:solid 5px white; font-size:small; text-align:left; float:left ">  
+                                                     
+                                                 
+                                                     <%#DataBinder.Eval(Container.DataItem, "buyer_Name")%>  
+                                                   <%--   <%#Eval("")%>--%>
+                                                      
+                                                      
+                                                                                                           
+                                                                                                           
+                                                                                                           
+                                                      
+                                                    </div> 
+                                                    
+                                                        
+                                                <div style=" font-size:small float:left; border:solid 5px white;  text-align:right;" >  
+                                               
+                                                     <%#DataBinder.Eval(Container.DataItem, "bidprice", "{0:C} ")%>  
+                                                   
+                                                     <%-- <%#Eval("bidamount")%>--%>
+                                                      
+                                                      
+                                                   </div>
+                                                   
+                                                     <div style=" font-size:small float:left; border:solid 5px white;  text-align:right;" >  
+                                               
+                                                     <%#DataBinder.Eval(Container.DataItem, "totalCreditsUsed", "{0:C} ")%>                                                       
+                                                      
+                                                   </div>
+                                                    <div style=" font-size:small float:left; border:solid 5px white;  text-align:right;" >  
+                                               
+                                                     <%#DataBinder.Eval(Container.DataItem, "totalBidAmount", "{0:C} ")%>                                                       
+                                                      
+                                                   </div>
+                                                   
+                                         
+						
+						          
+                                                   
+                                                     </div> 
+                                                    
+                                                     </ItemTemplate>
+                                                     </asp:Repeater>
+                                                   
+                                                     </div>
+                                                   
+                                                   
+                                                     
+                                                    </div>
+                                                    
+                                                   
+                                                     <div style=" padding-top:19px; border:solid 1px white;" >
+                                                   
+                                                   
+                                                   
+                                                   
+                                                   
+                                                   <div style=" border:solid 3px black; text-align:center; height:40px; width:250px;"><p>  Money Meter</p> </div>
+                                                  
+                                                      <div style=" border:solid 3px black; width:250px;">
+                                                     
+                                                    <div>  Credits Used:  <asp:Label runat="server" ID="lblCreditsUsed" ></asp:Label>           </div>   
+                                                       <div> Money Spent:  <asp:Label runat="server" ID="lblMoneySpent" ></asp:Label>           </div> 
+                                                       
+                                                         
+                                                         <div> You Have Donated:  <asp:Label runat="server" ID="lblDonated" ></asp:Label>           </div>   
+                                                       </div>
+                                                    
+                                                    
+                                                    
+                             <input type="hidden" id="counter"    />                       
+                                                      <input type="hidden" id="buyer"    />            
+                                                      <input type="hidden" id="price"    />            
+                                                    
+               <%-- <div class="iconbg">
+                 <div    onclick="javascript:navto('http://facebook.com/jomashop_com');" class="smallbox">  <img  src="App_Themes/YekaTheme/images/facebook1.jpg"  onclick="javascript:navto('http://facebook.com/jomashop_com');" width="26" height="30" alt="jomadeals" class="img3" /><span onmouseover="this.style.text-decoration='underline'"  style=" padding-left:5px; "> 
+                     &nbsp; Facebook </span> </div>
+            <div class="smallbox"> <img src="App_Themes/YekaTheme/images/twitter.jpg" onclick="javascript:navto('http://twitter.com/jomashop_com');" width="27" height="30" alt="jomadeals"  class="img3" /><span class="addthis_button_favorites" onmouseover="javascript:this.style.text-decoration='underline'" style=" padding-left:5px; "> 
+                &nbsp; Twitter </span> </div>
+               <div  style=" position:relative;" class="smallbox">
+                <div onmouseover="this.style.text-decoration='underline'"  style=" display:inline">&nbsp; 
+                    &nbsp; <a class="addthis_button_favorites"><img style="left:0px; margin-left:2px; position:absolute; " src="App_Themes/YekaTheme/images/bookmark.jpg" width="27" height="23" alt="jomadeals"   class="img3" /> 
+                    &nbsp; &nbsp; &nbsp; &nbsp; Bookmark   </a><br />
+                   
+                      <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js?pub=xa-4a32917b7eef9453"></script>
+                 
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this page</div></div>
+               <div class="smallbox">  <img src="App_Themes/YekaTheme/images/email.jpg" onclick="javascript:navto('mailto:orders@jomadeals.com');" width="33" height="30" alt="jomadeals"  class="img3"  /> <div class="addthis_button_email"  onmouseover="this.style.text-decoration='underline'" style=" display:inline;" >
+                   &nbsp; &nbsp; Email to <br />
+                      &nbsp; &nbsp; a friend</div> 
+                   </div>
+                          <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js?pub=xa-4a32917b7eef9453"></script>
+
+                  
+                  <div  class="smallbox" style="  float:left; position:relative;  right:0px; margin-right:-30px; font-family:Sans-Serif; min-width:210px; text-decoration:underline; font-size:small; left:0px; margin-left:0px; vertical-align:bottom; bottom:0px; margin-bottom:0px; font-size:small; color:Red;"><a style="color:Red;" href='<%=relLink%>'>
+                      Click here to view other products from this brand</a></div>
+
+                  
+                </div>
+                
+                                
+                
+                
+           </div>  --%>
+          
+                
+                
+                
+                 
+                 
+                 
+                 
+                  </div>  </div> 
+                  
+                  
+                  
+               
+               
+               
+                </div>
+            
+
+<div style="top:30px;  left:50px; height:200px;  border-top:solid 100px  white;"></div>
+ 
+
+                  <div  style="top:30px;  left:50px; height:500px;  margin-left:150px; border-top:solid 50px white;  margin-top:250px;  " >   
+               
+               
+                <uc1:orgProducts ID="orgProducts2" runat="server" />
+                           
+                                                    
+                                                    
+
+                
+                </div>
+</div>
+
+                      </ContentTemplate>
+                        </asp:UpdatePanel> 
+                    </asp:Content>
+
+ <asp:Content ID="Content5" ContentPlaceHolderID="Scripts" Runat="Server">
+     <!-- Google Code for Watches Remarketing List -->
+<script type="text/javascript">
+<!--
+    var google_conversion_id = 1026211208;
+    var google_conversion_language = "en";
+    var google_conversion_format = "3";
+    var google_conversion_color = "666666";
+    var google_conversion_label = "BE3wCOKVrgEQiPuq6QM";
+    var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+
+<script type="text/javascript">
+
+
+
+
+
+  window.onload = GetCount();
+    document.onload = GetCount();
+
+
+
+
+
+
+         function changeMainImage(medImageUrl, bigImageUrl, productColor) {
+             //Set the main image
+             var imgMediumImage = document.getElementById("imgMediumImage");
+
+           
+            
+        //    alert('imgMediumImage  '+  imgMediumImage);
+            
+             imgMediumImage.src = medImageUrl;
+  //alert('imgMediumImage.src  '+  medImageUrl  +'          '+imgMediumImage.src   );
+             //Set the full image
+             var lnkFullImage = document.getElementById("lnkFullImage");
+             lnkFullImage.href = bigImageUrl;
+
+             //Set the remote dropdownlist
+
+         }
+
+
+
+         function getamount() {
+////             alert('timer');
+////             var timer = document.getElementById('hdnTimerClientID')
+
+////             alert(timer);
+////             amount = timer.innerHTML.toString();
+
+                     alert(amount);
+          amount =   getTotBids();
+          alert(amount);
+              GetCount();
+               
+         }
+
+         function getamounts() {
+             /////////////  alert('timer');
+             amount = document.getElementById('<%= messages.bidEndTime %>')
+
+             //////////////////  alert(timer);
+              
+
+             alert(amount);
+             return amount;
+
+         }
+         
+         
+         
+             
+          
+ </script>
+ 
+ 
+ 
+ 
+<script type="text/javascript" >
+function  getvalue() {
+    alert(document.getElementById('hdnIndex'));
+ 
+
+alert ( document.getElementById('hdnIndex')).value;
+return document.getElementById('hdnIndex').value;
+   
+   
+   
+ 
+   
+   
+ 
+}
+
+
+
+
+function  setvalue(ddlist)
+{
+
+    var ddDisplayVariations_client = '';   // ; //   document.getElementById('ddDisplayVariations');
+
+ var ddDisplayVariations =  document.getElementById(ddDisplayVariations_client);
+ddDisplayVariations.selectedIndex =ddlist ;
+forcePost();
+
+}
+           
+           
+           
+//           function forcePost()
+//           {
+// 
+//
+//            
+//            window.location.reload(); 
+//            
+//            }
+
+
+
+
+function GetClientId(strid)
+{  
+     var count=document.getElementsByTagName ('*').length; //<-- gets all elements, instead of Forms as this only returns FORM elements
+     var i=0;
+     var eleName;
+     for (i=0; i < count; i++ )
+     {
+       eleName=document.getElementsByTagName ('*')[i].id;
+       pos = eleName.indexOf(strid);
+       
+       
+       
+       
+       if(pos>=0)  break;          
+     }
+    return eleName;
+}
+
+//		<add key="ConnectionString" value="Data Source=ELIBARBER-PC\SQLEXPRESS;Initial Catalog=Notik;Integrated Security=SSPI; Max Pool Size=1000;Asynchronous Processing=true; "/>
+
+
+
+
+
+
+function getResetTime( ) {
+////    var timer1 = document.getElementById('hdnTimer1ClientID');
+////    alert(timer1.innerHTML);
+
+
+
+////    alert('timer');
+////    var timer = document.getElementById('hdnTimer.ClientID')
+
+////    alert(timer);
+////    amount = timer.innerHTML.toString();
+////   
+////    alert(amount);
+ //   GetCount();
+        
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function xobject() {
+
+    if (typeof XMLHttpRequest == "undefined") {
+        XMLHttpRequest = function() {
+            return new ActiveXObject(navigator.userAgent.indexOf("MSIE 5") >= 0 ? "Microdoft.XMLHTTP" : "Msxml2.XMLHTTP");
+        }
+    }
+
+    else { return new XMLHttpRequest; }
+ }
+
+
+
+
+
+
+
+
+ function ajaxvalue(show,val) {
+    
+//     alert(val);
+     var indx = show.indexOf(val);
+//     alert(indx);
+//     alert(val.substring(indx, indx + 30));
+//     alert(indx);
+
+     var showq = show.substring(indx, indx + 30);
+//    alert(showq);
+
+     var fshow = showq.substring(showq.indexOf('>') + 1, showq.indexOf('<') );
+//     alert(fshow);
+     return fshow;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function getTotBids() {
+
+
+      // var req = xobject();
+
+     /// getResetTime();
+
+
+
+      var show;
+
+
+      // alert('begin');
+      //    var auctionid = document.getElementById('dvAuction.ClientID');
+      //    var buyerid = document.getElementById('dvBuyer.ClientID');
+//      var Bidamount = document.getElementById('<%=txtBidamount.ClientID%>');
+//      var CurrentBidPrice = document.getElementById('<%=lblCurrentBidPrice.ClientID%>');
+//      var HighestBidder = document.getElementById('<%=lblHighestBidder.ClientID%>');
+     
+     
+     
+      var Bidamount = document.getElementById( 'Bidamount' );
+      var CurrentBidPrice = document.getElementById( 'CurrentBidPrice' );
+      var HighestBidder = document.getElementById('HighestBidder');
+      var CartPrice = document.getElementById('CartPrice');
+      
+
+      var amountleft = document.getElementById('counter');
+
+
+
+
+      //alert(typeof XMLHttpRequest);
+
+      var xml = typeof XMLHttpRequest == "undefined" ? new ActiveXObject() : new XMLHttpRequest();
+
+      ///xml.Close
+
+      //////////
+////      alert(xml);
+      xml.open("GET", "simplePage.aspx", true);
+      alert(xml + '  getTotBidsxml');
+      //xml.setRequestHeader("Content-Type", "text/xml");
+      xml.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      // alert(xml.status);
+      /// var att = !xml.status && location.protocol == "file" || (xml.status >= 200)
+
+
+
+
+
+
+      ////alert(xml.onreadystatechange);
+      //
+      xml.onreadystatechange = function() {
+          if (xml.readyState == 4) {
+
+             alert('show3');
+              ///  var show = xml.responseXML;
+             var show = xml.responseText; ////
+            ///  alert(show);
+
+              alert(CurrentBidPrice.value + '     CurrentBidPrice  ' + ajaxvalue(show,'price'));
+              alert(amountleft.value + '     amountleft  ' + ajaxvalue(show,'amount'));
+             alert(HighestBidder.value + '     HighestBidder  ' + ajaxvalue(show, 'buyer'));
+
+              // ajaxvalue('amount');
+
+              CurrentBidPrice.value = ajaxvalue(show, 'price');
+              HighestBidder.value = ajaxvalue(show, 'buyer');
+              amountleft.value = ajaxvalue(show, 'amount');
+              CartPrice.value = CurrentBidPrice.value;
+              
+              
+              
+              xml = null;
+
+              //           var indx = showq.indexOf('amount');
+              //           alert(indx);
+              //           alert(showq.substring(indx, indx + 30));
+
+
+              //           var show = showq.substring(indx, indx + 30);
+              //           alert(show);
+
+              //           var fshow = show.substring(show.indexOf('<') + 1, show.indexOf('>'));
+
+              //           alert(fshow);
+              //           alert('show4');
+
+
+
+
+          }
+      }
+
+
+
+
+
+////      alert(xml + '    xml');
+
+
+      try {
+          xml.send();
+
+
+
+
+
+          // alert(xml.status + '    xmlstatus');
+//          alert('show');
+       ///   show = xml.responseXML;
+
+
+//          alert(show);
+  //        getResetTime();
+
+       
+//          alert(xml + '    xmlclose');
+      }
+      catch (ex) {
+          alert(ex.message);
+      }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  $.ajax({
+//      url: url,
+//      data: data,
+//      success: success,
+//      dataType: dataType
+//  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function setBids() {
+
+
+    alert('gevald');
+
+    var xml = typeof XMLHttpRequest == "undefined" ? new ActiveXObject( ) : new XMLHttpRequest( );
+
+    ///xml.Close
+
+    //////////
+    alert(xml);
+    xml.open("GET", "simplePageBtn.aspx", true);
+    alert(xml);
+    //xml.setRequestHeader("Content-Type", "text/xml");
+    xml.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+   
+
+    alert(xml + '    xml');
+    
+    
+    try{
+    xml.send();
+
+
+     
+    xml = null; 
+    alert(xml + '    xmlclose');
+}
+catch (ex) {
+    alert(ex.message);
+} 
+      
+
+}
+ 
+ 
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+            function stopCount()
+            {
+
+            alert('stop');
+            clearTimeout(  timeout );
+             
+            }
+
+
+
+
+
+             function calcamount(amount)
+             
+             
+             {          
+      
+          
+               
+                      
+                
+
+
+//                     if (amt > 0)  
+//                         {
+
+                ///    document.getElementById('dvBid').style.visibility='block';
+                // date is still good
+                 days=0;hours=0;mins=0;secs=0;out= "";
+                 var tempAmount = Math.floor(amount/1000);
+                 days=Math.floor(tempAmount/86400);
+                 tempAmount=tempAmount%86400;
+                 hours=Math.floor(tempAmount/3600);
+                 tempAmount=tempAmount%3600;
+                 mins=Math.floor(tempAmount/60);//minutes
+                 tempAmount=tempAmount%60;
+                 secs=Math.floor(tempAmount);//seconds
+                 if(days != 0) 
+                 {
+                    out += pad(days.toString(),'0').toString() + ":";
+                 }
+                 if(days != 0 || hours != 0)
+                 {
+                    out += pad(hours.toString(),'0').toString() + ":";
+                 }
+                 if(days != 0 || hours != 0 || mins != 0)
+                 {
+                        out += pad(mins.toString(),'0').toString() + ":"; 
+                        out += pad(secs.toString(),'0').toString();
+//                        document.getElementById('countbox').innerHTML=out;
+//                      setTimeout("GetCount()", 1000);
+                        //                        amount=amount-1000;
+                }
+                //              }
+
+
+                alert('out   '  + out);
+                return out;
+          }
+
+
+
+
+
+
+          var counte;
+
+
+          function GetCount() {
+
+              alert('GetCount');
+              var out;
+              
+               getTotBids();
+              
+               var counter = document.getElementById('counterx').value;
+               alert(counter + '         counter');
+            var  amount = counter;
+
+          ///  alert(counte + '         counte');
+
+              out = calcamount(amount);
+              alert(out + '         out');
+                document.getElementById('countbox').innerHTML = out;
+
+             ///////////// getTotBids();
+ 
+                  setTimeout("GetCount()", 1000);
+          
+//              if (amount <= 15000) {
+////                  alert(amount);
+//               amount = counter; }
+//              else {               
+//              amount = amount - 1000;
+//          }
+          }
+
+
+
+
+
+          function GetCounter() {
+
+
+
+
+
+
+
+              if (amount > 0) {
+
+                  document.getElementById('dvBid').style.visibility = 'block';
+                  // date is still good
+                  days = 0; hours = 0; mins = 0; secs = 0; out = "";
+                  var tempAmount = Math.floor(amount / 1000);
+                  days = Math.floor(tempAmount / 86400);
+                  tempAmount = tempAmount % 86400;
+                  hours = Math.floor(tempAmount / 3600);
+                  tempAmount = tempAmount % 3600;
+                  mins = Math.floor(tempAmount / 60); //minutes
+                  tempAmount = tempAmount % 60;
+                  secs = Math.floor(tempAmount); //seconds
+                  if (days != 0) {
+                      out += pad(days.toString(), '0').toString() + ":";
+                  }
+                  if (days != 0 || hours != 0) {
+                      out += pad(hours.toString(), '0').toString() + ":";
+                  }
+                  if (days != 0 || hours != 0 || mins != 0) {
+                      out += pad(mins.toString(), '0').toString() + ":";
+                      out += pad(secs.toString(), '0').toString();
+                      document.getElementById('countbox').innerHTML = out;
+                      setTimeout("GetCount()", 1000);
+                      amount = amount - 1000;
+                  }
+              }
+          }
+          
+
+
+
+
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+
+
+             function pad(val, ch)
+             {
+                if (val<10)  
+              return ch+val;
+                return val;
+             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+function navto(url)
+{  
+ document.location.href=url;
+ 
+}
+</script>
+
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1026211208/?label=BE3wCOKVrgEQiPuq6QM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+ </asp:Content>
+ 
+
+ 

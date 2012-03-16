@@ -1,0 +1,166 @@
+namespace Shof.modules
+{
+    using System;
+    using System.Data;
+    using System.Drawing;
+    using System.Web;
+    using System.Web.UI.WebControls;
+    using System.Web.UI.HtmlControls;
+    using System.Collections;
+    using System.Collections.Specialized;
+    using System.Configuration;
+//    //using D3DM.ECom.BusinessLogic;
+//    using Lib;
+
+
+    /// <summary>
+    ///		Summary description for WebUserControl1.
+    /// </summary>
+    public partial class home : System.Web.UI.UserControl
+    {
+		protected DataSet dsProductList;
+
+        protected int categoryID;
+        protected int itemCount;
+        protected int countItemsPage = 6;
+        protected int pageNum = 0;
+        protected int pageCount = 1;
+		protected System.Web.UI.WebControls.TextBox txtSearch;
+		protected System.Web.UI.WebControls.Button btnSearch;
+		protected System.Web.UI.WebControls.Panel SearchPanel;
+        protected int listNum;
+
+        protected void Page_Load(object sender, System.EventArgs e)
+        {
+            dsProductList = new DataSet();            
+        }
+		
+		protected void CustomheaderInfo()
+		{
+			Response.WriteFile("homehead.htm");
+		}
+		protected void Page_PreRender(object sender, System.EventArgs e)
+		{
+//			if( dsProductList.Tables.Count == 0 )
+//			{
+				DataSet bProducts = BLProduct.GetList(0,true,"BFeatured");
+				if( bProducts!=null && bProducts.Tables.Count > 0 && bProducts.Tables["Product"].Rows.Count > 0)
+				{
+					BLProduct product = new BLProduct();
+					product.ID = (int)bProducts.Tables["Product"].Rows[0]["prdID"];
+					product.Retrieve();
+					aFPrdName.InnerText = product.Name;
+					aFPrdName.HRef=".?page=detail&id=8&idc=0&idp="+product.ID;
+					aFPrdImg.HRef=aFPrdName.HRef;
+					aFPrdMore.HRef=aFPrdName.HRef;
+					spanFPrdDescription.InnerHtml = product.Description.Replace(""+(char)13,"<br/>");
+
+					BLImageGallery imageGallery = new BLImageGallery();
+					imgFPrdImage.Src    = imageGallery.GetimgInfo("productdetail",product.ID.ToString());
+					imgFPrdImage.Width  = imageGallery.Width;
+					imgFPrdImage.Height = imageGallery.Height;
+					imgFPrdImage.Visible = ((imgFPrdImage.Src != "") && (imgFPrdImage.Src != null));
+
+				}
+				else
+				{
+					FProductPanel.Visible=false;
+				}
+
+				dsProductList = BLProduct.GetListLastByCategoryRec(0, true, 3, "SFeatured");
+//			}
+//			else
+//			{
+//				FProductPanel.Visible = false;
+//			}
+
+			if (dsProductList.Tables[0].Rows.Count>0)
+			{
+				///rptProductList.DataSource = lib.GetPage(dsProductList.Tables["Product"],1,this.countItemsPage);
+				rptProductList.DataBind();
+			}
+			else
+			{
+				Itemspanel.Visible=false;
+			}
+		}
+
+        protected void rptProductList_OnItemDataBound(object sender, System.Web.UI.WebControls.DataListItemEventArgs e) 
+        {
+            switch(e.Item.ItemType)	
+            {
+                case ListItemType.Item:
+                case ListItemType.AlternatingItem:
+					
+                    //HtmlContainerControl spanPrdName = (HtmlContainerControl) e.Item.FindControl("spanPrdName");
+                    HtmlContainerControl spanPrdDescription = (HtmlContainerControl) e.Item.FindControl("spanPrdDescription");
+                    HtmlContainerControl spanPrdRegPrice = (HtmlContainerControl) e.Item.FindControl("spanPrdRegPrice");
+                    HtmlContainerControl spanPrdPrice = (HtmlContainerControl) e.Item.FindControl("spanPrdPrice");
+                    HtmlImage imgPrdImage = (HtmlImage) e.Item.FindControl("imgPrdImage");
+                    HtmlAnchor aPrdDetailhref = (HtmlAnchor) e.Item.FindControl("aPrdDetailhref");
+                    HtmlAnchor aPrdNameDetailhref = (HtmlAnchor) e.Item.FindControl("aPrdNameDetailhref");
+                    HtmlAnchor aPrdMore = (HtmlAnchor) e.Item.FindControl("aPrdMore");
+                    Panel RRPPanel = (Panel) e.Item.FindControl("RRPPanel");
+					HtmlAnchor aAddToCart = (HtmlAnchor) e.Item.FindControl("aAddToCart");
+					HtmlContainerControl tdAddToCart = (HtmlContainerControl) e.Item.FindControl("tdAddToCart");
+                    HtmlContainerControl id_s = (HtmlContainerControl) e.Item.FindControl("id_s");
+					
+                    //spanPrdName.InnerText = ((DataRowView)e.Item.DataItem)["prdName"].ToString();
+                    string lpDesc = ((DataRowView)e.Item.DataItem)["prdDescription"].ToString();
+                    int cutmin = 130;
+                    if (lpDesc.Length>cutmin)
+                        lpDesc = lpDesc.Substring(0,cutmin-1)+" ...";
+                    spanPrdDescription.InnerHtml = lpDesc.Replace(""+(char)13,"<br/>");
+                    //spanPrdDescription.InnerText = ((DataRowView)e.Item.DataItem)["prdDescription"].ToString();
+                    if ((bool)((DataRowView)e.Item.DataItem)["prdOnSale"] && (decimal)( (DataRowView)e.Item.DataItem)["prdRegPrice"]>0)
+                    {
+                        spanPrdRegPrice.InnerText = string.Format("{0:#0.00}",((DataRowView)e.Item.DataItem)["prdRegPrice"]);
+                        //spanPrdRegPrice.InnerText = this.GeneratePrice(System.Convert.ToDouble(((DataRowView)e.Item.DataItem)["prdRegPrice"]));
+                        RRPPanel.Visible=true;
+                    }
+                    else{RRPPanel.Visible=true;id_s.Visible=false;}
+                    spanPrdPrice.InnerText = string.Format("{0:#0.00}",((DataRowView)e.Item.DataItem)["prdPrice"]);
+                    //spanPrdPrice.InnerText = this.GeneratePrice(System.Convert.ToDouble(((DataRowView)e.Item.DataItem)["prdPrice"]));
+					aPrdDetailhref.HRef = ".?page=detail&id=8&idc="+this.categoryID+"&idp="+((DataRowView)e.Item.DataItem)["prdID"].ToString();
+					
+					if( (int)((DataRowView)e.Item.DataItem)["prdInventory"] > 0 )
+						//temp disable of add directly to cart
+						//aAddToCart.HRef = ".?page=cart&id=8&idp=" + ((DataRowView)e.Item.DataItem)["prdID"].ToString() + "&quantity=" + ((DataRowView)e.Item.DataItem)["prdDefQuantity"].ToString();
+						aAddToCart.HRef = aPrdDetailhref.HRef;
+					else 
+						tdAddToCart.InnerHtml = "<font color=\"red\">Out of Stock</font>";
+                    aPrdNameDetailhref.HRef = aPrdDetailhref.HRef;
+                    aPrdNameDetailhref.InnerText = ((DataRowView)e.Item.DataItem)["prdName"].ToString();
+
+                    aPrdMore.HRef = aPrdDetailhref.HRef;
+
+                    BLImageGallery imageGallery = new BLImageGallery();
+                    imgPrdImage.Src    = imageGallery.GetimgInfo("productList",((DataRowView)e.Item.DataItem)["prdID"].ToString());
+                    imgPrdImage.Width  = imageGallery.Width;
+                    imgPrdImage.Height = imageGallery.Height;
+                    imgPrdImage.Visible = ((imgPrdImage.Src != "") && (imgPrdImage.Src != null));
+                    break;
+            }
+        }
+
+        #region Web Form Designer generated code
+        override protected void OnInit(EventArgs e)
+        {
+            //
+            // CODEGEN: This call is required by the ASP.NET Web Form Designer.
+            //
+            InitializeComponent();
+            base.OnInit(e);
+        }
+		
+        /// <summary>
+        ///		Required method for Designer support - do not modify
+        ///		the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+
+		}
+        #endregion
+    }
+}

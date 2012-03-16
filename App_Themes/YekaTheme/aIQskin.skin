@@ -1,0 +1,24 @@
+
+
+<asp:ImageButton runat="server" SkinID="iqScrollLeft" ImageUrl="App_Themes/YekaTheme/images/leftarrow.jpg" 
+AlternateText="Scroll Left" width="19px" height="21px" />
+
+<asp:ImageButton runat="server" SkinID="iqScrollRight" ImageUrl="App_Themes/YekaTheme/images/rightarrow.jpg" 
+AlternateText="Scroll Right" width="19px" height="21px" />
+
+
+<asp:ImageButton runat="server" SkinID="iqViewOtherrightarrow" ImageUrl="App_Themes/YekaTheme/images/rightarrow.jpg" 
+AlternateText="Scroll Right" width="19px" height="21px" />
+
+
+
+ 
+
+<asp:ImageButton runat="server" SkinID="iqViewOtherleftarrow" ImageUrl="App_Themes/YekaTheme/images/leftarrow.jpg" 
+AlternateText="Scroll Right" width="19px" height="21px" />
+
+
+<asp:Image runat="server" SkinID="iqCartDelete" ImageUrl="App_Themes/YekaTheme/images/delete_sm.gif"   
+ AlternateText="Remove"   width="19px" height="21px" />
+
+

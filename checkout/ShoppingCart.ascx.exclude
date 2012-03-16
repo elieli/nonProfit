@@ -1,0 +1,494 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="ShoppingCart.ascx.cs" Inherits="controls_ShoppingCart" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jomadeals</title>
+<link href="app_themes/yekatheme/style.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+    .order_heading{
+     width:260px;
+     margin:0;
+     padding:15px 0 0 25px;
+     float:left;
+     background: url(app_themes/yekatheme/images/order_bg.gif) no-repeat top;
+    }
+    .product1{
+     background: url(app_themes/yekatheme/images/product_bg.gif) no-repeat top;
+     float:left;
+     margin:0;
+     padding:22px 21px 30px 22px;
+     float:left;
+     width:242px;
+    }
+    .product1 p{
+     font-family:Arial, Helvetica, sans-serif;
+     margin:0;
+     padding:0 0 0px 0;
+     font-size:13px;
+    }
+    .product1 h2{
+     font-family:Arial, Helvetica, sans-serif;
+     text-transform:uppercase;
+     font-weight:bold;
+     margin:0;
+     padding:7px 0 12px 0;
+     font-size:13px;
+    }
+    .img7{
+     float:left;
+     margin:0 18px 0 0;
+    }
+
+    .product2{
+     background: url(app_themes/yekatheme/images/product_bg_02.gif) no-repeat top;
+     float:left;
+     margin:0;
+     padding:22px 21px 30px 22px;
+     float:left;
+     width:242px;
+    }
+    .product2 p{
+     font-family:Arial, Helvetica, sans-serif;
+     margin:0;
+     padding:0 0 0px 0;
+     font-size:13px;
+    }
+    .product2 h2{
+     font-family:Arial, Helvetica, sans-serif;
+     text-transform:uppercase;
+     font-weight:bold;
+     margin:0;
+     padding:7px 0 12px 0;
+     font-size:13px;
+    }
+
+    .order_total{   font-weight:bold;
+     background: url(app_themes/yekatheme/images/order_total_bg.gif) no-repeat top;
+      
+    }
+    .order_total p{
+     font-family:Arial, Helvetica, sans-serif;
+     text-transform:uppercase;
+     font-weight:bold;
+     margin:0;
+     padding:0px 0 0px 0;
+     font-size:13px;
+    }
+    .coupon_total{
+     background: url(app_themes/yekatheme/images/coupon_bg.gif) background-repeat:repeat-y;
+     float:left;
+     margin:0;
+     padding:14px 21px 0px 22px;
+     float:left;
+     height:73px;
+     width:242px;
+    }
+    .coupon_total p{
+     font-family:Arial, Helvetica, sans-serif;
+     text-transform:uppercase;
+     font-weight:bold;
+     margin:0;
+     padding:0px 0 0px 0;
+     font-size:15px;
+     text-decoration:underline;
+    }
+    .coupon_total input{
+     font-family:Arial, Helvetica, sans-serif;
+     color:#7c4747;
+     font-size:12px;
+     margin:0;
+     padding:1px 0 2px 0;
+     border:1px solid #d8d8d8;
+     width:200px;
+    }
+</style>
+
+</head>
+
+<body>
+ 
+<!-- Confirm your Order Form -->
+
+
+<!-- Your Order Product -->
+ 
+<div id="your_order" style="">
+<div class="order_heading" style=" background:url(app_themes/yekatheme/images/order_bg.gif) no-repeat top;">
+    <p>your order</p></div>
+
+<%--<div runat="server" visible="false" id="prodcontainer">
+<div class="product1">
+
+<%--
+ItemImageThumb   ItemImageTitle
+
+  %> <a href='<%#Eval("ItemUrl").ToString()%>'>
+                                <%#Eval("ItemTitle").ToString()%></a> 
+<img src="../App_Themes/yekatheme/../app_themes/yekatheme/images/product_01.jpg" alt="" class="img7" /> 
+<h2>Title of Project</h2> <p> Size:<br />
+Color:<br />Select Qty: 
+   <asp:DropDownList ID="ddQuantity" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddQuantity_SelectedIndexChanged">
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>3</asp:ListItem>
+                                <asp:ListItem>4</asp:ListItem>
+                                <asp:ListItem>5</asp:ListItem>
+                                <asp:ListItem>6</asp:ListItem>
+                                <asp:ListItem>7</asp:ListItem>
+                                <asp:ListItem>8</asp:ListItem>
+                                <asp:ListItem>9</asp:ListItem>
+                                <asp:ListItem>10</asp:ListItem>
+                            </asp:DropDownList>
+
+ <input name="select" type="checkbox" value="" /></p> 
+
+
+
+ 
+</div>
+</div>
+--%>
+ 
+
+ <asp:Repeater ID="rCart" runat="server" onitemcommand="rCart_ItemCommand" 
+                onitemdatabound="rCart_ItemDataBound">
+                
+             
+                
+                
+                
+                
+                <ItemTemplate>
+                
+                <div style=" position:relative">
+                
+ <div class='product1'   style=" position:relative; background-image:url(app_themes/yekatheme/images/product_bg.gif);"><img src='  <%#Eval("ItemImageThumb").ToString()%>' alt='  <%#Eval("ItemImageTitle").ToString()%> '    style="float:left;   "          class='img7' /> 
+              
+          
+              
+              
+              
+              <div  style=" font-size:smaller; float:left; text-align:left;"  >
+              
+              
+               
+               <h2 style=" max-width:25px;">   <a href='<%#Eval("ItemUrl").ToString()%>'><%#Eval("ItemImageTitle").ToString()%></a> </h2>  <p> <%--Size:<br /> --%>
+        <%--      Color:<br />--%> Quantity:
+            
+               <input type="text" runat="server"   size="2" maxlength="2" minlength="2"    id="tdLBQuantity"   value='<%#Eval("ItemQuantity").ToString()%>' />
+                
+                <%-- <input type="text" runat="server"  size="6" maxlength="6"  style=" min-width:15px;  " id="tdLBQuantity"  />
+           --%>
+              
+              
+                <asp:DropDownList  Width="20"  ID='ddQuantity' runat='server' AutoPostBack='true' OnSelectedIndexChanged='ddQuantity_SelectedIndexChanged'>  
+              <asp:ListItem>1</asp:ListItem><asp:ListItem>2</asp:ListItem><asp:ListItem>3</asp:ListItem> 
+             <asp:ListItem>4</asp:ListItem><asp:ListItem>5</asp:ListItem><asp:ListItem>6</asp:ListItem><asp:ListItem>7</asp:ListItem> 
+              <asp:ListItem>9</asp:ListItem>  <asp:ListItem>10</asp:ListItem> </asp:DropDownList>
+             
+              <br /> Price :  <span style=" "><%#Convert.ToDecimal(Eval("ItemPrice")).ToString("c")%> </span> 
+              <br /> SubTotal:   <span style="  "> <%#Convert.ToDecimal(Eval("ItemSubTotal")).ToString("c")%> </span>   <br />
+              
+              
+              
+               <div runat="server" id="tdBtnDelete"> 
+                            <asp:LinkButton ID="lnkDelete"  Text="Delete"  CommandName="Delete" CommandArgument='<%#Eval("OrderItemGuid").ToString()%>'
+                                runat="server">
+                                <%--<asp:Image ID="imgCartRowDelete"  ImageUrl="App_Themes/YekaTheme/images/delete_sm.gif"  alt="Delete" runat="server" SkinID="iqCartDelete" />--%>
+                            </asp:LinkButton>
+                        </div>     
+              
+               
+               
+               
+               
+               
+               
+               </div>    </div>  
+</div>
+ </ItemTemplate>
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+</asp:Repeater>
+
+
+
+<%--
+<div class="product2"><img src="../App_Themes/yekatheme/../app_themes/yekatheme/images/product_02.jpg" alt="" class="img7" /> <h2>Title of Project</h2> <p> Size:<br />
+Color:<br />Select Qty: <input name="select" type="checkbox" value="" /></p> </div>--%>
+
+
+
+<%--
+
+
+<div class="order_total"><p>Order Subtotal:<span style=" font-size:small; font-weight:lighter;">  <%=SubTotal %></span></p> </div>
+
+<div class="order_total"><p>Estimate tax: <span style=" font-size:small; font-weight:lighter;">   <%=Tax %> </span></p> </div>
+
+
+<div class="order_total"><p>Discount: <span style=" font-size:small;  text-transform:lowercase capitalize; font-weight:lighter;">     <%=Discount %> </span></p> </div>
+
+<div class="order_total"><p>shipping:   <span style=" font-size:small; font-weight:lighter;">  <%=Shipping %></span></p> </div>
+
+<div class="order_total"><p>total:<span style=" font-size:small; font-weight:lighter;">   <%=Total %></span></p> </div>
+
+--%>
+
+
+
+
+
+
+
+
+
+ 
+
+
+<div style=" font-size:small; "  class="order_total"> Order Subtotal: <span  id="spnSubTotal" runat="server" style=" font-size:small;   font-weight:lighter; text-align:right;">  </span>  </div>
+
+<div style=" display:inline;font-size:small;" class="order_total"><span     style="   display:inline;   ">Estimate tax: </span> <span        id="spnTax" runat="server"      style="   text-align:right; display:inline;   font-size:small; font-weight:lighter;">   </span> </div>
+
+
+<div  style=" font-size:small; "  class="order_total"> Discount:   <span     id="spnDiscount" runat="server"      style=" font-size:small;   display:inline;   text-align:right;text-transform:lowercase capitalize; font-weight:lighter;">    </span></div>
+ <div  style=" font-size:small; " class="order_total"> Shipping:    <span    id="spnShipping" runat="server"          style=" font-size:small;    text-align:right;display:inline; font-weight:lighter;">  </span></div>
+
+<div    class="order_total   "><p><b>  total:</b></p> <span     id="spnTotal" runat="server"           style=" font-size:small;    text-align:right; display:inline; font-weight:lighter;"> </span></div>
+
+ 
+
+
+
+
+
+<%--<div class="coupon_total"><p>Got a coupon?</p><br />
+<input name="Coupon" type="text" value="Coupon Dropdown" />
+
+</div>--%>
+ <div   runat="server"   class="order_total" style=" height:30px;" id="tdDeleteAll">  Delete All: 
+                                <asp:LinkButton ID="lnkDeleteAll"  CommandName="DeleteAll" CommandArgument="DeleteAll" runat="server">
+                                    <asp:Image ID="iqRermoveItemImg" ImageUrl="App_Themes/YekaTheme/images/delete_sm.gif" runat="server" SkinID="iqCartDelete"  AlternateText="Remove"/>
+                                </asp:LinkButton>
+                            </div>
+  
+  
+  
+  
+
+<!-- Your Order Product -->
+
+<%--
+
+        <p    class="order_total"  ></p>--%>
+ 
+
+
+   <div id="dvDltAll"  runat="server"    class="order_total" style="left:0px;">
+                            <msc:FlexButton ID="btnUpdateCart" runat="server" BackColor="#fed9a2" Font-Bold="True"
+                                Text="Update Cart" Width="100px" Height="25px" OnClick="btnUpdateCart_Click" />
+                           <%-- &nbsp;<msc:FlexButton ID="btnCheckoutNow" runat="server" BackColor="#fed9a2" Font-Bold="True"
+                                Text="Checkout Now" Width="120px" Height="25px" OnClick="btnCheckoutNow_Click" /> 
+                          </div>--%>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <br />
+                               </div>
+                         
+                 
+        
+
+ 
+                    <div   ><%--<a href="#"  onmouseover="javascript:toggle(); "> toggle</a>--%></div>    
+                                    <div   runat="server"   id="dvCoupon"  style="height:165px;" class="coupon_total"><p>Got a coupon?</p><br />  
+                                   
+                             <asp:TextBox ID="txtCouponCode"  runat="server"></asp:TextBox>  <br /> <br /> <br /> 
+                                   <span style=" text-align:center;">     <msc:FlexButton ID="btnApplyDiscount" runat="server" BackColor="#fed9a2"
+                                                Font-Bold="True" Text="Apply Discount" Width="120px" Height="25px" OnClick="btnApplyDiscount_Click" /> </span>
+                                    <br />   <br /> <span class="ErrorMessage">  <%=Message %></span> 
+                                   
+                                    </div>  <br /> 
+
+             <%--   <div style=" font-size:small; "><a > sign me up for promotional email and coupon savings</a></div>--%>
+    <div>
+
+<%-- <p    class="order_total"  ></p>--%>
+               
+                               
+                             
+                            <msc:FlexButton ID="btnContinueShopping" runat="server" BackColor="#c0e6fc" Font-Bold="True"
+                                Text="< Continue Shopping" Width="160px" Height="25px" OnClick="btnContinueShopping_Click" />   
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                               </div>
+</div>
+<%--
+
+</div> --%>
+
+ <script type="text/javascript">
+ function toggle()
+ {
+    var  dvCoupon = document.getElementById("dvCoupon");
+    if (dvCoupon.style.display == 'none')
+    {dvCoupon.style.display == 'block';    
+    }else{dvCoupon.style.display == 'none' ;}
+    
+ }
+ </script>
+ 
+</body>
+</html>
+
+    
+    
+    
+    <%--
+  
+<table  visible="false" width="600px" cellpadding="4px" cellspacing="4px" style="clear: both; border-collapse: separate;
+    background-color: White; padding-bottom: 0px">
+    <tr>
+        <td>
+            <asp:Repeater ID="Repeater1" runat="server" onitemcommand="rCart_ItemCommand" 
+                onitemdatabound="rCart_ItemDataBound">
+                <HeaderTemplate>
+                    <table width="600px" cellpadding="4px" cellspacing="4px" style="clear: both; border-collapse: separate;
+                        background-color: White; padding-bottom: 0px">
+                        <tr>
+                            <td colspan="7" class="iqHeaderBoxBlock" id="headerCell" runat="server">
+                                <b>Shopping Cart</b>
+                            </td>
+                        </tr>
+                        <tr class="iqBodyBoxBlock" align="center">
+                            <td width="150">
+                                <b>Code</b>
+                            </td>
+                            <td width="100px">
+                                <b>Picture</b>
+                            </td>
+                            <td width="250">
+                                <b>Description</b>
+                            </td>
+                            <td width="45">
+                                <b>Qty</b>
+                            </td>
+                            <td>
+                                <b>Price</b>
+                            </td>
+                            <td>
+                                <b>SubTotal</b>
+                            </td>
+                            <td runat="server" id="tdDeleteAll">
+                                <asp:LinkButton ID="lnkDeleteAll" CommandName="DeleteAll" CommandArgument="" runat="server">
+                                    <asp:Image ID="iqRermoveItemImg" runat="server" SkinID="iqCartDelete" />
+                                </asp:LinkButton>
+                            </td>
+                        </tr>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <tr class="iqBodyBoxBlock" valign="middle">
+                        <td valign="middle">
+                            <center>
+                                <%#Eval("ItemCode").ToString()%></center>
+                        </td>
+                        <td style="background-color: White;" align="center">
+                            <asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("ItemImageThumb") %>' ToolTip='<%# Eval("ItemImageTitle") %>'
+                                AlternateText='<%# Eval("ItemImageTitle").ToString() %>' />
+                        </td>
+                        <td valign="middle">
+                            <a href='<%#Eval("ItemUrl").ToString()%>'>
+                                <%#Eval("ItemTitle").ToString()%></a>
+                        </td>
+                        <td valign="middle" runat="server" id="tdDDQuantity" align="center">
+                            <asp:DropDownList ID="ddQuantity" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddQuantity_SelectedIndexChanged">
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>3</asp:ListItem>
+                                <asp:ListItem>4</asp:ListItem>
+                                <asp:ListItem>5</asp:ListItem>
+                                <asp:ListItem>6</asp:ListItem>
+                                <asp:ListItem>7</asp:ListItem>
+                                <asp:ListItem>8</asp:ListItem>
+                                <asp:ListItem>9</asp:ListItem>
+                                <asp:ListItem>10</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td valign="middle" runat="server" id="tdLBQuantity" visible="false" align="center">
+                            <%#Eval("ItemQuantity").ToString()%>
+                        </td>
+                        <td valign="middle" align="center">
+                            <%#Convert.ToDecimal(Eval("ItemPrice")).ToString("c")%>
+                        </td>
+                        <td valign="middle" align="center">
+                            <%#Convert.ToDecimal(Eval("ItemSubTotal")).ToString("c")%>
+                        </td>
+                        <td valign="middle" runat="server" id="tdBtnDelete">
+                            <asp:LinkButton ID="lnkDelete" CommandName="Delete" CommandArgument='<%#Eval("OrderItemGuid").ToString()%>'
+                                runat="server">
+                                <asp:Image ID="imgCartRowDelete" runat="server" SkinID="iqCartDelete" />
+                            </asp:LinkButton>
+                        </td>
+                    </tr>
+                </ItemTemplate>
+                <FooterTemplate>
+                    <tr>
+                        <td colspan="7" align="right" style="padding: 0" id="footerCell" runat="server">
+                            <table cellpadding="4px" cellspacing="4px" style="padding: 0">
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>SubTotal:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=SubTotal %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>Shipping:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Shipping %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>Tax:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Tax %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>Discount:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Discount %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock" id="trTotal" visible="false">
+                                    <td>
+                                        <b>Total:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Total %>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </table>
+                </FooterTemplate>
+            </asp:Repeater>
+        </td>
+    </tr>
+</table>--%>

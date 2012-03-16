@@ -1,0 +1,250 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="Shopping_Cart.ascx.cs"    Inherits="controls_Shopping_Cart" %>    
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jomadeals</title>
+<link href="~/app_themes/yekatheme/style.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.order_heading{
+ width:300px;
+ margin:0;
+ padding:15px 0 0 25px;
+ float:left;
+ background: url( <%= ResolveUrl("app_themes/yekatheme/images/order_bg.gif") %> ) no-repeat top; 
+}
+.product1{
+  background:  url( <%= ResolveUrl("app_themes/yekatheme/images/product_bg.gif")  %> ) no-repeat top;  
+ float:left; text-align:left;
+ margin:0;
+ padding:22px 21px 30px 22px;
+ float:left;
+ width:242px;
+}
+.product1 p{
+ font-family:Arial, Helvetica, sans-serif;
+ margin:0;
+ padding:0 0 0px 0;
+ font-size:13px;
+}
+.product1 h2{
+ font-family:Arial, Helvetica, sans-serif;
+ text-transform:uppercase;
+ font-weight:bold;
+ margin:0;
+ padding:7px 0 12px 0;
+ font-size:13px;
+}
+.img7{
+ float:left;
+ margin:0 18px 0 0;
+}
+
+.product2{
+   background:  url( <%= ResolveUrl("app_themes/yekatheme/images/product_bg_02.gif") %> ) no-repeat top;    
+ float:left;
+ text-align:left;
+ margin:0;
+ padding:22px 21px 30px 22px;
+ float:left;
+ width:242px;
+}
+.product2 p{
+ font-family:Arial, Helvetica, sans-serif;
+ margin:0;
+ padding:0 0 0px 0;
+ font-size:13px;
+}
+.product2 h2{
+ font-family:Arial, Helvetica, sans-serif;
+ text-transform:uppercase;
+ font-weight:bold;
+ margin:0;
+ padding:7px 0 12px 0;
+ font-size:13px;
+}
+
+.order_total{
+   background:  url( <%= ResolveUrl("app_themes/images/order_total_bg.gif") %> ) no-repeat top;  
+ float:left;
+ text-align:left;
+ margin:0;
+ padding:12px 21px 0px 22px;
+ float:left;
+ height:25px;
+ width:242px;
+}
+.order_total p{
+ font-family:Arial, Helvetica, sans-serif;
+ text-transform:uppercase;
+ font-weight:bold;
+ margin:0;
+ padding:0px 0 0px 0;
+ font-size:13px;
+}
+.coupon_total{
+ background:  url( <%= ResolveUrl("app_themes/images/coupon_bg.gif")   %> )  no-repeat top;   
+ float:left;
+ margin:0;
+ padding:14px 21px 0px 22px;
+ float:left;
+ height:73px;
+ width:242px;
+}
+.coupon_total p{
+ font-family:Arial, Helvetica, sans-serif;
+ text-transform:uppercase;
+ font-weight:bold;
+ text-align:left;
+ margin:0;
+ padding:0px 0 0px 0;
+ font-size:15px;
+ text-decoration:underline;
+}
+.coupon_total input{
+ font-family:Arial, Helvetica, sans-serif;
+ color:#7c4747;
+ font-size:12px;
+ margin:0;
+ padding:1px 0 2px 0;
+ border:1px solid #d8d8d8;
+ width:200px;
+}
+</style>
+</head>
+
+<body  >
+ 
+<!-- Confirm your Order Form -->
+
+
+<!-- Your Order Product -->
+ 
+<div id="your_order" style="">
+    <div class="order_heading" style=" background:  url(<%= ResolveUrl("app_themes/yekatheme/images/order_bg.gif") %>) no-repeat top;">
+        <p>your order</p>
+    </div>
+
+
+<%--<div runat="server" visible="false" id="prodcontainer">
+ 
+
+ 
+</div>--%>
+
+ 
+ <asp:Repeater ID="rCart" runat="server" onitemcommand="rCart_ItemCommand" 
+                onitemdatabound="rCart_ItemDataBound">
+ <ItemTemplate>
+ <div class='product1'><img src='  <%#Eval("ItemImageThumb").ToString()%>' alt='  <%#Eval("ItemImageTitle").ToString()%> ' class='img7' /> 
+               <h2>   <a href='<%#Eval("ItemUrl").ToString()%>'><%#Eval("ItemImageTitle").ToString()%></a> </h2>  <p>  
+              Color:<br />Select Qty:
+              
+               <input type="text" runat="server" id="tdLBQuantity" visible="false" value='<%#Eval("ItemQuantity").ToString()%>' />
+                       
+              
+              
+              
+                <asp:DropDownList ID='ddQuantity' runat='server' AutoPostBack='true' OnSelectedIndexChanged='ddQuantity_SelectedIndexChanged'>  
+              <asp:ListItem>1</asp:ListItem><asp:ListItem>2</asp:ListItem><asp:ListItem>3</asp:ListItem> 
+             <asp:ListItem>4</asp:ListItem><asp:ListItem>5</asp:ListItem><asp:ListItem>6</asp:ListItem><asp:ListItem>7</asp:ListItem> 
+              <asp:ListItem>9</asp:ListItem>  <asp:ListItem>10</asp:ListItem> </asp:DropDownList>
+              <br /> Price :  <span style=" "><%#Convert.ToDecimal(Eval("ItemPrice")).ToString("c")%> </span> 
+              <br /> SubTotal:   <span style="  "> <%#Convert.ToDecimal(Eval("ItemSubTotal")).ToString("c")%> </span>   <br />
+              
+              
+              
+               <div runat="server" id="tdBtnDelete"> 
+                            <asp:LinkButton ID="lnkDelete" CommandName="Delete" CommandArgument='<%#Eval("OrderItemGuid").ToString()%>'
+                                runat="server">
+                                <asp:Image ID="imgCartRowDelete" runat="server" SkinID="iqCartDelete" />
+                            </asp:LinkButton>
+                        </div>
+              
+               </div>  
+
+ </ItemTemplate>
+</asp:Repeater>
+ 
+<div class="order_total"><p>Order Subtotal:</p> <span  id="spnSubTotal" runat="server" style=" font-size:small;   font-weight:lighter;">  </span>  </div>
+
+<div style=" display:inline;" class="order_total"><p     style="   display:inline;   ">Estimate tax: </p> <span        id="spnTax" runat="server"      style="   display:inline;   font-size:small; font-weight:lighter;">   </span> </div>
+
+
+<div class="order_total"><p>Discount: </p> <span     id="spnDiscount" runat="server"      style=" font-size:small;   display:inline;  text-transform:lowercase capitalize; font-weight:lighter;">    </span></div>
+
+<div class="order_total"><p>shipping:  </p>  <span    id="spnShipping" runat="server"          style=" font-size:small;   display:inline; font-weight:lighter;">  </span></div>
+
+<div class="order_total"><p>total:</p> <span     id="spnTotal" runat="server"           style=" font-size:small;    display:inline; font-weight:lighter;"> </span></div>
+ 
+ 
+ <div  style="display:inline;" class="order_total"  runat="server" id="tdDeleteAll"> <p>Delete All:</p>
+                                <asp:LinkButton ID="lnkDeleteAll" CommandName="DeleteAll" CommandArgument="" runat="server">
+                                    <asp:Image ID="iqRermoveItemImg" runat="server" SkinID="iqCartDelete" AlternateText="Remove" />
+                                </asp:LinkButton>
+                            </div>
+  
+  
+  
+  
+<!-- Your Order Product -->
+
+
+
+
+ 
+
+
+    <div style="left:0px;">
+                         
+                                                
+                                                
+                                       <asp:Button ID="btnUpdateCart" runat="server" BackColor="#fed9a2" Font-Bold="True"
+                                Text="Update Cart" Width="100px" Height="25px" OnClick="btnUpdateCart_Click" />
+                            &nbsp;<asp:Button ID="btnCheckoutNow" runat="server" BackColor="#fed9a2" Font-Bold="True"
+                                Text="Checkout Now" Width="120px" Height="25px" OnClick="btnCheckoutNow_Click" />
+                          
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <br />
+                               
+                         
+                               
+                               
+                                 
+                            <asp:Button ID="btnContinueShopping" runat="server" BackColor="#c0e6fc" Font-Bold="True"
+                                Text="< Continue Shopping" Width="160px" Height="25px" OnClick="btnContinueShopping_Click" />   
+                          &nbsp;&nbsp;&nbsp;&nbsp;
+                               
+
+
+ 
+                                    <div   class="coupon_total"><p>Got a coupon?</p><br />
+                             <asp:TextBox ID="txtCouponCode"  BorderColor="Aquamarine"  runat="server"></asp:TextBox>
+                                     <br />    <br /> 
+                                        <asp:Button ID="btnApplyDiscount" runat="server" BackColor="#fed9a2"
+                                                Font-Bold="True" Text="Apply Discount" Width="120px" Height="25px" OnClick="btnApplyDiscount_Click" />         
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                    </div>
+
+
+
+</div>
+
+
+
+</div> 
+
+ <span class="ErrorMessage">   
+    <%=Message %></span>  
+</body>
+</html>
+
+    
+     

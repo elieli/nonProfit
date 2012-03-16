@@ -1,0 +1,331 @@
+﻿body {
+    font-family: arial,sans-serif;
+    font-size: small;
+}
+
+li{position:absolute;}
+
+ul{position:absolute;}
+form {
+    margin: 0;
+    padding: 0;
+}
+a, a:link, a:visited, a:active {
+    color: #1A4DC1;
+    text-decoration: none;
+}
+a:hover {
+    color: #1A4DC1;
+    text-decoration: underline;
+}
+th {
+    font-weight: normal;
+    text-align: left;
+}
+.clear {
+    clear: both;
+}
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.row {
+    margin: 15px;
+}
+.subHeadBox {
+    margin-bottom: 20px;
+    padding: 0 10px 10px 23px;
+}
+.subHead {
+    float: left;
+    font-size: small;
+    font-weight: bold;
+    margin-top: 4px;
+}
+.helpBtn img {
+    border: 0 none;
+    margin-left: 5px;
+}
+.sec {
+    margin-bottom: 10px;
+}
+.secHead {
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+    height: 63px;
+    margin-left: 20px;
+}
+.secHead h2 {
+    color: #FFFFFF;
+    font-size: medium;
+    margin: 0 0 0 20px;
+    padding-top: 7px;
+}
+.secHead div {
+    background-position: right top;
+    background-repeat: no-repeat;
+    height: 33px;
+    margin-left: 55px;
+    position: relative;
+    top: 14px;
+    width: 788px;
+}
+.fldBox {
+    background-color: #F9F9F9;
+    border: 1px solid #DDDDDD;
+    display: block;
+    margin: 0 35px 15px;
+    padding: 15px;
+}
+.fldBoxTags {
+    background-color: #F9F9F9;
+    border: 1px solid #DDDDDD;
+    display: block;
+    margin-bottom: 15px;
+    margin-left: 35px;
+    padding: 0 15px 15px;
+    width: 795px;
+}
+.tipsTable {
+    margin-bottom: 10px;
+    margin-left: 25px;
+}
+.tipsTable td {
+    background-color: #F9F9F9;
+    border: 1px solid #DDDDDD;
+}
+.tips {
+    min-height: 250px;
+    width: 178px;
+}
+.tips h3 {
+    background-color: #F0F0EE;
+    border-bottom: 1px solid #DDDDDD;
+    font-size: small;
+    margin: 0;
+    padding: 5px 10px;
+}
+.tips p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.tips ul {
+    margin-left: -15px;
+    margin-right: 5px;
+}
+.errorTtl {
+    color: red;
+    font-weight: bold;
+}
+.errorMsg, .error {
+    color: red;
+}
+.errorList {
+    color: red;
+    font-weight: normal;
+    list-style: none outside none;
+    margin-bottom: 5px;
+    padding: 0;
+}
+.disabled {
+    background-color: #CCCCCC;
+}
+.disabledText {
+    color: #AAAAAA;
+}
+.feePromo {
+    color: #009900;
+    font-weight: bold;
+}
+#box {
+    left: 50%;
+    margin-left: -450px;
+    position: relative;
+    width: 900px;
+}
+#wrapper {
+    border-color: #FFFFFF #FFB50C;
+    border-left: 1px solid #FFB50C;
+    border-right: 1px solid #FFB50C;
+    border-style: solid;
+    border-width: 1px;
+}
+#lnkSaveForLaterImg {
+    margin-left: 20px;
+}
+#header {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/header_bg.gif") repeat-x scroll center bottom #FFD739;
+    border-color: #FFB50C;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    height: 50px;
+    margin-top: 10px;
+}
+#headerTxt h1 {
+    font-size: medium;
+    font-weight: bold;
+    margin-left: 20px;
+    margin-top: 15px;
+}
+.errSum {
+    border: 1px solid red;
+    margin: 10px 0 0 35px;
+    padding: 10px;
+    width: 698px;
+}
+.errSum div, .info div {
+    margin-right: 10px;
+}
+.warSum {
+    border: 1px solid #CCCCCC;
+    margin: 10px 0 0 35px;
+    padding: 10px;
+    width: 698px;
+}
+#footer {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btm_bar.gif") repeat-x scroll center bottom #FFD112;
+}
+#footerLt {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btm_leftcnr.gif") no-repeat scroll left bottom transparent;
+    border-bottom: 1px solid white;
+}
+#footerRt {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btm_rightcnr.gif") no-repeat scroll right bottom transparent;
+}
+#footerTxt {
+    float: left;
+    font-size: small;
+    margin: 8px 0 10px 10px;
+}
+#footerBtns {
+    float: right;
+    margin: 10px 15px 10px 0;
+}
+#cusSupport {
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+}
+.btn_lnk {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    color: #1A4DC1;
+    text-decoration: none;
+}
+.btn_lnkHover {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    color: #1A4DC1;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.btn_whiteLt {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btn_whiteLt.gif") no-repeat scroll left top transparent;
+    border: 0 none;
+    font-family: arial;
+    height: 24px;
+}
+.btn_whiteRt {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btn_whiteRt.gif") no-repeat scroll right top transparent;
+    display: inline-block;
+    height: 24px;
+    padding-right: 3px;
+}
+.btn_checkLt {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btn_checkLt.gif") no-repeat scroll left top transparent;
+    border: 0 none;
+    height: 22px;
+    margin-right: 4px;
+    padding-left: 18px;
+}
+.btn_arrowLt {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btn_arrowLt.gif") no-repeat scroll left top transparent;
+    border: 0 none;
+    height: 22px;
+    margin-right: 4px;
+    padding-left: 18px;
+}
+.btn_grayRt {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/btn_grayRt.gif") no-repeat scroll right top transparent;
+    height: 22px;
+    padding-bottom: 2px;
+    padding-top: 4px;
+}
+.readOnlyVal {
+    font-weight: bold;
+}
+.inpErr {
+    color: #FF0000;
+}
+.msgPanel {
+    background-color: #EDF1F9;
+}
+.panel-n {
+    border-color: #739DCD #739DCD -moz-use-text-color;
+    border-style: solid solid none;
+    border-width: 1px 1px 0;
+    position: relative;
+}
+.panel-n .panel-e {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/imgTopLeftBlue_6x6.gif") no-repeat scroll right top transparent;
+    position: relative;
+    right: -1px;
+    top: -1px;
+}
+.panel-n .panel-w {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/imgTopRightBlue_6x6.gif") no-repeat scroll left top transparent;
+    font-size: 0;
+    height: 6px;
+    left: -2px;
+    position: relative;
+}
+.panel-s {
+    border-color: -moz-use-text-color #739DCD #739DCD;
+    border-right: 1px solid #739DCD;
+    border-style: none solid solid;
+    border-width: 0 1px 1px;
+    position: relative;
+}
+.panel-s .panel-e {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/imgBottomRightBlue_6x6.gif") no-repeat scroll right bottom transparent;
+    bottom: -1px;
+    position: relative;
+    right: -1px;
+}
+.panel-s .panel-w {
+    background: url("http://pics.ebaystatic.com/aw/pics/easylister/imgBottomLeftBlue_6x6.gif") no-repeat scroll left bottom transparent;
+    font-size: 0;
+    height: 6px;
+    left: -2px;
+    position: relative;
+}
+.panel-head {
+    border-color: #739DCD;
+    border-style: solid;
+    border-width: 0 1px;
+    padding: 0 10px;
+}
+.g-hdn {
+    display: block;
+    left: -9999px;
+    position: absolute;
+}
+.footerBG {
+    background: url("http://q.ebaystatic.com/aw/pics/buy/trust/imgEbpNeuFooter.gif") no-repeat scroll right bottom #D4E4F4;
+    clear: right;
+    color: #D4E4F4;
+    font-family: Verdana;
+    font-size: 10px;
+    padding: 0;
+    width: 400px;
+}
+.coreFooterLinks .gh-hdn {
+    font-size: 0;
+    height: 0;
+    margin-top: 10px;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+}

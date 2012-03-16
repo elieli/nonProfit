@@ -1,0 +1,764 @@
+<%@ Page Title="JomaDeals.com Order Information and Checkout - Step 1" Language="C#"
+    MasterPageFile="../Site.master" AutoEventWireup="true" CodeFile="Checkout_step1.aspx.cs"
+    Inherits="checkout_Checkout_step1" %>
+
+<%@ Register TagPrefix="uc1" TagName="ShoppingCart" Src="../controls/ShoppingCart.ascx" %>
+<%@ Register Src="~/controls/CartPaymentForm.ascx" TagName="CartPaymentForm" TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="Headers" runat="Server">
+    <meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
+    <meta name="GOOGLEBOT" content="NOARCHIVE" />
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Body"  runat="Server">
+   
+   
+   
+   
+   <%--
+    
+    <!-- Start Inner Content -->--%>
+<div class="body_partone_inner"><%--
+<!-- Contact Form Content -->--%>
+<h1>Confirm your Order</h1><%--
+<!-- Confirm your Order Form -->--%>
+<div id="confirm_form">
+
+
+
+<div class="confirm_form_top"><p>Confirm Your Order</p></div>
+<div  id="tdAlreadyRegistered2" runat="server" class="login_form"><p>   <a  href="../account/login.aspx?checkout">Got an account? Login Here</a> 
+ <asp:ImageButton runat="server"  Visible="false" AlternateText ="Got an account? Login Here" OnClick="login_click"  ID="lnkLogin"/>  
+ <asp:Button  Visible="false" ID="btnLogin"  runat="server" BackColor="#fed9a2"
+                                    Font-Bold="True" Text="Login" Width="83px" Height="25px" OnClick="btnLogin_Click" /> 
+             
+                                        <%--  <asp:TextBox ID="txtForgotPasswordEmail" runat="server" Width="155"></asp:TextBox>
+                                          
+                                      <span>   <%=MessageForgot %></span><asp:Button ID="btnNewPassword" runat="server" BackColor="#fed9a2"
+                                    Font-Bold="True" Text="Request new password" Width="174px" Height="25px" OnClick="btnNewPassword_Click" />  
+                                       --%>   
+                                          
+                                          
+                                                          
+                    </p></div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                           <div  id="Div1" >      
+                    
+                     <br />
+                            <br />
+                    
+               <p> <b>Checkout</b></p> 
+                         <%--    <span style="font-size: 200%; font-weight: bold">Order Information and Checkout</span>
+                        --%>   
+                            If you have any questions about your order, please call 877-834-1434.
+                            <br />
+                             
+                            The security of this site has been verified by NetworkSolutions and McAfee.
+                          
+                          
+                           <br /> <br /> 
+                             
+</div>
+                    
+                           <div  id="tdAlreadyRegistered1" runat="server">    
+ <div   > 
+ 
+ 
+<div class="form_table_row_pay"  > <%--<b>Already Registered?</b>--%></div>
+<div class="form_table_pay_row1"><%--<p>Email:</p>--%></div> 
+<div  style="display:none;"  class="form_table_pay_row2">  <asp:TextBox ID="txtLoginEmail" Visible="false" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox> </div> 
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<%--<div  class="form_table_pay_row1"><%--<p>Password:</p></div> --%>
+<div style="display:none;"  class="form_table_pay_row2">    <asp:TextBox Visible="false"  ID="txtLoginPassword" runat="server" Width="155" TextMode="Password"></asp:TextBox>     </div>
+  <div  style="display:none;"  class="form_table_pay_row2">       <asp:CheckBox  ID="chkRememberPassword" runat="server" Visible="false" Text="Remember password:"
+                                                TextAlign="Left" /> </div>
+</div> 
+ 
+ 
+  </div>
+ 
+ 
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <div  id="tdForgotPassword1" runat="server" class="login_form">
+ 
+
+<div class="form_table_row_pay"  >
+
+ <%--<p><span>  <%=MessageLogin %></span> </p> 
+  <div class="form_table_pay_row1"><p>  <b>Forgot Password?</b></p> </div>
+
+<div class="form_table_pay_row1"><p>Email:</p></div>--%>
+<div  style="display:none;" class="form_table_pay_row2">   <asp:TextBox  ID="txtForgotPasswordEmail" runat="server" Width="155"></asp:TextBox>
+</div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<%--<div class="form_table_pay_row1"><p>Password:</p></div>--%>
+<div  style="display:none;" class="form_table_pay_row2">      <span class="ErrorMessage">
+                                <%=MessageForgot %></span><asp:Button ID="btnNewPassword" runat="server" BackColor="#fed9a2"
+                                    Font-Bold="True" Text="Request new password" Width="174px" Height="25px" OnClick="btnNewPassword_Click" />
+                 </div>
+ 
+</div>
+ 
+ 
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+
+<div class="paybtg_form">
+<%--<h2>PAYMENT INFORMATION</h2>
+--%>
+
+
+
+
+
+
+
+
+<%--
+<!-- bILLING INFORMATION         
+<!--<div class="paybtg_form">-->--%>
+<h2>Billing Information</h2>
+<div class="form_table_pay">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>First Name:</p></div>
+<div class="form_table_pay_row2">
+    <asp:TextBox ID="txtBillFirstName" runat="server" ValidationGroup="vgBillInfo">
+    </asp:TextBox><asp:RequiredFieldValidator ID="vdlBillFirstName" runat="server" ControlToValidate="txtBillFirstName"
+        ErrorMessage="required" ValidationGroup="vgBill" /> </div>
+</div>
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Last Name:</p></div>
+<div class="form_table_pay_row2"><asp:TextBox ID="txtBillLastName" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox><asp:RequiredFieldValidator ID="vdlBillLastName" runat="server" ControlToValidate="txtBillLastName"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" /></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Address:</p></div>
+<div class="form_table_pay_row2"> <asp:TextBox ID="txtBillAddress" runat="server"   ValidationGroup="vgBillInfo"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="vdlBillAddress" runat="server" ControlToValidate="txtBillAddress"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" />         </div>
+</div>
+
+
+<%--
+<!--<div class="form_table_pay">-->--%>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Address2:</p></div>
+<div class="form_table_pay_row2"> <asp:TextBox ID="txtBillAddress2" runat="server"   ValidationGroup="vgBillInfo"></asp:TextBox>
+                              
+                                  </div>
+</div>
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>City:</p></div>
+<div class="form_table_pay_row2">     <asp:TextBox ID="txtBillCity" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="vdlBillCity" runat="server" ControlToValidate="txtBillCity"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" />   
+                                    </div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>State:</p></div>
+<div class="form_table_pay_row2"><asp:DropDownList ID="cmbBillState" runat="server" ValidationGroup="vgBillInfo" AutoPostBack="True"
+                                                OnSelectedIndexChanged="cmbBillState_SelectedIndexChanged">
+                                            </asp:DropDownList>
+                                            <asp:RequiredFieldValidator ID="vdlBillState" runat="server" ControlToValidate="cmbBillState"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" ></asp:RequiredFieldValidator>
+                                            </div>
+</div>
+
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Bill Country:</p></div>
+<div class="form_table_pay_row2">   <asp:DropDownList ID="cmbBillCountry" runat="server" ValidationGroup="vgShipInfo"
+                                                        AutoPostBack="True" OnSelectedIndexChanged="cmbShipCountry_SelectedIndexChanged">
+                                                    </asp:DropDownList>      <asp:RequiredFieldValidator ID="vdlBillCountry" runat="server" ControlToValidate="cmbBillCountry"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" ></asp:RequiredFieldValidator>
+                                                                                    
+                                                    
+                                      </div>
+</div>
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Zip Code:</p></div>
+<div class="form_table_pay_row2">    <asp:TextBox ID="txtBillZip" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox>
+                                     
+                                           <asp:RequiredFieldValidator ID="vdlBillZip" runat="server" ControlToValidate="txtBillZip"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" ></asp:RequiredFieldValidator>
+                                   
+                                      </div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Phone Number:</p></div>
+<div class="form_table_pay_row2">       <asp:TextBox ID="txtBillPhone" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox>
+                                   
+                                           <asp:RequiredFieldValidator ID="vdlBillPhone" runat="server" ControlToValidate="txtBillPhone"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" ></asp:RequiredFieldValidator>
+                                   
+                                    </div>
+</div>
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Email:</p></div>
+<div class="form_table_pay_row2">       <asp:TextBox ID="txtBillEmail" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox> <asp:Label ID="lblbemailErr" runat="server" Visible ="false" Text="*" BackColor="Red" ></asp:Label>
+                                   
+                                           <asp:RequiredFieldValidator ID="vdlBillEmail" runat="server" ControlToValidate="txtBillEmail"
+                                                        ErrorMessage="required" ValidationGroup="vgBill" ></asp:RequiredFieldValidator>
+                                   
+                                   
+                                    </div>
+                                    
+                                    
+                                   
+                                    
+</div>
+
+
+
+
+<%--
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_pay_row3">
+ Shipping same as billing
+  <asp:CheckBox ID="chkShipToBillAddress" runat="server" Text="Ship to my Billing Address"
+                                                AutoPostBack="True" OnCheckedChanged="chkShipToBillAddress_CheckedChanged" />
+                
+ </div>
+--%>
+
+                                    <div>
+                                    <asp:Label runat="server" ID="billMessage"></asp:Label>
+                                    </div>
+
+
+
+</div> 
+
+
+
+
+
+
+<%--
+
+<!-- form_table_pay">  -->--%>
+</div>
+
+<%--
+ 
+<!--  bILLING INFORMATION  -->--%>
+
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_pay_row3"><br />
+ Shipping same as billing
+  <asp:CheckBox ID="chkShipToBillAddress"  Checked="true" runat="server" Text=""
+                                                AutoPostBack="True" OnCheckedChanged="chkShipToBillAddress_CheckedChanged" />
+  </div> 
+
+ 
+
+
+
+
+
+
+
+<%--
+<!-- SHIPPING INFORMATION         -->
+<!--<div class="paybtg_form">-->--%>
+
+<div  id="shipForm" runat="server" class="paybtg_form" > 
+
+<div class="form_table_pay">
+<br /><br />
+<h2>Shipping Information</h2>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>First Name:</p></div>
+<div class="form_table_pay_row2"> <asp:TextBox ID="txtShipFirstName" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox><asp:RequiredFieldValidator ID="vdlShipFirstName" runat="server" ControlToValidate="txtShipFirstName"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" /> </div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Last Name:</p></div>
+<div class="form_table_pay_row2"><asp:TextBox ID="txtShipLastName" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox><asp:RequiredFieldValidator ID="vdlShipLastName" runat="server" ControlToValidate="txtShipLastName"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" /></div>
+</div>
+ 
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Address:</p></div>
+<div class="form_table_pay_row2"> <asp:TextBox ID="txtShipAddress" runat="server"   ValidationGroup="vgBillInfo"></asp:TextBox><asp:RequiredFieldValidator ID="vdlShipAddress" runat="server" ControlToValidate="txtShipAddress"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" />
+                                  </div>
+</div>
+ 
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Address2:</p></div>
+<div class="form_table_pay_row2"> <asp:TextBox ID="txtShipAddress2" runat="server"   ValidationGroup="vgBillInfo"></asp:TextBox>
+                                  </div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>City:</p></div>
+<div class="form_table_pay_row2">     <asp:TextBox ID="txtShipCity" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox>
+                                 <asp:RequiredFieldValidator ID="vdlShipCity" runat="server" ControlToValidate="txtShipCity"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" />
+                                    </div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>State:</p></div>
+<div class="form_table_pay_row2"><asp:DropDownList ID="cmbShipState" runat="server" ValidationGroup="vgBillInfo" AutoPostBack="True"
+                                                OnSelectedIndexChanged="cmbBillState_SelectedIndexChanged">
+                                            </asp:DropDownList><asp:RequiredFieldValidator ID="vdlShipState" runat="server" ControlToValidate="cmbShipState"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" /></div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Zip Code:</p></div>
+<div class="form_table_pay_row2">    <asp:TextBox ID="txtShipZip" runat="server" ValidationGroup="vgBillInfo"></asp:TextBox>
+<asp:RequiredFieldValidator ID="vdlShipZip" runat="server" ControlToValidate="txtShipZip"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" />
+                                      </div>
+</div>
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div> 
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Ship Country:</p></div>
+<div class="form_table_pay_row2">   <asp:DropDownList ID="cmbShipCountry" runat="server" ValidationGroup="vgShipInfo"
+                                                        AutoPostBack="True" OnSelectedIndexChanged="cmbShipCountry_SelectedIndexChanged">
+                                                    </asp:DropDownList><asp:RequiredFieldValidator ID="vdlShipCountry" runat="server" ControlToValidate="cmbShipCountry"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" />
+                                      </div>
+</div>
+ 
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Phone Number:</p></div>
+<div class="form_table_pay_row2">
+    <asp:TextBox ID="txtShipPhone" runat="server" ValidationGroup="vgShipInfo"></asp:TextBox>
+    <asp:RequiredFieldValidator ID="vdlShipPhone" runat="server" ControlToValidate="txtShipPhone"
+        ErrorMessage="required" ValidationGroup="vgShip" />
+</div>
+</div>
+ 
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Email:</p></div>
+<div class="form_table_pay_row2">       <asp:TextBox ID="txtShipEmail" runat="server" ValidationGroup="vgShipInfo"></asp:TextBox> <asp:RequiredFieldValidator ID="vdltShipEmail" runat="server" ControlToValidate="txtShipEmail"
+                                                        ErrorMessage="required" ValidationGroup="vgShip" /><asp:Label ID="lblsemailErr" runat="server" Visible ="false" Text="*" BackColor="Red" ></asp:Label>
+                                    </div>
+  </div>                            
+        <div>
+                                    <asp:Label runat="server" ID="shipMessage"></asp:Label>
+                                    </div>
+                             
+</div><%--
+ <!--Text="Ship to my Billing Address"-->--%>
+                                  
+                                          
+ 
+
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+</div> 
+
+
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="paybtg_form">
+<div class="form_table_row_pay">
+
+<div class=""><p><b>Method of Shipping</b></p></div>
+
+
+<div class=" ">
+
+    <asp:RadioButtonList ID="rblShippingMethods" runat="server" AutoPostBack="True" OnSelectedIndexChanged="rblShippingMethods_SelectedIndexChanged">
+                                    </asp:RadioButtonList>
+   
+                                    <div>
+                                    <asp:Label runat="server" ID="shpmethMessage"></asp:Label>
+                                    </div>
+</div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="form_table_pay">
+
+ 
+ <br />
+       <uc2:CartPaymentForm ID="CartPaymentForm1" ValidationGroup="vgPayment" runat="server" /> 
+                  
+ 
+
+                                    <div>
+                                    <asp:Label runat="server" ID="payMessage"></asp:Label>
+                                    </div>
+<%--
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Credit Card:</p></div>
+<div class="form_table_pay_row2"><input name="" type="text" value="" /></div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Expiration:</p></div>
+<div class="form_table_pay_row2"><input name="" type="text" value="" /></div>
+</div>
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>CVV:</p></div>
+<div class="form_table_pay_row2"><input name="" type="text" value="" /></div>
+</div>--%>
+
+
+ 
+</div>
+
+
+
+ 
+
+<div   id="trCreateAccount2"  runat="server"  class="form_table_pay">
+<br /><br /><br />
+<h2>Create Account</h2>
+<div class="form_table_row_pay"  >
+<div id="trCreateAccount1" runat="server"> 
+
+           <asp:CheckBox ID="chkCreateAccount" runat="server" Text="I would like to create an account" />
+                            
+ </div>                    
+ </div>
+
+
+
+
+
+
+
+                            
+
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Password:</p></div>
+<div class="form_table_pay_row4">  
+                                                  <asp:TextBox  ID="txtCreateAccountPassword" TextMode="Password" runat="server"></asp:TextBox>
+                         
+                                </div>
+
+ </div>
+
+
+
+
+
+
+ 
+
+
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row1"><p>Confirm Password:</p></div>
+<div class="form_table_pay_row4">     <asp:TextBox ID="txtCreateAccountConfirmPassword" TextMode="Password" runat="server"></asp:TextBox>
+                                </div>
+ </div>
+
+
+<%--
+</div> 
+< form_table_pay">  --%>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- paybtg_form">  -->
+
+
+
+
+ <%--
+</div>--%>
+
+
+
+
+
+<%--
+</div>
+--%>
+
+
+
+
+
+
+
+
+
+
+<div class="paybtg_form_bottom">&nbsp;</div>
+ 
+ <%--
+<div class="form_table_paysep1"><p>&nbsp;</p></div> --%>
+<div style="float:right;" class="form_table_pay_row5"><p><a href="#">
+ <asp:ImageButton ID="btnContinue"   ImageUrl='App_Themes/yekatheme/images/submit_pay.gif' runat="server" BackColor="#fed9a2" Font-Bold="True"
+                                Text="" Width="86px" Height="25px" OnClick="btnContinue_Click" />
+
+
+
+
+<%--<img src="../App_Themes/yekatheme/images/submit_pay.gif" alt="" border="0" />--%></a></p>
+</div>
+
+
+
+<div class="form_table_paysep"><p>&nbsp;</p></div>
+<div class="form_table_row_pay">
+<div class="form_table_pay_row6"><a href="#"><img src="App_Themes/yekatheme/images/paypal.gif" alt="" border="0" /></a> <a href="#"><img src="App_Themes/yekatheme/images/google.gif" alt="" border="0" /></a>
+ <%--<asp:Button ID="btnContinueS" runat="server" BackColor="#c0e6fc" Font-Bold="True"
+                                Text="< Continue Shopping" Width="160px" Height="25px" OnClick="btnContinueShopping_Click" />
+                            &nbsp;<asp:Button ID="btnUpdateCart" runat="server" BackColor="#fed9a2" Font-Bold="True"
+                                Text="Update Cart" Width="100px" Height="25px" OnClick="btnUpdateCart_Click" />
+                            &nbsp;&nbsp;&nbsp;&nbsp--%>
+
+</div></div>
+ 
+
+
+
+<%--
+ </div>
+ --%>
+ 
+<%-- <div id="your_order_" style="float:left; z-index:2000; height:auto; position:absolute; width:auto;" > 
+   <div class="order_heading"><p>your order</p></div> 
+ --%>
+<!--  <ContentTemplate>-->
+                                 <%--   <uc1:ShoppingCart ID="ShoppingCart1" runat="server" CalculateOthers="true" ShowTotal="true"
+                                        OnCartUpdated="ShoppingCart1_CartUpdated" />--%>
+                               
+ 
+
+<%--
+ 
+</div> 
+ --%><%--
+ <div>TESTTER </div>--%>
+ 
+<%--Confirm your Order Form --%>
+
+
+  </div>   
+
+
+<div    style=" float:left; margin-top:0px;left:0px; margin-left:0px; z-index:1000px; top:0px;  "> 
+   
+   <uc1:ShoppingCart ID="ShoppingCart2" runat="server" CalculateOthers="true" ShowTotal="true"
+                                      OnCartUpdated="ShoppingCart1_CartUpdated" />
+                                    
+<!--
+</div>-->
+</div>
+
+
+
+  </div>   
+
+<%--</div> --%>
+<!-- End Inner Content -->
+
+
+</asp:Content>

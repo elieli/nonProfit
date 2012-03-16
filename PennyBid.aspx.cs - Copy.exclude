@@ -1,0 +1,1979 @@
+﻿/////*
+////=====================================================
+////' Project:      JomaDeals.com
+////' Programmer:   Derek/Valentin
+////' File:         default.aspx.cs
+////' Description:  
+////' Created:		07/09/09
+////' Last Updated: 11/16/09
+////'
+////'=====================================================
+////*/
+/////*
+////=====================================================
+////' Project:      JomaDeals.com
+////' Programmer:   Eli Barber
+////' File:         default.aspx.cs
+////' Description:  Redesign and revision of website
+////' Created:		12/09/10
+////' Last Updated: 12/09/10
+////'
+////'=====================================================
+////*/
+using System;
+using System.Collections;
+using System.IO;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Xml;
+
+//using MainStreet.BusinessFlow.SDK;
+//using MainStreet.BusinessFlow.SDK.Web;
+//using MainStreet.BusinessFlow.SDK.Ws;
+
+using System.Configuration;
+
+
+public partial class PennyBid : System.Web.UI.Page
+{
+    protected string style;
+    ProductDetails p;
+    DataTable dtItemDetail;
+    protected String Sdomain ="";//    ConfigurationManager.AppSettings["Landing"].ToString().ToLower();
+    String WebsiteUrl =  "";// ConfigurationManager.AppSettings["WebsiteUrl"].ToString().ToLower();
+      
+    Referrer r = new Referrer();
+    public int index = 0; bool InDebugMode = false;
+  
+    protected String ProductTitle; protected String Link;
+    public string knowtxt = "";
+    public string knowtxt_ = "";
+    protected string relLink;
+    protected string PriceFormated1;
+    protected string ProductURL1;
+       protected string  ImageLogoURL1;
+       protected string CompanyName1;
+
+
+       protected string PriceFormated2;
+       protected string ProductURL2;
+       protected string ImageLogoURL2;
+       protected string CompanyName2;
+     
+    static string prefix = ""; 
+   
+    protected string reprow;
+    protected string Message = "";
+    protected string MediumImageWidth = "";
+    protected string MediumImageHeight = "";
+    protected string ImageDesc = "";
+    protected string CompareSaveText = "";
+    protected string BrowseCollectionBanner = "";
+    protected string ImageUrl1; 
+    protected string ImageUrls;
+            protected string          Link1  ;
+            protected string ImageTitle2; 
+    protected string ImageTitle;
+            protected string ImageUrl2;
+            protected string Link2;
+            protected string ImageTitle1; HtmlInputHidden hdnIndex;
+
+    public string ProductTitles
+    {
+        get
+        {
+            try
+            {
+                return "";// PrgFunctions.TryCastString(ViewState["ProductTitle"]);
+            }
+            catch
+            {
+                return "";
+            }
+        }
+        set
+        {
+            ViewState["ProductTitle"] = value;
+        }
+    }
+
+    #region "Properties"
+    //*Properties
+    public string MediumImageUrl
+    {
+        get
+        {
+            try
+            {
+                return "";// PrgFunctions.TryCastString(ViewState["MediumImageUrl"].ToString());
+            }
+            catch
+            {
+                return "";
+            }
+        }
+        set
+        {
+            ViewState["MediumImageUrl"] = value;
+        }
+    }
+
+
+    public string LinkToFullImage
+    {
+        get
+        {
+            try
+            {
+                return "";// PrgFunctions.TryCastString(ViewState["LinkToFullImage"].ToString());
+            }
+            catch
+            {
+                return "";
+            }
+        }
+        set
+        {
+            ViewState["LinkToFullImage"] = value;
+        }
+    }
+
+
+    public decimal SpecialItemCost
+    {
+        get
+        {
+            return 0;// PrgFunctions.TryCastDecimal(Application[prefix + "SpecialItemCost"]);
+        }
+        set
+        {
+            Application[prefix + "SpecialItemCost"] = value;
+        }
+    }
+
+
+    public int FreeShipping
+    {
+        get
+        {
+            return 0;// PrgFunctions.TryCastInt(Application[prefix + "FreeShipping"]);
+        }
+        set
+        {
+            Application[prefix + "FreeShipping"] = value;
+        }
+    }
+
+
+    public string DisplayVariationGuid
+    {
+        get
+        {
+            try
+            {
+                
+                return "";// PrgFunctions(.TryCastString(ViewState["DisplayVariationGuid"]);
+            }
+            catch
+            {
+                return "";
+            }
+        }
+        set
+        {
+            ViewState["DisplayVariationGuid"] = value;
+        }
+    }
+    #endregion
+
+
+
+
+
+
+
+    private ProductDetails getDetails()
+    {
+        bool outOfDate = false;
+
+        //Get the current date time
+        DateTime dt = DateTime.Now;
+        outOfDate = true;
+        
+        //Application init/null
+      if ((Application == null) || (Application[prefix + "DateTimeCached"] == null) || (Convert.ToDateTime(Application[prefix + "DateTimeCached"]).Date != dt.Date) || (Application[prefix + "Product"] == null))
+        outOfDate = true;
+
+       
+
+        if (outOfDate)
+        {
+            //Added in to ensure child item was not reloaded
+            DisplayVariationGuid = "";
+
+            Application.Lock();
+
+         
+
+            // Retrieve deals for today 
+ 
+            string commandName = "v_getDeals";
+            string dealDate = "";
+            string site = prefix;
+            string opt = "6";
+            string title = "";
+            string status = "";
+            string itemcode = "";
+            string eventid = "";
+
+            DataSet ds = new DataSet();// r.GetDeals(commandName, dealDate, site, eventid, itemcode, title, status, opt);
+
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                itemcode =  ds.Tables[0].Rows[0][0].ToString();
+                SpecialItemCost = (decimal)ds.Tables[0].Rows[0][1];
+                FreeShipping = (int)ds.Tables[0].Rows[0][2];
+             Session["id"]=  (int)ds.Tables[0].Rows[0][3];
+
+
+
+                if (FreeShipping == 1)
+                {
+                    freeship.Visible = true;
+                }
+                else { freeship.Visible = false; }
+
+
+            }
+
+            //Get the product details
+           ////////////// Application[prefix + "Product"] = new ProductDetails(itemcode);
+            Application[prefix + "DateTimeCached"] = DateTime.Now.Date;
+
+            Application.UnLock();
+          }
+
+            return (ProductDetails)Application[prefix + "Product"];
+        
+    }
+
+
+
+
+
+
+        protected void lvDisplayVariations_OnItemDataBound(object sender, DataListItemEventArgs e)
+        {   
+           
+            switch (e.Item.ItemType)
+            {
+                case  ListItemType.Item:
+                case ListItemType.AlternatingItem:
+
+                    DataRowView dtRow =  (DataRowView) e.Item.DataItem;
+                    hdnIndex = (HtmlInputHidden)e.Item.FindControl("hdnIndex");
+
+
+
+                    style = dtRow[2].ToString().Substring(dtRow[2].ToString().IndexOf(':')+1, dtRow[2].ToString().IndexOf(';') - dtRow[2].ToString().IndexOf(':') -1);
+                   /// style = " " + style + " ; display:block; border:solid 2px black; width:12px; height:12px;";
+
+                      HtmlContainerControl vv = (HtmlContainerControl)e.Item.FindControl("vv");
+                    hdnIndex.Value =  e.Item.ItemIndex.ToString();///
+                    index  = e.Item.ItemIndex ;
+                    vv.Attributes.Add("onmouseover", "setvalue(" + index + ")");
+                    vv.Style.Add("background-color", style);
+                    break;
+
+
+            }
+
+
+    }
+
+
+
+
+
+
+    // roll over images to change big image 
+
+    protected void otherView(object sender, CommandEventArgs e)
+    {
+
+
+     DataTable  dtImagesThumb =(DataTable) Session["dtImagesThumb"] ;  
+
+
+        DataTable dtImagesThumb3 = new DataTable();
+        dtImagesThumb3 = dtImagesThumb.Clone();
+
+        DataSet dst = new DataSet();
+        dst.Tables.Add("dtImagesThumb3");
+       
+        int cntrow = 0; int cntrows = 3;
+        if (e.CommandArgument.ToString() == "right" && dtImagesThumb.Rows.Count > 3)
+            cntrows = dtImagesThumb.Rows.Count - 3;
+        
+
+        foreach (DataRow rows_ in dtImagesThumb.Rows)
+        {
+            if ((cntrow >= cntrows && e.CommandArgument.ToString() == "right") || (cntrow < cntrows && e.CommandArgument.ToString() == "left"))
+              
+
+            dtImagesThumb3.ImportRow(rows_);
+           
+            cntrow += 1;
+        }
+
+        iqImagesThumb.DataSource = dtImagesThumb3;
+        iqImagesThumb.DataBind();
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    protected override void OnInit(EventArgs e)
+    {  
+    }
+
+
+
+
+
+
+
+
+    protected Decimal UpdateItems(String parm, string commandtext, int id, int buyerID, DateTime biddate, Decimal bidamount, int credits, String soldFixedBid, int fee_per_bid)
+    { // int orgid=0;  
+        int shippngCost = 0;
+        //  int orgid = 0;  
+        String title = "";
+        int quantity = 0;
+        int catID = 0;
+        String location = "";
+        String orgPaypal = "";
+        String description = "";
+        String condition = "";
+        //String shippngCost = status; 
+        DateTime startDate = DateTime.Today;
+        DateTime endDate = DateTime.Today;
+        DateTime soldDate = DateTime.Today;
+        String commandName = commandtext;
+
+        String prm = parm;
+
+        string auctionType = messages.bidtype;
+        //  int credits = 3;
+
+        int itemAuctionID = id;
+        // status = "";
+        Decimal bid = 0;
+        DataSet ds = new DataSet();
+
+        string commandText = commandtext;
+        commandName = commandtext;
+        //   string commandName;
+
+        //   DateTime biddate;
+
+        //    string commandName, string prm,   int itemAuctionID, int buyerID, int storeID,
+        //int quantity, int quantityAllocated, int shipping, Decimal startBidPrice, Decimal currentBidPrice, int soldAmount,
+        //int buyitNow, int percentAllocated, int amountAllocated, int soldFixedBid, string condition, int returnDays,
+        //String returnPolicy, DateTime startTime, DateTime endTime, DateTime soldTime, string paypalEmail, int handlingTime, String auctiontype, int credits,
+        //string imgPath
+        if (prm == "X")
+        {
+            ///orgStatus = "";// drplstEmailSts.SelectedValue.ToString();
+            bid = r.get_Bids(commandName, prm, itemAuctionID, buyerID, biddate,
+          bidamount, credits,
+          soldFixedBid, fee_per_bid, auctionType);
+
+
+
+
+
+         
+
+        }
+        return bid;
+    }
+
+
+
+
+
+
+    protected DataSet UpdateDonate(String parm, string commandtext, int id, int orgid, int catid, int itemid, string status, String auctiontype)
+    {
+
+      //  int itemid = 0;
+        // int orgid=0;  
+        int shippngCost = 0;
+        //  int orgid = 0;  
+        String title = "";
+        int quantity = 0;
+        int catID = 0;
+        String location = "";
+        String orgPaypal = "";
+        String description = "";
+        String condition = "";
+        //String shippngCost = status; 
+        DateTime startDate = DateTime.Today;
+        DateTime endDate = DateTime.Today;
+        DateTime soldDate = DateTime.Today;
+        String commandName = commandtext;
+
+        String prm = parm;
+
+
+        int credits = 3;
+
+
+        status = "";
+
+        DataSet ds = new DataSet();
+
+        string commandText = commandtext;
+        commandName = commandtext;
+        //   string commandName;
+
+        if (prm == "S")
+        {
+            ///orgStatus = "";// drplstEmailSts.SelectedValue.ToString();
+            ds = r.getItems(commandName, prm, itemid, orgid, catid, location,
+     description, quantity, shippngCost, condition, title,
+          startDate, endDate, soldDate, auctiontype ,0 
+     );
+
+
+
+
+
+
+
+        }
+
+
+
+
+        return ds;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    protected override void OnPreRender(EventArgs e)
+    {
+         
+    }
+
+
+    private void load()
+    {
+        ddDisplayVariations.Attributes.Add("onChange", "forcePost()");
+
+        string query =   Request.Url.ToString();
+         
+           Session["MapPath"] =    "";// ConfigurationManager.AppSettings["MapPath"].ToString();
+             string paths =  "";// ConfigurationManager.AppSettings["Path"].ToString();
+             string mp = paths;  
+             string mmp = mp.Replace("/", "");     
+        
+        Session["Path"] = Request.Url.ToString().IndexOf(mp) != -1 ? Request.Url.ToString().Substring(0, Request.Url.ToString().IndexOf(mp)) + mp : Request.Url.ToString().Substring(0, Request.Url.ToString().IndexOf(mmp)) + mp;
+             Session["Path"] = Session["Path"].ToString().Replace("https", "http");
+             Session["sPath"] = Session["Path"];
+             Session["sPath"] = Session["sPath"].ToString().Replace("http", "https");            
+
+        String Sdomain =  "";// ConfigurationManager.AppSettings["Landing"].ToString().ToLower();        
+
+        //will get the default Sub domain, and Host Name
+        string SubDomain = "www", HostName;
+        //HostName = Request.Url.Authority;
+        //string[] UrlParts = HostName.Split('.');
+
+        
+       // InDebugMode = Convert.ToBoolean( "";// ConfigurationManager.AppSettings["InDebugMode"].ToString());
+
+        if (InDebugMode == true)
+        {
+            prefix = query.LastIndexOf('=') == -1 ? "" : query.Substring(query.LastIndexOf('=') + 1, query.Length - (query.LastIndexOf('=') + 1));
+            SubDomain = prefix;
+        }
+
+
+
+        else
+         {
+
+             if (query.ToLower().IndexOf("luxury") != -1)
+             {
+                 prefix = "luxury"; SubDomain = prefix;
+
+             }
+             else
+             {
+                 if (query.ToLower().IndexOf("handbag") != -1)
+                 {
+                     prefix = "handbag"; SubDomain = prefix;
+
+                 }
+           
+              else
+             {
+                 
+                     prefix = ""; SubDomain = prefix;
+
+                 
+             }
+
+             }
+         }
+
+         
+
+        Session["prefix"] = prefix;
+        btnBuyNow.Click += new ImageClickEventHandler(btnBuyNow_Click);
+        Session["pageorig"] = "";
+        Session["page"] = "home";      
+
+        lvDisplayVariations.RepeatDirection = RepeatDirection.Horizontal;
+        lvDisplayVariations.RepeatLayout = RepeatLayout.Table;
+        lvDisplayVariations.RepeatColumns = 4;
+      
+        ImgBtnOvleft.Visible = false;
+        ImgBtnOvright.Visible = false;
+      
+        if (IsPostBack)
+        {
+        string eventArgument =  this.Request["__EVENTARGUMENT"] == null ? string.Empty :  this.Request["__EVENTARGUMENT"].ToString() ;
+
+        if (eventArgument != string.Empty)
+        {            
+            try
+            {
+                int eventargument = Convert.ToInt16(eventArgument);
+              return;
+            }
+            catch { }
+        }        
+        
+        }
+        
+
+        string itemGuid=null;
+        //Get an item if it doesn't already exist
+     
+         p = getDetails();
+
+
+         if (itemGuid.Length == 0) //(p.IsLoaded())
+        {
+            Session["IsLoaded"] = true;             
+         //   itemGuid = p.GetItemGuid();
+          
+            if (itemGuid.Length == 0)
+            { 
+                HtmlContainerControl body_partone_1 = (HtmlContainerControl)this.FindControl("body_partone_1");
+                body_partone_1.Visible = false;
+                pStyleDisplayVariations.Visible = false;
+                HtmlContainerControl box1_one = (HtmlContainerControl)this.FindControl("box1_one");
+                box1_one.Visible = false;
+                      ddDisplayVariations.Visible = false;
+                Session["IsLoaded"] = false;
+             
+                btnBuyNow.Visible = false;
+                imagesoldOut.Visible = false;
+                return;
+            }
+            
+            Message = "";
+        }
+        else
+        {
+             
+            ddDisplayVariations.Visible = false;             
+            Session["IsLoaded"] = false;          
+            HtmlContainerControl box1_one = (HtmlContainerControl)this.FindControl("box1_one");           
+        
+            //If the product can't be loaded from mainstreet
+            Message = "<br /><center><h1>There is no deal today or has been sold out.<br /><br />Please check back tommorrow for another great deal!</h1></center><br /><br />";
+          
+            HtmlContainerControl body_partone_1 = (HtmlContainerControl)this.FindControl("body_partone_1");
+            Panel1.Visible = false;
+            btnBuyNow.Visible = false;
+            imagesoldOut.Visible = false;
+            
+            return;
+        }
+
+         
+       
+
+
+
+        //Is this a master item?
+        if  (true) /// (p.IsMasterItem()) //test
+        {
+            //Master with child items
+            trNormalItem.Visible = false;
+            pChildItems.Visible = true;
+
+            DataTable dt = new DataTable();// p.GetChildItems();
+            if ((dt == null) || (dt.Rows.Count < 1))
+            {
+                pChildItems.Visible = false;
+                trOutofStock.Visible = true;
+                day.Visible = false;
+
+            }
+            else
+            {
+                bool atleastOneItem = false;
+
+                //Load up the reference table
+                bool lookUpLoaded = false;
+
+                //LookupDataTable ldt =    BusinessFlow.WebServices.LookupTables[MainStreet.BusinessFlow.SDK.Ws.LookupTables.AttributeValues, "DisplayVariation"];
+                //if ((ldt != null) || (ldt.Rows.Count < 1))
+                //    lookUpLoaded = true;
+
+                DataTable dtRes = new DataTable();
+                dtRes.Columns.Add("ItemGuid");
+                dtRes.Columns.Add("Title");
+                dtRes.Columns.Add("Style");
+                dtRes.Columns.Add("CSSClass");
+                dtRes.Columns.Add("Index");
+
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append(@"<style type=""text/css"">");
+
+                ddDisplayVariations.Items.Clear();
+ 
+
+                int count = 1;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    Guid gg = new Guid();
+                    ProductDetails c = new ProductDetails(gg);// (PrgFunctions.TryCastGuid(dr["item_guid"]));
+                    int q = 0;// c.GetActualQuantityOnHand();
+
+                    string title = "";// c.GetShortTitle();
+
+                    DataRow drRes = dtRes.NewRow();
+
+                    drRes["ItemGuid"] = dr["item_guid"].ToString();
+                    
+             
+
+                    dtRes.Rows.Add(drRes);
+
+                    if (q > 0)
+                        atleastOneItem = true;
+
+                    //Build the style
+                    string displayVariation = "";// c.GetStringFieldOrAttribute("DisplayVariation");
+                    if (lookUpLoaded)
+                    {
+                      ////////////  DataRow[] drAttribute = ldt.Select("LookupValue='" + displayVariation + "'");
+                        //if (drAttribute.Length == 0)
+                        //{
+                        //    drRes["Style"] = "";
+                        //}
+                        //else
+                        //{
+                        //    //drRes["Style"] = PrgFunctions.TryCastString(drAttribute[0]["LookupDescription"]);
+                        //    //title = PrgFunctions.TryCastString(drAttribute[0]["LookupCode"]);
+                        //}
+                    }
+                    else
+                    {
+                        drRes["Style"] = "";
+                    }
+
+                    drRes["Title"] = title;
+
+
+                   
+
+
+                    string className = "styleDisplayVariation" + count;
+                    drRes["CSSClass"] = className;
+
+                    //Build the style of the list item
+                    sb.Append("." + className + "{" + drRes["Style"].ToString() + "}");
+
+                    //Build the list item
+                    ListItem li = new ListItem();
+                    li.Text = title;
+                    li.Value = drRes["ItemGuid"].ToString();
+                    li.Attributes.Add("class", className);
+                    ddDisplayVariations.Items.Add(li);
+                    count++;
+                }
+
+                sb.Append(@"</style>");
+
+                lvDisplayVariations.DataSource = dtRes;
+                lvDisplayVariations.DataBind();
+
+                if (ddDisplayVariations.Items.Count > 0)
+                {
+                    if (DisplayVariationGuid.Length == 0)
+                    {
+                        DisplayVariationGuid = ddDisplayVariations.Items[0].Value;
+                    }
+                }
+              
+
+                //STI 10/16/09 Adjusted code to hide message
+                if (atleastOneItem)
+                {  
+                    pChildItems.Visible = true;
+                    trOutofStock.Visible = false;
+                    day.Visible = true;
+                    btnBuyNow.Visible = false;
+                    ddDisplayVariations.Visible = true;
+                   
+                
+                }
+
+
+                else
+                {
+                   
+                    trNormalItem.Visible = true;
+                    pChildItems.Visible = false;
+                    ddDisplayVariations.Visible = true;
+                }
+            }
+        }
+        else
+        {
+        trNormalItem.Visible = true;
+            pChildItems.Visible = false;
+
+                    //STI 10/16/09 Moved from outside of block into Normal Item section
+                    //if (p.IsBackOrderedBasedOnActualNotCart())
+                    //{
+                        btnBuyNow.Visible = false;
+                        
+                        imagesoldOut.Visible = true;
+                        trOutofStock.Visible =  true;
+                        day.Visible = false;
+                    //}
+                    //else
+                    //{
+                        btnBuyNow.Visible = true;
+                        
+                        imagesoldOut.Visible = false;
+                        trOutofStock.Visible = false;
+                        day.Visible = true;
+                    //}
+                }
+           
+
+            //Get further details
+
+           // DataTable dtItemDetail = getItemDetail(p);
+              //dtItemDetail = getItemDetail(p);
+        
+            lblRetailPrice.Text = Double.Parse(dtItemDetail.Rows[0]["Retail"].ToString()).ToString("C2");
+          ///  lblSalePrice.Text = Double.Parse(dtItemDetail.Rows[0]["Price"].ToString()).ToString("C2"); //mustresolve
+
+            ProductTitles = dtItemDetail.Rows[0]["Title"].ToString();
+            lblProductTitles.Text = ProductTitles;
+
+            Session["dtItemDetail"] = dtItemDetail;
+
+
+
+
+
+            //if (!p.IsMasterItem())
+            //{
+                ProductTitles = dtItemDetail.Rows[0]["Title"].ToString();
+                lblProductTitles.Text = ProductTitles;
+            //}
+           
+            //Calculate the You Save bit
+            try
+            {
+                double dPercent = Double.Parse(dtItemDetail.Rows[0]["Price"].ToString()) / Double.Parse(dtItemDetail.Rows[0]["Retail"].ToString());
+
+                int iPercent = Convert.ToInt32(dPercent * 100);
+                iPercent = 100 - iPercent;
+                lblYouSave.Text = (Double.Parse(dtItemDetail.Rows[0]["Retail"].ToString()) - Double.Parse(dtItemDetail.Rows[0]["Price"].ToString())).ToString("C2") + " (" + iPercent + "%)";
+            }
+            catch
+            {
+                lblYouSave.Text = "";
+            }
+
+           
+            //Get the brand
+            string brandName = "";// p.GetStringFieldOrAttribute("Brand");
+
+            //Converted from choice value guid to its label
+            object result = "";// BusinessFlow.WebServices.LookupTables[LookupTables.AttributeValues].TranslateToLabel(brandName, "");
+
+            if (result != null)
+                brandName = result.ToString();
+            // save the brand in a session var and use it in site master
+            Session["brandName"] = brandName;
+
+            string strPhysicalPath = "";
+            XmlDocument HomeSettings = new XmlDocument();
+            strPhysicalPath = Request.MapPath("~\\XML\\changeText.xml");
+            HomeSettings.Load(strPhysicalPath);  
+            XmlNode CurrNode;
+            DateTime linkdate;
+            TimeSpan ts = TimeSpan.FromDays(2);
+            CurrNode = HomeSettings.SelectSingleNode("JomaExl/changeText/linkdate");
+            linkdate = Convert.ToDateTime(CurrNode.InnerText);
+
+            if (linkdate < DateTime.Today.Add(-ts))
+            {
+                CurrNode = HomeSettings.SelectSingleNode("JomaExl/changeText/linkdefault");
+                relLink = CurrNode.InnerText;
+            }
+            else
+            {
+                CurrNode = HomeSettings.SelectSingleNode("JomaExl/changeText/link");
+                relLink = CurrNode.InnerText;
+            }
+
+            PrgFunctions f = new PrgFunctions();
+
+            //  fill  the Comapre & save listviews  and Other deals listviews (to be used in site master)
+            compareOther();         
+   
+            //STI 11/16/09 Load up the Banner 'Browse collection"
+            BrowseCollectionBanner = "";
+
+            string bannerImageUrl = "";// p.GetStringFieldOrAttribute("BannerImageUrl");
+            string BannerLinkUrl = "";// p.GetStringFieldOrAttribute("BannerLinkUrl");
+
+            if ((bannerImageUrl.Length > 0) && (BannerLinkUrl.Length > 0))
+            {
+                BrowseCollectionBanner = "<table width='280px' border='0' align='center' cellpadding='0' cellspacing='0'><tr><td valign='middle'>";
+                BrowseCollectionBanner += "<a href='" + BannerLinkUrl + "' title='Browse the " + brandName + " collection'><img src='" + bannerImageUrl + "' title='Browse the " + brandName + " collection' /></a>";
+                BrowseCollectionBanner += "</td></tr></table>";
+            }
+
+            //Load up the Attribute view
+            DataTable dtAttributes = new DataTable();//getAttributes(p);
+            Session["dtAttributes"] = dtAttributes;
+
+        
+            //Read the images from the harddisk instead of the image manager
+            f = new PrgFunctions();
+            string productImagesPath = "";// PrgFunctions.TryCastString(f.GetAppSettings("productImagesPath"));
+
+            if (!productImagesPath.EndsWith("\\"))
+                productImagesPath += "\\";
+
+            string manufacturerId = "";//p.GetStringFieldOrAttribute("ManufactuerItem").ToLower();
+
+            //Set the main image
+            LinkToFullImage = dtItemDetail.Rows[0]["ImageUrlFull"].ToString();
+            MediumImageUrl = dtItemDetail.Rows[0]["ImageUrlMain"].ToString();
+            MediumImageWidth = Unit.Parse(dtItemDetail.Rows[0]["ImageUrlMainWidth"].ToString()).ToString();
+            MediumImageHeight = Unit.Parse(dtItemDetail.Rows[0]["ImageUrlMainHeight"].ToString()).ToString();
+            ImageDesc = dtItemDetail.Rows[0]["Title"].ToString();
+       
+            //customization: override the image urls to use higher qualities ones
+            LinkToFullImage = ResolveUrl("ProductImages/Full/" + manufacturerId + "_1.jpg");
+            MediumImageUrl = ResolveUrl("ProductImages/Medium/" + manufacturerId + "_1.jpg");
+              
+            //Load up thumbnails
+            string itemTag = "";// p.GetStringFieldOrAttribute("item_tag").ToLower();
+
+
+
+            DataTable dtImagesThumb = new DataTable();// p.GetImagesTableWithUrls();//p.GetImagesTableWithUrlsFromHarddisk(this.Page); 
+            Session["dtImagesThumb"] = dtImagesThumb;
+
+
+              pOtherViews.Visible = true;
+            if (dtImagesThumb.Rows.Count == 0)
+            {
+
+                pOtherViews.Visible = false;
+            }
+
+
+
+
+
+            for (int i = 0; i < dtImagesThumb.Rows.Count; i++)
+                dtImagesThumb.Rows[i]["ImageDesc"] = itemTag + " " + (i + 1).ToString();
+            DataTable dtImagesThumb3 = new DataTable();
+            dtImagesThumb3 = dtImagesThumb.Clone();        
+            DataSet dst = new DataSet();
+            dst.Tables.Add("dtImagesThumb3");
+            DataView dv = new DataView();
+            dv = dst.Tables[0].DefaultView;
+            int cntrows = 0;
+            foreach (DataRow rows_ in dtImagesThumb.Rows)
+            {
+                if (cntrows <= 2)
+                {                    
+                    dtImagesThumb3.ImportRow(rows_);
+                    cntrows += 1;
+                }
+
+            }
+
+
+            if (dtImagesThumb.Rows.Count <= 3)
+            {
+                ImgBtnOvleft.Visible = false;
+                ImgBtnOvright.Visible = false;
+            }
+            else
+            {
+                ImgBtnOvleft.Visible = true;
+                ImgBtnOvright.Visible = true;
+            }
+
+
+            iqImagesThumb.DataSource = dtImagesThumb3;
+            iqImagesThumb.DataBind();
+
+
+            //Set or Update the meta tags
+            string seo_desc = "";// p.GetStringFieldOrAttribute("item_seo_description");
+            string seo_kw = "";// p.GetStringFieldOrAttribute("item_seo_keywords");
+
+            HtmlMeta metaDesc = new HtmlMeta();
+            metaDesc.Name = "Description";
+            metaDesc.Content = "Watch Deal. Awesome unbeatable deal-of-the-day + luxury items + surfing the net in your underwear = the best thing that ever happened to you. Read watch deal of the day reviews, compare daily deal prices, see  photos, watch videos, buy and save at Jomadeals.";
+
+            HtmlMeta metaKeywords = new HtmlMeta();
+            metaKeywords.Name = "KEYWORDS";
+            //metaKeywords.Content = "Deal of the day, Watch,  watches, deals, diamond watches, ladies watches, mens watches, gold watches, omega watches,movado,movado watch,movado watches,cartier watches,cartier watch, tag heuer, rolex watches gold watches chanel watches hamilton oris, bvlgari, breitling, baume and mercier, tag heuer, swarovski crystal,timex watches,nike watch,polar watch,suunto watch,mont blanc pen,tag heuer watches,discount watches,concord watches,ebel watches,watches on sale, tissot watch bacarat crystal,Montblanc pens,christofle,citizen watch,lalique crystal,discount, pulsar watches, pulsar";
+            metaKeywords.Content = "watch deal, watch, watches, daily deal, deal of the day, deal of the day watches, watch deal of the day, new deals every day, a new deal every day, watch new deals every day, watches deal, watch deals,watches deals, a new deal every day watches, deal or no deal, best deal of the day, deals of the day, online deal of the day, hot deal of the day, today deal of the day, deal of the day website, great deal of the day, king deal of the day, stupid deal of the day, deal of day, best deals watches, hot deals watches, cheap deals watches, joma deal, daily joma deal, jomashop one deal a day, jomashop deals, Luxury Deal of the day, luxury daily deals, luxury deal of the day, one watch a day, one deal a day watches, daily watch deal, woot watch deal, designer watch deal, luxury watch deal, sport watch deal, one sale a day, one deal a day, daily deal, daily watch deal, ladies watches, mens watches, discount watches, watches on sale, discount luxury deals, watch deal, handbag deal, daily deal designer handbags, discounted handbags, brand name handbag deal," +
+    "deals, coupons, discounts, sale, promo codes, lowest price, cheap, freebies, savings, best price, lowest price, best deal, bargain, free, codes, shopping, compare and save, tag heuer, movado, invicta, omega, swiss watches, chronograph, dolce gabbana, baume and mercier, citizen, seiko, IKE, bvlgari, fashion deal, special daily deal, burberry, armani, ferragamo, victorinox, swiss army, gucci, skagen, swatch, fossil, coach, ralph lauren ";
+                //Force the page to expire if the user has caching enabled, (though this is still browser dependent)
+            DateTime dtItem = Convert.ToDateTime(Application[prefix + "DateTimeCached"]);
+
+            //test
+            //DateTime dtRefresh = new DateTime(dtItem.Year, dtItem.Month, dtItem.Day, 23, 59, 59);
+            /*
+            DateTime dtRefresh = new DateTime(2009, 10, 12, 14, 45, 59);
+
+            dtRefresh = dtRefresh.AddHours(5); //Time differential between server(EST) and (GMT)
+            string expiry = dtRefresh.ToString("ddd, dd MMM yyyy HH:mm:ss") + " GMT"; //RFC 1123
+        
+            HtmlMeta metaExpires = new HtmlMeta();
+            metaExpires.Name = "expires";
+            metaExpires.Content = expiry;
+            */
+
+            HtmlHead head = (HtmlHead)Page.Header;
+            head.Controls.AddAt(0, metaDesc);
+            head.Controls.AddAt(1, metaKeywords);
+           
+        }
+
+
+
+
+
+
+
+
+    protected void compareOther()
+    {
+        PrgFunctions f = new PrgFunctions();
+
+        //Load up the Compare And Save functionality
+        try
+        {
+            DataTable dtCompareSave = new DataTable();// getCompareSave(p);
+            for (int i = 0; i < dtCompareSave.Rows.Count; i++)
+            {
+                dtCompareSave.Rows[i]["CompanyName"] = "Compare price for todays watch deal with " + dtCompareSave.Rows[i]["CompanyName"].ToString() +
+                    " price - You save - " +
+                    (double.Parse(dtCompareSave.Rows[i]["Price"].ToString().Replace("$", "").Replace(",", "")) -
+                    Double.Parse(dtItemDetail.Rows[0]["Price"].ToString().Replace("$", "").Replace(",", ""))).ToString("C2");
+                dtCompareSave.Rows[i]["PriceFormated"] = double.Parse(dtCompareSave.Rows[i]["Price"].ToString()).ToString("C2");
+
+
+                HtmlContainerControl compare2 = (HtmlContainerControl)this.FindControl("compare2");
+                HtmlContainerControl compare1 = (HtmlContainerControl)this.FindControl("compare1");
+
+
+                if (i == 0)
+                {
+
+                    ProductURL1 = dtCompareSave.Rows[i]["ProductURL"].ToString();
+                    ImageLogoURL1 = dtCompareSave.Rows[i]["ImageLogoURL"].ToString();
+                    CompanyName1 = dtCompareSave.Rows[i]["CompanyName"].ToString();
+                    PriceFormated1 = dtCompareSave.Rows[i]["PriceFormated"].ToString();
+                }
+
+
+                if (i == 1)
+                {
+                    ProductURL2 = dtCompareSave.Rows[i]["ProductURL"].ToString();
+                    ImageLogoURL2 = dtCompareSave.Rows[i]["ImageLogoURL"].ToString();
+                    CompanyName2 = dtCompareSave.Rows[i]["CompanyName"].ToString();
+                    PriceFormated2 = dtCompareSave.Rows[i]["PriceFormated"].ToString();
+                }
+
+            }
+
+            if (dtCompareSave.Rows.Count == 0)
+            {
+                Panel1.Visible = false;
+
+                CompareSaveText = "<img src='../content/jomadeals_exclusive.jpg' alt='This is a JomaDeals exclusive item.' />";
+            }
+            else
+            {
+                CompareSaveText = "";
+                Panel1.Visible = true;
+            }
+
+            iqCompareSaveListView.DataSource = dtCompareSave;
+            iqCompareSaveListView.DataBind();
+
+        }
+        catch
+        {
+            CompareSaveText = "";
+        }
+
+        DataTable dtSide = new DataTable();
+        dtSide.Columns.Add("Link");
+        dtSide.Columns.Add("ImageTitle");
+        dtSide.Columns.Add("ImageUrl");
+        dtSide.Columns.Add("PanelImageUrl");
+       // string sites = f.GetAppSettings("sites");
+        //string[] parts = sites.Split(',');
+
+    
+
+
+
+
+        
+
+
+
+        rptOthviews.DataSource = dtSide;
+        rptOthviews.DataBind();
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    protected void ItemDataBound(object sender,  RepeaterItemEventArgs  e)
+    {
+         
+
+    }
+
+
+
+
+
+    protected void build(string prm)
+    {
+        HtmlContainerControl trOutofStock = (HtmlContainerControl)this.FindControl("trOutofStock");
+        trOutofStock.Visible = false;
+
+        DataTable dt = new DataTable();
+        String soldFixedBid = "bid";
+
+        int orgid = Convert.ToInt16(messages.origID);
+        int catid = Convert.ToInt16(messages.catID);
+        int itemid = Convert.ToInt16(messages.itemID);
+        string bidtype = messages.bidtype;
+        int buyerid = messages.buyerID;
+        DateTime biddate = DateTime.Now;
+        Decimal bidamount = txtBidamount.Text.Trim() == "" ? 0 : Convert.ToDecimal(txtBidamount.Text);
+        int credits = 3;
+        int fee_per_bid = 0;
+        int auctionid = messages.auctionID;
+
+        if (credits > 0) { bidamount = credits * 5; }
+
+        //string prm = "X";
+
+
+        if (messages.bidTimeLeft == 0)
+        {
+            if (bidamount == 0)
+            {
+                prm = "C"; 
+                trOutofStock.Visible = true;
+            }
+            else { prm = "Z"; }
+
+        }
+
+        Decimal bid = UpdateItems(prm, "get_Bids", auctionid, buyerid, biddate, bidamount, credits, soldFixedBid, fee_per_bid);
+
+
+
+        if (prm == "Z")
+        {
+            txtBidamount.Text = bid.ToString();
+
+
+            prm = "X";
+            DataSet ds = new DataSet();
+
+            ds = UpdateDonate(prm, "get_Items", 0, catid, orgid, itemid, "", bidtype);
+
+
+            dt = ds.Tables[0];
+
+
+            DataRow dr = dt.Rows[0];
+
+            bidValues(dr);
+        }
+    }
+
+
+
+
+
+    protected void bidValues(DataRow dr)
+    {
+
+
+
+
+        DateTime startDate = Convert.ToDateTime(dr["startDate"].ToString());
+        DateTime endDate = Convert.ToDateTime(dr["endDate"].ToString());
+        DateTime soldDate = Convert.ToDateTime(dr["soldDate"].ToString());
+        int buyitNow = dr["buyitNow"].ToString() == string.Empty ? 0 : Convert.ToInt16(dr["buyitNow"].ToString());
+        String shippingCost = dr["shippingCost"].ToString() == string.Empty ? "0" : dr["shippingCost"].ToString();
+        int handlingTime = dr["handlingTime"].ToString() == string.Empty ? 0 : Convert.ToInt16(dr["handlingTime"].ToString());
+
+
+        String startBidPrice = dr["startBidPrice"].ToString() == string.Empty ? "0" : dr["startBidPrice"].ToString();
+        String currentBidPrice = dr["currentBidPrice"].ToString() == string.Empty ? "0" : dr["currentBidPrice"].ToString();
+        String title = dr["title"].ToString();
+        String condition = dr["condition"].ToString();
+        String itemStatus = dr["itemStatus"].ToString();
+        String auctiontype = dr["auctiontype"].ToString();
+
+
+        int returnDays = dr["returnDays"].ToString() == string.Empty ? 0 : Convert.ToInt16(dr["returnDays"].ToString());
+        int quantity = dr["quantity"].ToString() == string.Empty ? 0 : Convert.ToInt16(dr["quantity"].ToString());
+
+        lblCondition.Text = condition;
+        lblCurrentBidPrice.Text = Double.Parse(currentBidPrice).ToString();
+
+        lblProductTitles.Text = title;
+        lblStartBidPrice.Text = startBidPrice;
+        lblHandling.Text = handlingTime.ToString();
+
+        lblShipping.Text = shippingCost;
+
+        lblReturndays.Text = returnDays.ToString();
+
+        lblAuctiontype.Text = auctiontype;
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+    protected void Page_Load(object sender, EventArgs e)
+     {
+         //#region "Landing"
+
+         string query = Request.Url.ToString();
+
+
+
+
+
+         if (!IsPostBack)
+         {
+
+
+
+             DataTable dt = new DataTable();
+
+             DataSet ds = new DataSet();
+             messages.origID = 12;
+             messages.itemID = 22;
+             messages.catID = 18;
+             messages.bidtype = "standard";
+             ////////messages.buyerID = 2;
+             messages.auctionID = 2;
+
+
+             int orgid = Convert.ToInt16(messages.origID);
+             int catid = Convert.ToInt16(messages.catID);
+             int itemid = Convert.ToInt16(messages.itemID);
+             string bidtype = messages.bidtype;
+             int buyerid = messages.buyerID;
+             int auctionid = messages.auctionID;
+
+
+             ds = UpdateDonate("S", "get_Items", 0, catid, orgid, itemid, "", bidtype);
+
+
+             dt = ds.Tables[0];
+
+
+             DataRow dr = dt.Rows[0];
+
+             bidValues(dr);
+
+             /////// load();
+             /////////// loadChildInformation();
+             ///////////// Session["init"] = "init";
+
+         }
+             
+
+        HtmlButton btnPreview = (HtmlButton)this.FindControl("btnPreview");
+
+      
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+    // checks if landing page wasspecified in back end then goes first time to that page else goes to watches
+    private string GetLandingFromXml()
+    { 
+        string Landing;
+        XmlDocument xDoc = new XmlDocument();
+        string XmlFilePath = Request.MapPath("~\\XML\\changeText.xml");
+        xDoc.Load(XmlFilePath);
+
+        XmlNode xn = xDoc.SelectSingleNode("JomaExl/changeText/landing");
+        Landing = xn.InnerText;
+
+
+        DateTime landingdate;
+
+        TimeSpan tsd = TimeSpan.FromDays(2);
+
+
+
+        xn = xDoc.SelectSingleNode("JomaExl/changeText/landingdate");
+        landingdate = Convert.ToDateTime(xn.InnerText);
+
+        if (landingdate < DateTime.Today.Add(-tsd))
+        {
+
+            xn = xDoc.SelectSingleNode("JomaExl/changeText/landingdefault");
+            Landing = xn.InnerText;
+
+
+        }
+        
+
+           xn = null;
+        xDoc = null;
+        return Landing;
+    }
+
+    //protected DataTable getAttributes(ProductDetails p)
+    //{
+    //    DataTable dt = new DataTable();
+    //    dt.Columns.Add(new DataColumn("attribute_description"));
+    //    dt.Columns.Add(new DataColumn("attribute_label"));
+    //    dt.Columns.Add(new DataColumn("attribute_value"));
+
+        
+
+    //    DataView dv = p.GetAttributesView();
+
+    //    if ((dv != null) && (dv.Count > 0))
+    //    {
+    //        DataRow dr = null;
+    //        string val = "";
+
+    //        foreach (DataRowView drv in dv)
+    //        {
+    //            val = "";
+    //            dr = dt.NewRow();
+
+    //            val = PrgFunctions.TryCastString(drv["attribute_value"]);
+
+    //            if (val.Length > 0)
+    //            {
+    //                dr["attribute_label"] = PrgFunctions.TryCastString(drv["attribute_label"]) + ":";
+    //                dr["attribute_value"] = val;
+    //                dr["attribute_description"] = PrgFunctions.TryCastString(drv["attribute_description"]);
+
+    //                dt.Rows.Add(dr);
+    //            }
+    //        }
+    //    }
+
+    //    return dt;
+    //}
+
+
+    protected DataTable getCompareSave(ProductDetails p)
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add(new DataColumn("ImageLogoURL"));
+        dt.Columns.Add(new DataColumn("Price"));
+        dt.Columns.Add(new DataColumn("PriceFormated"));
+        dt.Columns.Add(new DataColumn("CompanyName"));
+        dt.Columns.Add(new DataColumn("ProductUrl"));
+
+        
+
+        //DataRow drItem = p.GetItemRow();
+
+        //for (int i = 1; i <= 5; i++)
+        //{
+        //    DataRow drNew = dt.NewRow();
+
+        //    if (!PrgFunctions.IsNullOrEmpty(drItem["CompareAndSaveLink" + i.ToString()]))
+        //    {
+        //        drNew["ProductUrl"] = drItem["CompareAndSaveLink" + i.ToString()];
+        //    }
+        //    else
+        //    {
+        //        drNew["ProductUrl"] = "";
+        //    }
+
+        //    if (!PrgFunctions.IsNullOrEmpty(drItem["CompareAndSaveIcon" + i.ToString()]))
+        //    {
+        //        drNew["ImageLogoURL"] = drItem["CompareAndSaveIcon" + i.ToString()].ToString().TrimStart('/');
+        //    }
+        //    else
+        //    {
+        //        drNew["ImageLogoURL"] = "";
+        //    }
+
+        //    if (!PrgFunctions.IsNullOrEmpty(drItem["CompareAndSavePrice" + i.ToString()]))
+        //    {
+        //        drNew["Price"] = drItem["CompareAndSavePrice" + i.ToString()];
+        //    }
+        //    else
+        //    {
+        //        drNew["Price"] = "";
+        //    }
+
+        //    if (!PrgFunctions.IsNullOrEmpty(drItem["CompareAndSaveName" + i.ToString()]))
+        //    {
+        //        drNew["CompanyName"] = drItem["CompareAndSaveName" + i.ToString()];
+        //    }
+        //    else
+        //    {
+        //        drNew["CompanyName"] = "";
+        //    }
+
+        //    if (!string.IsNullOrEmpty(drNew["Price"].ToString()))
+        //    {
+        //        if (drNew["CompanyName"].ToString().Length > 30)
+        //        {
+        //            drNew["CompanyName"] =
+        //                drNew["CompanyName"].ToString().Substring(0, drNew["CompanyName"].ToString().Length / 4).ToString();
+        //        } 
+        //        dt.Rows.Add(drNew);
+        //    }
+        //}
+
+        return dt;
+    }
+
+
+    private DataTable getItemDetail(ProductDetails p)
+    {
+        DataTable dt = new DataTable();
+
+        dt.Columns.Add(new DataColumn("Price"));
+        dt.Columns.Add(new DataColumn("Retail"));
+        dt.Columns.Add(new DataColumn("Title"));
+        dt.Columns.Add(new DataColumn("Description"));
+        dt.Columns.Add(new DataColumn("AboutBrand"));
+        dt.Columns.Add(new DataColumn("ItemDetail"));
+        dt.Columns.Add(new DataColumn("ImageUrlThumb"));
+        dt.Columns.Add(new DataColumn("ImageUrlZoom"));
+
+        dt.Columns.Add(new DataColumn("ImageUrlMain"));
+        dt.Columns.Add(new DataColumn("ImageUrlMainWidth"));
+        dt.Columns.Add(new DataColumn("ImageUrlMainHeight"));
+
+        dt.Columns.Add(new DataColumn("ImageUrlFull"));
+        dt.Columns.Add(new DataColumn("ImageUrlFullWidth"));
+        dt.Columns.Add(new DataColumn("ImageUrlFullHeight"));
+
+        DataRow dr;
+
+        dr = dt.NewRow();
+
+     //   dr["Retail"] = p.GetRetailPrice();
+        dr["Price"] = SpecialItemCost;
+    //    dr["Title"] = p.GetTitle();
+
+        //Get the brand
+        string brand = "";// p.GetStringFieldOrAttribute("Brand");
+
+        //Converted from choice value guid to its label
+        object result = null;// BusinessFlow.WebServices.LookupTables[LookupTables.AttributeValues].TranslateToLabel(brand, "");
+
+        if (result != null)
+            brand = result.ToString();
+
+        if (brand.Length != 0)
+        {
+            //dr["AboutBrand"] ="Rolex is considered to be one of the most prolific Swiss wristwatch manufacturing companies in the world. With their sheer elegance and uncompromising attention to detail, Rolex is the largest luxury watch brand worldwide, producing around 200 watches per day. Since its inception in 1905, Rolex has exuded an aura of unsurpassed urbanity. Unveiled in 1945, the Rolex Oyster Perpetual Datejust was the first wristwatch to display the date and boast a Cyclops magnifying lens. Similarly, the Rolex Oyster Perpetual Cosmograph Daytona, introduced 1988, is designed for measuring elapsed time and calculating average speed with artistic precision. Rolex, an eclectic company, had the maritime adventurer in mind when it created the Oyster Perpetual Submariner with water resistance at depths of 300 meters. All Rolex watches, whether the Rolex Air-King, Rolex Pearlmaster, Rolex Explorer, Rolex Day-Date, Rolex Oyster Perpetual Milgauss, Rolex GMT-Master II, Rolex Yacht-Master, Rolex Oyster Perpetual or Rolex Sea-Dweller, are exceptional investments. The Rolex watch is a pathway to a timeless tradition.";
+            PrgFunctions f = new PrgFunctions();// ((MainStreet.BusinessFlow.SDK.Web.BusinessFlowWebContext)BusinessFlow.Context);
+            //dr["AboutBrand"] = f.GetGlobalChoiceValueDescription("BrandDescriptions", brand);
+        }
+
+        //dr["ItemDetail"] = "Rolex is considered to be one of the most prolific Swiss wristwatch manufacturing companies in the world. With their sheer elegance and uncompromising attention to detail, Rolex is the largest luxury watch brand worldwide, producing around 200 watches per day. Since its inception in 1905, Rolex has exuded an aura of unsurpassed urbanity. Unveiled in 1945, the Rolex Oyster Perpetual Datejust was the first wristwatch to display the date and boast a Cyclops magnifying lens. Similarly, the Rolex Oyster Perpetual Cosmograph Daytona, introduced 1988, is designed for measuring elapsed time and calculating average speed with artistic precision. Rolex, an eclectic company, had the maritime adventurer in mind when it created the Oyster Perpetual Submariner with water resistance at depths of 300 meters. All Rolex watches, whether the Rolex Air-King, Rolex Pearlmaster, Rolex Explorer, Rolex Day-Date, Rolex Oyster Perpetual Milgauss, Rolex GMT-Master II, Rolex Yacht-Master, Rolex Oyster Perpetual or Rolex Sea-Dweller, are exceptional investments. The Rolex watch is a pathway to a timeless tradition.";
+        //dr["ItemDetail"] = p.GetDescription(this.Page);
+
+        //Get the main(medium) image
+        DataTable dtItemImages = new DataTable();// p.GetItemImagesTable();
+        DataRow[] drRows = dtItemImages.Select("item_image_type_id=1");
+
+        if (drRows.Length > 0)
+        {
+            //Get the Main display images
+          //  dr["ImageUrlMain"] = BusinessFlow.Settings.Pages.Images.get_UrlByImage(new Guid(drRows[0]["image_guid"].ToString()), MainStreet.BusinessFlow.SDK.Ws.ImageSize.Medium).ToString();
+            dr["ImageUrlMainWidth"] = drRows[0]["image_med_width"].ToString();
+            dr["ImageUrlMainHeight"] = drRows[0]["image_med_height"].ToString();
+
+            //Get the full image
+           // dr["ImageUrlFull"] = BusinessFlow.Settings.Pages.Images.get_UrlByImage(new Guid(drRows[0]["image_guid"].ToString()), MainStreet.BusinessFlow.SDK.Ws.ImageSize.Full).ToString();
+            dr["ImageUrlFullWidth"] = drRows[0]["image_full_width"].ToString();
+            dr["ImageUrlFullHeight"] = drRows[0]["image_full_height"].ToString();
+        }
+        else
+        {
+            dr["ImageUrlMain"] = "";
+            dr["ImageUrlMainWidth"] = "";
+            dr["ImageUrlMainHeight"] = "";
+
+            dr["ImageUrlFull"] = "";
+            dr["ImageUrlFullWidth"] = "";
+            dr["ImageUrlFullHeight"] = "";
+        }
+
+        dt.Rows.Add(dr);
+
+        return dt;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    protected void btnBidNow_Click(object sender, EventArgs e)
+    {
+
+      //  txtBidamount
+
+       
+
+        //DataSet ds = new DataSet();
+        //messages.origID = 12;
+        //messages.itemID = 10;
+        //messages.catID = 18;
+        //messages.bidtype = "standard";
+        //messages.buyerID = 2;
+
+        
+
+
+
+
+
+
+
+
+
+
+        build();
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    protected void btnBuyNow_Click(object sender, EventArgs e)
+    {
+        int quantity = 1;
+
+        try
+        {
+            
+            if (quantity < 1)
+                return;
+
+            //STI 07/15/09: Custom code
+            if (quantity > 10)
+            {
+                quantity = 10;
+                return;
+            }
+        }
+        catch
+        {
+            return;
+        }
+
+        //customization
+        /*
+        string promotionGuid = PrgFunctions.TryCastString(BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"]);
+        string promotionCode = BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_cd"].ToString();
+        string promotionDescription = BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_description"].ToString();
+
+        BusinessFlow.DefaultCart.Clear();
+        
+        //Load up the customer information because, default cart clears everything
+        if (BusinessFlow.Identity.IsAuthenticated)
+            BusinessFlow.DefaultCart.LoadCustomerInfo(BusinessFlow.Identity.CustomerGuid);
+        */
+
+       // BusinessFlow.DefaultCart.PersistTimeout = new TimeSpan(0, 30, 0);
+
+        p = getDetails();
+        //if (p.IsLoaded())
+        //{
+            //customization: Adjust the quantity based on the control, do not add items to the cart
+            PrgFunctions f = new PrgFunctions();
+          //////////////  f.RemoveItemFromCart(new Guid(p.GetItemGuid()));
+
+
+          /////////////////  BusinessFlow.DefaultCart.AddItem(new Guid(p.GetItemGuid()), quantity, null, SpecialItemCost);
+
+            /*
+            if (promotionGuid.Length != 0)
+            {
+                BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"] = PrgFunctions.TryCastGuid(promotionGuid);
+                BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_cd"] = promotionCode;
+                BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_description"] = promotionDescription;
+            }
+            */
+
+            DisplayVariationGuid = "";
+       
+
+            Session["prefex"] = "block";
+
+          
+
+            Response.Redirect("checkout/checkout_step1.aspx");
+  
+        //}
+    }
+
+
+
+    protected void iqAttributeGridView_RowCreated(object sender, GridViewRowEventArgs e)
+    {
+        //Add CSS class on header row.
+        if (e.Row.RowType == DataControlRowType.Header)
+            e.Row.CssClass = "header";
+
+        //Add CSS class on normal row.
+        if (e.Row.RowType == DataControlRowType.DataRow && e.Row.RowState == DataControlRowState.Normal)
+            e.Row.CssClass = "normal";
+
+        //Add CSS class on alternate row.
+        if (e.Row.RowType == DataControlRowType.DataRow && e.Row.RowState == DataControlRowState.Alternate)
+            e.Row.CssClass = "alternate";
+    }
+
+
+    protected void iqAttributeGridView_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            DataRowView drv = (DataRowView)e.Row.DataItem;
+
+            string tooltip = "";// PrgFunctions.TryCastString(drv["attribute_description"].ToString());
+
+            for (int colIndex = 0; colIndex < e.Row.Cells.Count; colIndex++)
+            {
+                if (tooltip.Length > 0)
+                    e.Row.Cells[colIndex].Attributes.Add("title", tooltip);
+            }
+        }
+    }
+
+ 
+
+    protected void lvItemCommand(object sender,EventArgs e)
+    {
+        if ("ChangeVariation" == "ChangeVariation")
+        {
+        }
+    }
+
+
+
+
+
+    protected void lvDisplayVariationsItemCommand(int indx)
+    {
+           DataRowView drr = (DataRowView)lvDisplayVariations.Items[indx].DataItem;
+        string ItemGuid= drr["ItemGuid"].ToString();
+
+
+            updateChildItemInformation(ItemGuid);
+
+            //Update the dropdown list
+          
+            ddDisplayVariations.ClearSelection();
+            foreach (ListItem li in ddDisplayVariations.Items)
+            {
+                if (String.Compare(li.Value, DisplayVariationGuid, true) == 0)
+                {
+                    li.Selected = true;
+                }
+                else
+                {
+                    li.Selected = false;
+                }
+            }
+         
+    }
+
+
+
+
+
+    // rolling over colors auto changes...
+    protected void lvDisplayVariations_ItemCommand(object sender, DataListCommandEventArgs e)
+    {
+        if (e.CommandName == "ChangeVariation")
+        {
+            updateChildItemInformation(e.CommandArgument.ToString());
+
+            //Update the dropdown list
+            ddDisplayVariations.SelectedIndex = 0;
+            ddDisplayVariations.ClearSelection();
+            foreach (ListItem li in ddDisplayVariations.Items)
+            {
+                if (String.Compare(li.Value, DisplayVariationGuid, true) == 0)
+                {
+                    li.Selected = true;
+                }
+                else
+                {
+                    li.Selected = false;
+                }
+            }
+        }
+    }
+
+
+    private void updateChildItemInformation(string itemGuid)
+    {
+        if (itemGuid.Length == 0)
+            return;
+
+        DisplayVariationGuid = itemGuid;
+        //load();
+        loadChildInformation();
+    }
+
+
+
+    private void loadChildInformation()
+    {
+        compareOther();
+
+
+        if (DisplayVariationGuid.Length == 0)
+            return;
+
+        //Load up the product info
+       p = new ProductDetails(new Guid(DisplayVariationGuid));
+
+        //Read the images from the harddisk instead of the image manager
+        PrgFunctions f = new PrgFunctions();
+        string productImagesPath = "";// PrgFunctions.TryCastString(f.GetAppSettings("productImagesPath"));
+
+        if (!productImagesPath.EndsWith("\\"))
+            productImagesPath += "\\";
+
+        string manufacturerId = "";// p.GetStringFieldOrAttribute("ManufactuerItem").ToLower();
+
+
+
+
+
+        //Set the main image
+        DataTable dtItemImages= new DataTable();// = p.GetItemImagesTable();
+        DataRow[] drRows = dtItemImages.Select("item_image_type_id=1");
+
+        if (drRows.Length > 0)
+        {
+            MediumImageWidth = Unit.Parse(drRows[0]["image_med_width"].ToString()).ToString();
+            MediumImageHeight = Unit.Parse(drRows[0]["image_med_height"].ToString()).ToString();
+        }
+
+       // ImageDesc = p.GetTitle();
+        ProductTitle = ImageDesc;
+
+        //customization: override the image urls to use higher qualities ones
+         LinkToFullImage = ResolveUrl("ProductImages/Full/" + manufacturerId + "_1.jpg");
+        MediumImageUrl = ResolveUrl("ProductImages/Medium/" + manufacturerId + "_1.jpg");
+       
+        
+        
+        //Load up thumbnails
+        string itemTag = "";// p.GetStringFieldOrAttribute("item_tag").ToLower();
+      
+
+
+
+
+        DataTable dtImagesThumb = new DataTable();//=   p.GetImagesTableWithUrls();//p.GetImagesTableWithUrlsFromHarddisk(this.Page)
+        //HtmlContainerControl body_partone_11 = (HtmlContainerControl)this.FindControl("body_partone_1");
+        //HtmlControl pOtherViews = (HtmlControl)body_partone_11.FindControl("pOtherViews");
+        //pOtherViews.Visible = true;
+        //if (dtImagesThumb.Rows.Count==0) 
+        //{
+          
+        //    pOtherViews.Visible = false;
+        //}
+
+
+
+
+        for (int i = 0; i < dtImagesThumb.Rows.Count && i <3; i++)
+            dtImagesThumb.Rows[i]["ImageDesc"] = itemTag + " " + (i + 1).ToString();
+
+
+
+        
+        DataTable dtImagesThumb3 = new DataTable();
+
+        dtImagesThumb3 = dtImagesThumb.Clone();
+ 
+
+        DataSet dst = new DataSet();
+        dst.Tables.Add("dtImagesThumb3");
+
+        DataView dv = new DataView();
+
+        dv = dst.Tables[0].DefaultView;
+
+
+
+        int cntrows = 0;
+        foreach (DataRow rows_ in dtImagesThumb.Rows)
+        {
+
+            if (cntrows <= 2)
+            {
+                dtImagesThumb3.ImportRow(rows_);
+                cntrows += 1;
+            }
+
+        }
+
+        // checks to see if count more that 3 (images) then displays right/left buttons
+        //if (dtImagesThumb.Rows.Count <= 3)
+        //{
+        //    ImgBtnOvleft.Visible = false;
+        //    ImgBtnOvright.Visible = false;
+        //}
+        //else
+        //{
+        //    ImgBtnOvleft.Visible = true;
+        //    ImgBtnOvright.Visible = true;
+        //}
+
+
+        //iqImagesThumb.DataSource = dtImagesThumb3;
+        //iqImagesThumb.DataBind();
+
+
+        Session["dtImagesThumb"] = dtImagesThumb;
+
+
+
+
+
+        int q = 0;// p.GetActualQuantityOnHand();
+
+        if (q > 0)
+        {
+            
+        }
+        else
+        {
+            
+        }
+    }
+
+
+    protected void ddDisplayVariations_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if ((ddDisplayVariations.SelectedValue != "") && (ddDisplayVariations.SelectedValue != "- Select color -"))
+        {
+            updateChildItemInformation(ddDisplayVariations.SelectedValue);
+        }
+    }
+
+
+    protected void btnBuyNowChild_Click(object sender, EventArgs e)
+    {
+        if ((ddDisplayVariations.SelectedValue != "") && (ddDisplayVariations.SelectedValue != "- Select color -"))
+        {
+             
+            int quantity = 1;
+
+            try
+            {
+                
+
+                if (quantity < 1)
+                    return;
+
+                //STI 07/15/09: Custom code
+                if (quantity > 10)
+                {
+                    quantity = 10;
+                    return;
+                }
+            }
+            catch
+            {
+                return;
+            }
+
+           //// BusinessFlow.DefaultCart.PersistTimeout = new TimeSpan(0, 30, 0);
+
+            Guid gg = new Guid();
+            p = new ProductDetails(gg);// (PrgFunctions.TryCastGuid(ddDisplayVariations.SelectedValue));
+         
+            
+                //customization: Adjust the quantity based on the control, do not add items to the cart
+                PrgFunctions f = new PrgFunctions();
+              /////////////  f.RemoveItemFromCart(new Guid(p.GetItemGuid()));
+
+               ///////////// BusinessFlow.DefaultCart.AddItem(new Guid(p.GetItemGuid()), quantity, null, SpecialItemCost);
+
+                DisplayVariationGuid = "";
+
+                Session["cartHolder"] = true;
+                Response.Redirect( "checkout/checkout_step1.aspx");
+  
+                
+             
+        }
+    }
+}

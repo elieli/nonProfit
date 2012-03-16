@@ -1,0 +1,729 @@
+jQuery: Write Less, Do More.
+
+    * jQuery
+    * Plugins
+    * UI
+    * Meetups
+    * Forum
+    * Blog
+    * About
+    * Donate
+
+    * DownloadDownload
+    * DocumentationDocumentation
+    * TutorialsTutorials
+    * Bug TrackerBug Tracker
+    * DiscussionDiscussion
+
+Search jQuery Go
+jQuery API
+Skip to content
+
+    * api
+    * jsonp
+    * Types
+    * Extending Ajax: Prefilters, Converters, and Transports
+
+.animate()
+Categories: Effects > Custom
+.animate( properties [, duration] [, easing] [, complete] ) Returns: jQuery
+
+Description: Perform a custom animation of a set of CSS properties.
+
+    *
+      version added: 1.0.animate( properties [, duration] [, easing] [, complete] )
+
+      propertiesA map of CSS properties that the animation will move toward.
+
+      durationA string or number determining how long the animation will run.
+
+      easingA string indicating which easing function to use for the transition.
+
+      completeA function to call once the animation is complete.
+    *
+      version added: 1.0.animate( properties, options )
+
+      propertiesA map of CSS properties that the animation will move toward.
+
+      optionsA map of additional options to pass to the method. Supported keys:
+          o duration: A string or number determining how long the animation will run.
+          o easing: A string indicating which easing function to use for the transition.
+          o complete: A function to call once the animation is complete.
+          o step: A function to be called after each step of the animation.
+          o queue: A Boolean indicating whether to place the animation in the effects queue. If false, the animation will begin immediately. As of jQuery 1.7, the queue option can also accept a string, in which case the animation is added to the queue represented by that string.
+          o specialEasing: A map of one or more of the CSS properties defined by the properties argument and their corresponding easing functions (added 1.4).
+
+The .animate() method allows us to create animation effects on any numeric CSS property. The only required parameter is a map of CSS properties. This map is similar to the one that can be sent to the .css() method, except that the range of properties is more restrictive.
+Animation Properties and Values
+
+All animated properties should be animated to a single numeric value, except as noted below; most properties that are non-numeric cannot be animated using basic jQuery functionality (For example, width, height, or left can be animated but background-color cannot be, unless the jQuery.Color() plugin is used). Property values are treated as a number of pixels unless otherwise specified. The units em and % can be specified where applicable.
+
+In addition to style properties, some non-style properties such as scrollTop and scrollLeft, as well as custom properties, can be animated.
+
+Shorthand CSS properties (e.g. margin, background, border) are not supported. For example, if you want to retrieve the rendered margin, use: $(elem).css('marginTop') and $(elem).css('marginRight'), and so on.
+
+In addition to numeric values, each property can take the strings 'show', 'hide', and 'toggle'. These shortcuts allow for custom hiding and showing animations that take into account the display type of the element.
+
+Animated properties can also be relative. If a value is supplied with a leading += or -= sequence of characters, then the target value is computed by adding or subtracting the given number from the current value of the property.
+
+    Note: Unlike shorthand animation methods such as .slideDown() and .fadeIn(), the .animate() method does not make hidden elements visible as part of the effect. For example, given $('someElement').hide().animate({height:'20px'}, 500), the animation will run, but the element will remain hidden.
+
+Duration
+
+Durations are given in milliseconds; higher values indicate slower animations, not faster ones. The strings 'fast' and 'slow' can be supplied to indicate durations of 200 and 600 milliseconds, respectively.
+Complete Function
+
+If supplied, the complete callback function is fired once the animation is complete. This can be useful for stringing different animations together in sequence. The callback is not sent any arguments, but this is set to the DOM element being animated. If multiple elements are animated, the callback is executed once per matched element, not once for the animation as a whole.
+Basic Usage
+
+To animate any element, such as a simple image:
+
+<div id="clickme">
+  Click here
+</div>
+<img id="book" src="book.png" alt="" width="100" height="123"
+  style="position: relative; left: 10px;" />
+
+To animate the opacity, left offset, and height of the image simultaneously:
+
+$('#clickme').click(function() {
+  $('#book').animate({
+    opacity: 0.25,
+    left: '+=50',
+    height: 'toggle'
+  }, 5000, function() {
+    // Animation complete.
+  });
+});
+
+Note that the target value of the height property is 'toggle'. Since the image was visible before, the animation shrinks the height to 0 to hide it. A second click then reverses this transition:
+
+The opacity of the image is already at its target value, so this property is not animated by the second click. Since the target value for left is a relative value, the image moves even farther to the right during this second animation.
+
+Directional properties (top, right, bottom, left) have no discernible effect on elements if their position style property is static, which it is by default.
+
+    Note: The jQuery UI project extends the .animate() method by allowing some non-numeric styles such as colors to be animated. The project also includes mechanisms for specifying animations through CSS classes rather than individual attributes.
+
+    Note: if attempting to animate an element with a height or width of 0px, where contents of the element are visible due to overflow, jQuery may clip this overflow during animation. By fixing the dimensions of the original element being hidden however, it is possible to ensure that the animation runs smoothly. A clearfix can be used to automatically fix the dimensions of your main element without the need to set this manually.
+
+Step Function
+
+The second version of .animate() provides a step option — a callback function that is fired at each step of the animation. This function is useful for enabling custom animation types or altering the animation as it is occurring. It accepts two arguments (now and fx), and this is set to the DOM element being animated.
+
+    * now: the numeric value of the property being animated at each step
+    * fx: a reference to the jQuery.fx prototype object, which contains a number of properties such as elem for the animated element, start and end for the first and last value of the animated property, respectively, and prop for the property being animated.
+
+Note that the step function is called for each animated property on each animated element. For example, given two list items, the step function fires four times at each step of the animation:
+
+$('li').animate({
+  opacity: .5,
+  height: '50%'
+},
+{
+  step: function(now, fx) {
+    var data = fx.elem.id + ' ' + fx.prop + ': ' + now;
+    $('body').append('<div>' + data + '</div>');
+  }
+});
+
+Easing
+
+The remaining parameter of .animate() is a string naming an easing function to use. An easing function specifies the speed at which the animation progresses at different points within the animation. The only easing implementations in the jQuery library are the default, called swing, and one that progresses at a constant pace, called linear. More easing functions are available with the use of plug-ins, most notably the jQuery UI suite.
+Per-property Easing
+
+As of jQuery version 1.4, you can set per-property easing functions within a single .animate() call. In the first version of .animate(), each property can take an array as its value: The first member of the array is the CSS property and the second member is an easing function. If a per-property easing function is not defined for a particular property, it uses the value of the .animate() method's optional easing argument. If the easing argument is not defined, the default swing function is used.
+
+For example, to simultaneously animate the width and height with the swing easing function and the opacity with the linear easing function:
+
+$('#clickme').click(function() {
+  $('#book').animate({
+    width: ['toggle', 'swing'],
+    height: ['toggle', 'swing'],
+    opacity: 'toggle'
+  }, 5000, 'linear', function() {
+      $(this).after('<div>Animation complete.</div>');
+  });
+});
+
+In the second version of .animate(), the options map can include the specialEasing property, which is itself a map of CSS properties and their corresponding easing functions. For example, to simultaneously animate the width using the linear easing function and the height using the easeOutBounce easing function:
+
+$('#clickme').click(function() {
+  $('#book').animate({
+    width: 'toggle',
+    height: 'toggle'
+  }, {
+    duration: 5000,
+    specialEasing: {
+      width: 'linear',
+      height: 'easeOutBounce'
+    },
+    complete: function() {
+      $(this).after('<div>Animation complete.</div>');
+    }
+  });
+});
+
+As previously noted, a plugin is required for the easeOutBounce function.
+Additional Notes:
+
+    * All jQuery effects, including .animate(), can be turned off globally by setting jQuery.fx.off = true, which effectively sets the duration to 0. For more information, see jQuery.fx.off.
+
+Examples:
+Example: Click the button to animate the div with a number of different properties.
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+div {
+background-color:#bca;
+width:100px;
+border:1px solid green;
+}
+</style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <button id="go">&raquo; Run</button>
+
+<div id="block">Hello!</div>
+<script>
+
+/* Using multiple unit types within one animation. */
+
+$("#go").click(function(){
+  $("#block").animate({
+    width: "70%",
+    opacity: 0.4,
+    marginLeft: "0.6in",
+    fontSize: "3em",
+    borderWidth: "10px"
+  }, 1500 );
+});
+</script>
+
+</body>
+</html>
+
+Demo:
+Example: Animates a div's left property with a relative value. Click several times on the buttons to see the relative animations queued up.
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+div {
+  position:absolute;
+  background-color:#abc;
+  left:50px;
+  width:90px;
+  height:90px;
+  margin:5px;
+}
+</style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <button id="left">&laquo;</button> <button id="right">&raquo;</button>
+<div class="block"></div>
+
+<script>
+$("#right").click(function(){
+  $(".block").animate({"left": "+=50px"}, "slow");
+});
+
+$("#left").click(function(){
+  $(".block").animate({"left": "-=50px"}, "slow");
+});
+
+</script>
+
+</body>
+</html>
+
+Demo:
+Example: The first button shows how an unqueued animation works. It expands the div out to 90% width while the font-size is increasing. Once the font-size change is complete, the border animation will begin. The second button starts a traditional chained animation, where each animation will start once the previous animation on the element has completed.
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+div {
+  background-color:#bca;
+  width:200px;
+  height:1.1em;
+  text-align:center;
+  border:2px solid green;
+  margin:3px;
+  font-size:14px;
+}
+button {
+  font-size:14px;
+}
+</style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <button id="go1">&raquo; Animate Block1</button>
+<button id="go2">&raquo; Animate Block2</button>
+<button id="go3">&raquo; Animate Both</button>
+
+<button id="go4">&raquo; Reset</button>
+<div id="block1">Block1</div>
+<div id="block2">Block2</div>
+<script>
+
+$( "#go1" ).click(function(){
+  $( "#block1" ).animate( { width: "90%" }, { queue: false, duration: 3000 })
+     .animate({ fontSize: "24px" }, 1500 )
+     .animate({ borderRightWidth: "15px" }, 1500 );
+});
+
+$( "#go2" ).click(function(){
+  $( "#block2" ).animate({ width: "90%" }, 1000 )
+     .animate({ fontSize: "24px" }, 1000 )
+     .animate({ borderLeftWidth: "15px" }, 1000 );
+});
+
+$( "#go3" ).click(function(){
+  $( "#go1" ).add( "#go2" ).click();
+});
+
+$( "#go4" ).click(function(){
+  $( "div" ).css({ width: "", fontSize: "", borderWidth: "" });
+});
+
+</script>
+
+</body>
+</html>
+
+Demo:
+Example: Animates the first div's left property and synchronizes the remaining divs, using the step function to set their left properties at each stage of the animation.
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+div {
+   position: relative;
+   background-color: #abc;
+   width: 40px;
+   height: 40px;
+   float: left;
+   margin: 5px;
+}
+</style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  
+<p><button id="go">Run »</button></p>
+<div class="block"></div> <div class="block"></div>
+<div class="block"></div> <div class="block"></div>
+<div class="block"></div> <div class="block"></div>
+
+<script>
+$( "#go" ).click(function(){
+  $( ".block:first" ).animate({
+    left: 100
+  }, {
+    duration: 1000,
+    step: function( now, fx ){
+      $( ".block:gt(0)" ).css( "left", now );
+    }
+  });
+});
+</script>
+
+</body>
+</html>
+
+Demo:
+Example: Animates all paragraphs to toggle both height and opacity, completing the animation within 600 milliseconds.
+
+$( "p" ).animate({
+  "height": "toggle", "opacity": "toggle"
+}, "slow" );
+
+Example: Animates all paragraph to a left style of 50 and opacity of 1 (opaque, visible), completing the animation within 500 milliseconds.
+
+$( "p" ).animate({
+  "left": "50", "opacity": 1
+}, 500 );
+
+Example: An example of using an 'easing' function to provide a different style of animation. This will only work if you have a plugin that provides this easing function. Note, this code will do nothing unless the paragraph element is hidden.
+
+$( "p" ).animate({
+  "opacity": "show"
+}, "slow", "easein" );
+
+Example: Animates all paragraphs to toggle both height and opacity, completing the animation within 600 milliseconds.
+
+$( "p" ).animate({
+  "height": "toggle", "opacity": "toggle"
+}, { duration: "slow" });
+
+Example: Animates all paragraph to a left style of 50 and opacity of 1 (opaque, visible), completing the animation within 500 milliseconds. It also will do it outside the queue, meaning it will automatically start without waiting for its turn.
+
+$( "p" ).animate({
+  left: "50px", opacity: 1
+}, { duration: 500, queue: false });
+
+Example: An example of using an 'easing' function to provide a different style of animation. This will only work if you have a plugin that provides this easing function.
+
+$( "p" ).animate({
+  "opacity": "show"
+}, { "duration": "slow", "easing": "easein" });
+
+Example: An example of using a callback function. The first argument is an array of CSS properties, the second specifies that the animation should take 1000 milliseconds to complete, the third states the easing type, and the fourth argument is an anonymous callback function.
+
+$( "p" ).animate({
+  height:200, width:400, opacity: .5
+}, 1000, "linear", function(){ alert("all done"); });
+
+Support and Contributions
+
+Need help with .animate() or have a question about it? Visit the jQuery Forum or the #jquery channel on irc.freenode.net.
+
+Think you've discovered a jQuery bug related to .animate()? Report it to the jQuery core team.
+
+Found a problem with this documentation? Report it to the jQuery API team.
+* All fields are required
+Name:
+Email Address:
+Subject:
+Comment:
+Report
+
+    *
+    *
+      Disqus
+          o Login
+          o About Disqus
+
+Glad you liked it. Would you like to share?
+
+Facebook
+
+Twitter
+
+    * Share
+    * No thanks
+
+Sharing this page …
+
+Thanks! Close
+Comments for this page are closed.
+Showing 20 of 117 comments
+
+    *
+      Bob 2 comments collapsed Collapse Expand
+      how do you delay the beginning of the mouseover/mouseout....i have a lot of animated pop ups/tool tips and i want about a quarter second delay so that the animations don't begin immediately....that way, whipping your mouse over the buttons don't start the animation, but stopping and hovering will.....also, i would like the delay the mouseout so that the tool tips don't immediately disappear if the user 'accidentally' rolls out for a fraction of a second....
+          o A Like
+          o 11 months ago
+          o 52 Likes
+          o F
+    *
+    *
+      Bob 1 comment collapsed Collapse Expand
+      btw, this is what i'm using:
+
+      $(this).find("span").animate({opacity: 0, top: "-320"}, {queue:false, duration:250, complete: function(){
+      $(this).attr({"style": 'display:none'});
+          o A Like
+          o 11 months ago
+          o in reply to Bob
+          o 38 Likes
+          o F
+    *
+    *
+      Jaseinatl 1 comment collapsed Collapse Expand
+      How can you tell if an element is animating? And can you tell the final state of the animation?
+      If I set a button to fade an image on click and it has a long duration, if the user clicks the button again, would it reset the duration and apply the new animation? Or would it queue the new animation? And what happens if you animate an element to it's current state (no change)?
+          o A Like
+          o 11 months ago
+          o 25 Likes
+          o F
+    *
+    *
+      Libin4646 1 comment collapsed Collapse Expand
+      very nice. i sure i can make a wonderful application using this info.
+          o A Like
+          o 12 months ago
+          o 27 Likes
+          o F
+    *
+    *
+      Andi 1 comment collapsed Collapse Expand
+      Is there a way to expand the menu to the left side?
+      My menu is on the right side of the homepage and submenu should slide to the left side.
+      Please help!!
+          o A Like
+          o 12 months ago
+          o 23 Likes
+          o F
+    *
+    *
+      Will K 2 comments collapsed Collapse Expand
+      Is there a way to add a callback based on the % complete? And if so, is there a way for the "%" it to not match the animated easing?
+
+      As an example, I want to move a box from the left to the right, and I want either callbacks (or custom triggers) at 25%, 50% and 75% based on the distance.
+
+      I could always poll it, but a callback would be much cleaner.
+          o A Like
+          o 1 year ago
+          o 16 Likes
+          o F
+    *
+    *
+      IKR 1 comment collapsed Collapse Expand
+      how about a setTimeout based on animation duration?
+          o A Like
+          o 12 months ago
+          o in reply to Will K
+          o 20 Likes
+          o F
+    *
+    *
+      Mauloa 23 2 comments collapsed Collapse Expand
+      I have a handful of image thumbnails that will open to separate pages when clicked.
+      My question is on the hover/animate state. When I roll over 1 image, I want the remaining images to fade to 50% black. I don't care if the image fades into an existing bg color or if an overlying div goes from 0 to 50% opacity.
+      I just need some direction on how to pull this off. Any tips are appreciated!
+          o A Like
+          o 1 year ago
+          o 12 Likes
+          o F
+    *
+    *
+      Cole 1 comment collapsed Collapse Expand
+      you can the jquery hover method to animate all images except the one being hovered
+          o A Like
+          o 1 year ago
+          o in reply to Mauloa 23
+          o 12 Likes
+          o F
+    *
+    *
+      Dork89 1 comment collapsed Collapse Expand
+      Is it possible to pause an animation?
+          o A Like
+          o 1 year ago
+          o 26 Likes
+          o F
+    *
+    *
+      Simonauftour 3 comments collapsed Collapse Expand
+      Is it possible to have a constant speed? Instead animation be done in xy seconds, it takes steps like 2 seconds for every 100px?
+          o A Like
+          o 1 year ago
+          o 13 Likes
+          o F
+    *
+    *
+      Mbu725 2 comments collapsed Collapse Expand
+      Yes. Set the easing function to "linear". Then specify the proper duration depending on the amount of pixels.
+          o A Like
+          o 1 year ago
+          o in reply to Simonauftour
+          o 14 Likes
+          o F
+    *
+    *
+      Johan 1 comment collapsed Collapse Expand
+      I think Simonauftour is meaning that the speed (time per pixel) is fixed instead of the total duration.
+
+      I've got the same problem since I want several elements with different heigts have the same animation speed. So a 10px div should open as fast as the first 10px of a 100px div, instead of a very slow 10px and a very fast 100px (since the duration is the same).
+          o A Like
+          o 1 year ago
+          o in reply to Mbu725
+          o 18 Likes
+          o F
+    *
+    *
+      Guest 1 comment collapsed Collapse Expand
+      What happens when you trigger an animation for a property while anouther animation, animating the same property is still in effect?
+          o A Like
+          o 1 year ago
+          o 18 Likes
+          o F
+    *
+    *
+      Tony S 1 comment collapsed Collapse Expand
+      When I use this on my page, and I go to a link, when I click back on the browser, is there a way to refresh the jQuery, so it will start the animation again?
+          o A Like
+          o 1 year ago
+          o 13 Likes
+          o F
+    *
+    *
+      sidonath 1 comment collapsed Collapse Expand
+      The first example is incorrect, it shows that animate() can be used to animate "borderWidth" property, whereas only "borderLeftWidth" and others can be specified (as illustrated in example #60)
+
+      http://bugs.jquery.com/ticket/...
+          o A Like
+          o 1 year ago
+          o 9 Likes
+          o F
+    *
+    *
+      Broox9 3 comments collapsed Collapse Expand
+      is it possible to animate the opacity with a "from" and "to" setting as such:
+
+      $(thing).animate({opacity: {"from" : 1, "to": 0.3}}, 500);
+          o A Like
+          o 1 year ago
+          o 9 Likes
+          o F
+    *
+    *
+      Felipe Correia 1 comment collapsed Collapse Expand
+      You can use the fadeTo(). http://api.jquery.com/fadeTo/
+          o A Like
+          o 1 year ago
+          o in reply to Broox9
+          o 10 Likes
+          o F
+    *
+    *
+      Elie Khoury, Woopra Founder 1 comment collapsed Collapse Expand
+      Broox9, you can do this:
+
+      $(this).css('opacity', 1).animate({'opacity': 0.3}, 500);
+          o A Like
+          o 1 year ago
+          o in reply to Broox9
+          o 29 Likes
+          o F
+    *
+    *
+      Adrianjacob 4 comments collapsed Collapse Expand
+      Hi,
+
+      Im trying to create a custom horizontal accordion style showcase. In terms of actual functionality, i have the framework (which can be seen here):
+
+      http://www.jsfiddle.net/adrian...
+
+      However my main bug bear (and the clients) is that if you look at the right hand side of the last li, there is always slight movement/flickering as the widths animate up and down.
+
+      Ideally I want it to appear smooth with no dodgy movement on the last item as other things resize. Any idea how I can achieve this?
+
+      A.
+          o A Like
+          o 1 year ago
+          o 24 Likes
+          o F
+    *
+
+    * M Subscribe by email
+    * S RSS
+
+Load more comments
+jQuery API
+
+    *
+          o New or Changed in 1.7
+          o Raw XML API Dump
+          o Dynamic API Browser
+          o jQuery API Book
+
+Browse the jQuery API
+
+    *
+          o All
+          o +Ajax
+                + Global Ajax Event Handlers
+                + Helper Functions
+                + Low-Level Interface
+                + Shorthand Methods
+          o  Attributes
+          o  Callbacks Object
+          o  Core
+          o  CSS
+          o  Data
+          o  Deferred Object
+          o  Deprecated
+          o  Dimensions
+          o +Effects
+                + Basics
+                + Custom
+                + Fading
+                + Sliding
+          o +Events
+                + Browser Events
+                + Document Loading
+                + Event Handler Attachment
+                + Event Object
+                + Form Events
+                + Keyboard Events
+                + Mouse Events
+          o  Forms
+          o  Internals
+          o +Manipulation
+                + Class Attribute
+                + Copying
+                + DOM Insertion, Around
+                + DOM Insertion, Inside
+                + DOM Insertion, Outside
+                + DOM Removal
+                + DOM Replacement
+                + General Attributes
+                + Style Properties
+          o +Miscellaneous
+                + Collection Manipulation
+                + Data Storage
+                + DOM Element Methods
+                + Setup Methods
+          o  Offset
+          o +Plugins
+                + Data Link
+                + Templates
+          o +Properties
+                + Properties of jQuery Object Instances
+                + Properties of the Global jQuery Object
+          o +Selectors
+                + Attribute
+                + Basic
+                + Basic Filter
+                + Child Filter
+                + Content Filter
+                + Form
+                + Hierarchy
+                + jQuery Extensions
+                + Visibility Filter
+          o +Traversing
+                + Filtering
+                + Miscellaneous Traversing
+                + Tree Traversal
+          o  Utilities
+          o +Version
+                + Version 1.0
+                + Version 1.0.4
+                + Version 1.1
+                + Version 1.1.2
+                + Version 1.1.3
+                + Version 1.1.4
+                + Version 1.2
+                + Version 1.2.3
+                + Version 1.2.6
+                + Version 1.3
+                + Version 1.4
+                + Version 1.4.1
+                + Version 1.4.2
+                + Version 1.4.3
+                + Version 1.4.4
+                + Version 1.5
+                + Version 1.5.1
+                + Version 1.6
+                + Version 1.7
+
+© 2010 The jQuery Project
+
+Sponsored by Media Temple and others.
+
+    * DownloadDownload
+    * DocumentationDocumentation
+    * TutorialsTutorials
+    * Bug TrackerBug Tracker
+    * DiscussionDiscussion
+

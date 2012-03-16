@@ -1,0 +1,301 @@
+﻿/*  
+'=====================================================
+' Project:      JomaDeals.com
+' Programmer:   Derek Souers
+' File:         Checkout_step2.aspx
+' Description:  
+' Created:		07/24/09
+' Last Updated: 09/30/09
+'
+'=====================================================
+*/
+using System;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+
+using MainStreet.BusinessFlow.SDK;
+using MainStreet.BusinessFlow.SDK.Web;
+using MainStreet.BusinessFlow.SDK.Ws;
+
+public partial class checkout_Checkout_step2 : System.Web.UI.Page
+{
+    protected string ShippingInformation = "";
+    protected string BillingInformation = "";
+    private Cart m_Cart = BusinessFlow.DefaultCart;
+
+    public Cart Cart
+    {
+        get
+        {
+            return m_Cart;
+        }
+        set
+        {
+            m_Cart = value;
+        }
+    }
+     
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ////UserControl ShoppingCart = (UserControl)this.FindControl("ShoppingCart1");
+
+        ////if (ShoppingCart != null)
+        ////{
+        ////    DropDownList ddQuantity = (DropDownList)ShoppingCart.FindControl("ddQuantity");
+        ////    ddQuantity.Enabled = false;
+        ////    ///  uc.ddQuantity;
+
+        ////}
+
+
+
+
+        lblMsg.Text = "";
+
+        Session["page"] = "checkout";
+        //TODO
+        BillingInformation = "";
+        
+
+        /*
+            Name<br />
+            Address<br />
+            City, State Zip<br />
+            Phone<br />
+            E-mail
+        */
+
+        //TODO
+        ShippingInformation = "";
+
+        /*
+        Name<br />
+        Address<br />
+        City, State Zip<br />
+        Phone<br />
+        E-mail
+        <br />
+        <br />
+        Card holder name<br />
+        Card type
+        <br />
+        Card Number
+        <br />
+        Expiration Date
+         */
+
+        ShippingInformation = "";
+
+        ShippingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_ship_attention"].ToString(), "<br />");
+        ShippingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_ship_company_name"].ToString(), "<br />");
+        ShippingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_ship_address"].ToString(), "<br />");
+        ShippingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_ship_address2"].ToString(), "<br />");
+        ShippingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_ship_address3"].ToString(), "<br />");
+        ShippingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_ship_city"].ToString(), ", ") +
+            appendIfNotEmpty(BusinessFlow.WebServices.LookupTables[MainStreet.BusinessFlow.SDK.Ws.LookupTables.CountryRegions].TranslateToLabelShort(Cart.Data.OrderRow["order_ship_state_id"].ToString(), null).ToString(), " ") +
+            appendIfNotEmpty(Cart.Data.OrderRow["order_ship_postal_code"].ToString(), "<br />");
+        ShippingInformation += appendIfNotEmpty(BusinessFlow.WebServices.LookupTables[MainStreet.BusinessFlow.SDK.Ws.LookupTables.Countries].TranslateToLabelShort(Cart.Data.OrderRow["order_ship_country_id"].ToString(), null).ToString(), "<br />");
+        ShippingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_ship_phone"].ToString(), "<br />");
+
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_attention"].ToString(), "<br />");
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_company_name"].ToString(), "<br />");
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_address"].ToString(), "<br />");
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_address2"].ToString(), "<br />");
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_address3"].ToString(), "<br />");
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_city"].ToString().Trim(), ", ") +
+            appendIfNotEmpty(BusinessFlow.WebServices.LookupTables[MainStreet.BusinessFlow.SDK.Ws.LookupTables.CountryRegions].TranslateToLabelShort(Cart.Data.OrderRow["order_bill_state_id"].ToString(), null).ToString(), " ") +
+            appendIfNotEmpty(Cart.Data.OrderRow["order_bill_postal_code"].ToString(), "<br />");
+        BillingInformation += appendIfNotEmpty(BusinessFlow.WebServices.LookupTables[MainStreet.BusinessFlow.SDK.Ws.LookupTables.Countries].TranslateToLabelShort(Cart.Data.OrderRow["order_bill_country_id"].ToString(), null).ToString(), "<br />");
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_phone"].ToString().Trim(), "<br />");
+        BillingInformation += appendIfNotEmpty(Cart.Data.OrderRow["order_bill_email"].ToString().Trim(), "<br />");
+
+	//STI 10/16/09 Added additional check
+        if ((Cart.ItemCount==0)||(BillingInformation.Length==0)||(ShippingInformation.Length==0))
+            Response.Redirect("checkout_step1.aspx");
+
+        ShoppingCart1.Refresh();
+    }
+
+
+    protected void btnPrevious_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("Checkout_step1.aspx");
+    }
+
+
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse submitResponse = default(MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse);
+        BusinessFlow.DefaultCart.Data.OrderRow.order_date = DateTime.Now;
+
+        submitResponse = ShoppingCart1.SubmitOrder();
+
+        if ((submitResponse.Status == MainStreet.BusinessFlow.SDK.Ws.ResponseStatuses.Success | submitResponse.Status == MainStreet.BusinessFlow.SDK.Ws.ResponseStatuses.Warning) && !string.IsNullOrEmpty(ShoppingCart1.OrderId))
+        {
+            btnSubmit.Visible = false;
+            btnPrevious.Visible = false;
+
+            Response.Redirect(Session["sPath"] + "checkout/checkout_step3.aspx" + "?order_id=" + ShoppingCart1.OrderId + "&order_guid=" + ShoppingCart1.OrderGuid);
+        }
+
+        else
+        {
+            
+            lblMsg.Text = submitResponse.Messages[0].Message.ToString(); 
+        }
+    }
+
+
+    protected void btnEdit_Click(object sender, EventArgs e)
+    {
+        Response.Redirect(Session["sPath"] + "checkout/Checkout_step1.aspx");
+    }
+
+
+    private string appendIfNotEmpty(string input, string end)
+    {
+        input = input.Trim();
+
+        if (input.Length != 0)
+            return input + end;
+
+        return input;
+    }
+
+
+    protected override void OnPreRender(EventArgs e)
+    {
+        OrderDetail od = new OrderDetail(BusinessFlow.Context, Cart.DisplayData);
+        bindPayments(od);
+
+        base.OnPreRender(e);
+    }
+
+
+    private void bindPayments(OrderDetail order)
+    {
+        MainStreet.BusinessFlow.SDK.Ws.dsOrderDetail.OrdersRow drOrder = default(MainStreet.BusinessFlow.SDK.Ws.dsOrderDetail.OrdersRow);
+        MainStreet.BusinessFlow.SDK.Ws.dsOrderDetail.OrderPaymentMethodsRow drDefaultMethod = default(MainStreet.BusinessFlow.SDK.Ws.dsOrderDetail.OrderPaymentMethodsRow);
+        MainStreet.BusinessFlow.SDK.Ws.dsOrderDetail.OrderPaymentMethodsDataTable dtPaymentMethods = default(MainStreet.BusinessFlow.SDK.Ws.dsOrderDetail.OrderPaymentMethodsDataTable);
+
+        drOrder = order.OrderRow;
+        dtPaymentMethods = (MainStreet.BusinessFlow.SDK.Ws.dsOrderDetail.OrderPaymentMethodsDataTable)order.PaymentMethods.Copy();
+
+        object sumAmount = dtPaymentMethods.Compute("sum(order_payment_method_amount)", null);
+        decimal balance = PrgFunctions.TryCastDecimal(order.OrderRow["order_total"]) - PrgFunctions.TryCastDecimal(sumAmount);
+        if (balance < 0)
+        {
+            balance = 0;
+        }
+
+        //copy a row for the default payment method.
+        drDefaultMethod = dtPaymentMethods.NewOrderPaymentMethodsRow();
+        drDefaultMethod.order_guid = Cart.OrderGuid;
+        drDefaultMethod.order_payment_method_guid = Guid.Empty;
+        drDefaultMethod["order_payment_method_amount"] = balance;
+        drDefaultMethod["order_payment_method_address"] = drOrder["order_payment_address"];
+        drDefaultMethod["order_payment_method_expiration"] = drOrder["order_payment_expiration"];
+        drDefaultMethod["order_payment_method_name"] = drOrder["order_payment_name"];
+        drDefaultMethod["order_payment_method_number"] = drOrder["order_payment_number"];
+        drDefaultMethod["order_payment_method_number_ext"] = drOrder["order_payment_number_ext"];
+        drDefaultMethod["order_payment_method_postal_code"] = drOrder["order_payment_postal_code"];
+        drDefaultMethod["payment_method_id"] = drOrder["payment_method_id"];
+        dtPaymentMethods.AddOrderPaymentMethodsRow(drDefaultMethod);
+
+        dtPaymentMethods.Columns.Add("SortOrder", typeof(int), "IIF(order_payment_method_guid='" + Guid.Empty.ToString() + "', 0, 1)");
+        dtPaymentMethods.DefaultView.Sort = "SortOrder";
+
+        //bind the datalist
+        dlPayment.DataSource = dtPaymentMethods.DefaultView;
+        dlPayment.DataBind();
+    }
+
+
+    protected void dlPayment_ItemDataBound(object sender, DataListItemEventArgs e)
+    {
+        if (e.Item.DataItem == null)
+        {
+            return;
+        }
+
+        //Following Code from OrderDetailView, check when updates occur
+        HtmlTableRow trPaymentAmount = (HtmlTableRow)e.Item.FindControl("trPaymentAmount");
+        HtmlTableRow trPaymentName = (HtmlTableRow)e.Item.FindControl("trPaymentName");
+        HtmlTableRow trPaymentNumber = (HtmlTableRow)e.Item.FindControl("trPaymentNumber");
+        HtmlTableRow trPaymentExp = (HtmlTableRow)e.Item.FindControl("trPaymentExp");
+        HtmlTableRow trPaymentAddress = (HtmlTableRow)e.Item.FindControl("trPaymentAddress");
+        Literal lblPaymentAmount = (Literal)e.Item.FindControl("lblPaymentAmount");
+        Literal lblPaymentType = (Literal)e.Item.FindControl("lblPaymentType");
+        Literal lblPaymentName = (Literal)e.Item.FindControl("lblPaymentName");
+        Label lblPaymentAddress = (Label)e.Item.FindControl("lblPaymentAddress");
+        Label lblPaymentZip = (Label)e.Item.FindControl("lblPaymentZip");
+        Literal lblPaymentNumber = (Literal)e.Item.FindControl("lblPaymentNumber");
+        Literal lblPaymentExp = (Literal)e.Item.FindControl("lblPaymentExp");
+
+        DataRowView drv = (DataRowView)e.Item.DataItem;
+
+        lblPaymentName.Text = drv["order_payment_method_name"].ToString();
+        lblPaymentAddress.Text = drv["order_payment_method_address"].ToString();
+        lblPaymentZip.Text = drv["order_payment_method_postal_code"].ToString();
+        lblPaymentExp.Text = drv["order_payment_method_expiration"].ToString();
+        lblPaymentType.Text = BusinessFlow.WebServices.LookupTables[MainStreet.BusinessFlow.SDK.Ws.LookupTables.PaymentMethods].TranslateToLabel(drv["payment_method_id"], "");
+        lblPaymentAmount.Text = PrgFunctions.TryCastDecimal(drv["order_payment_method_amount"]).ToString("$0.00");
+
+        try
+        {
+            MainStreet.BusinessFlow.SDK.Ws.PaymentMethod method = (MainStreet.BusinessFlow.SDK.Ws.PaymentMethod)PrgFunctions.TryCastInt(drv["payment_method_id"]);
+
+            lblPaymentNumber.Text = DisplayFormatter.FormatPaymentMethod(method, drv["order_payment_method_number"].ToString(), drv["order_payment_method_number_ext"].ToString());
+
+            switch (method)
+            {
+                case MainStreet.BusinessFlow.SDK.Ws.PaymentMethod.Cash:
+                    trPaymentNumber.Visible = false;
+                    trPaymentExp.Visible = false;
+                    trPaymentAddress.Visible = false;
+                    break;
+
+                case MainStreet.BusinessFlow.SDK.Ws.PaymentMethod.Check:
+                case MainStreet.BusinessFlow.SDK.Ws.PaymentMethod.MoneyOrder:
+                    trPaymentExp.Visible = false;
+                    trPaymentAddress.Visible = false;
+                    break;
+
+                case MainStreet.BusinessFlow.SDK.Ws.PaymentMethod.PayPal:
+                    trPaymentExp.Visible = false;
+                    trPaymentAddress.Visible = false;
+                    trPaymentNumber.Visible = false;
+                    trPaymentName.Visible = false;
+                    break;
+
+                case MainStreet.BusinessFlow.SDK.Ws.PaymentMethod.PurchaseOrder:
+                    trPaymentExp.Visible = false;
+                    trPaymentAddress.Visible = false;
+                    break;
+
+                case MainStreet.BusinessFlow.SDK.Ws.PaymentMethod.GiftCard:
+                    trPaymentName.Visible = false;
+                    trPaymentAddress.Visible = false;
+
+                    break;
+                case MainStreet.BusinessFlow.SDK.Ws.PaymentMethod.EFT:
+                    trPaymentExp.Visible = false;
+                    trPaymentAddress.Visible = false;
+
+                    break;
+                default:
+                    trPaymentAddress.Visible = false;
+                    trPaymentAmount.Visible = false;
+                    trPaymentName.Visible = false;
+                    break;
+            }
+        }
+        catch
+        {
+        }
+    }
+}

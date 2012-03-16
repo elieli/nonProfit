@@ -1,0 +1,419 @@
+using System;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Drawing;
+using System.IO;
+
+
+
+ 
+	/// <summary>
+	/// Summary description for BLImageGallery.
+	/// </summary>
+	public class BLImageGallery
+	{
+		#region Fields
+
+		private int id;
+		private int height;
+		private int width;
+		private string src;
+		private string name;
+		private string description;
+
+		//private DataTable thumbnailSettings;
+		
+		private DataSet images;
+
+		
+		#endregion
+
+		#region Constants
+		
+		public float THUMBNAIL_MAX_WIDTH = 100;
+		public float THUMBNAIL_MAX_HEIGHT = 100;
+
+		public float IMAGE_MAX_WIDTH = 100;
+		public float IMAGE_MAX_HEIGHT = 100;
+
+		
+		#endregion
+		
+		#region Properties
+
+		public int Height
+		{
+			get{return this.height;}
+			set{this.height = value;}
+		}
+
+		public int Width
+		{
+			get{return this.width;}
+			set{this.width = value;}
+		}
+		public string Src
+		{
+			get {return this.src;}
+			set {this.src = value;}
+		}
+		public int ID
+		{
+			get{ return this.id; }
+			set{ this.id = value; }
+		}
+
+		public string Name
+		{
+			get{ return this.name; }
+			set{ this.name = value; }
+		}
+
+		public string Description
+		{
+			get{ return this.description; }
+			set{ this.description = value; }
+		}
+
+		public DataSet images
+		{
+			get { return this.images; }
+			set {this.images = value;}
+		}
+
+		#endregion
+
+		#region Methods
+
+		#region Static Methods
+
+		
+		public static int GetGalleryID(string BindingType, string BindingValue)
+		{
+			int galleryID = 0;
+
+		 	galleryID = DALCImageGallery.GetGalleryID(BindingType, BindingValue);
+			
+			return galleryID;
+		}
+		
+		public static int Update(int id, string name, string description)
+		{
+			int returnValue = 0;
+
+
+			return returnValue;
+		}
+
+		public static void Delete(int Id)
+		{
+			DALCImageGallery.Delete(Id);
+		}
+
+		public static DataSet GetList()
+		{
+			return null;
+		}
+
+
+		#endregion
+
+		#region None Static Methods
+
+		/// <summary>
+		/// Возвращает src картинки
+		/// </summary>
+		public string GetimgInfo(string BindingType,string BindingValue)
+		{
+			this.ID = DALCImageGallery.GetGalleryID(BindingType,BindingValue);
+			this.Retrieve();
+			if ((this.images != null)&&(this.images.Tables["ImageGallery"].Rows.Count >0))
+			{
+				this.Src = this.images.Tables["ImageGallery"].Rows[0]["ImageUrl"].ToString();
+			}
+			else
+			{
+				this.Src = "";
+			}
+			return this.Src; 
+		}
+
+		
+		public void DeleteBinding(string bindingType, string bindingValue)
+		{
+			DALCImageGallery.DeleteBinding(this.id, bindingType, bindingValue);
+		}
+
+		public void Bind(string bindingType, string bindingValue)
+		{
+			DALCImageGallery.Bind(this.id, bindingType, bindingValue);
+		}
+		
+		public void Update()
+		{
+			int id = -1;
+			id = DALCImageGallery.Update(this.id, this.name, this.description);
+			if( id > 0 )
+			{
+				this.id = id;
+			}
+		}
+		
+		public void Deleteimages()
+		{
+			if (this.images!=null && this.images.Tables["ImageGallery"].Rows.Count>0)
+			{
+				foreach(DataRow row in this.images.Tables["ImageGallery"].Rows)
+				{
+					BLImageGallery.ImageDelete(Convert.ToInt32(row["ID"]));
+				}
+			}
+			this.images = null;
+		}
+
+		public void CopyimagesToGallery(int galleryID)
+		{
+			FileStream fs;
+			string fileName;
+			Bitmap bitmap;
+			FileInfo imageFile;
+
+			BLImageGallery imageGallery = new BLImageGallery();
+			imageGallery.ID = galleryID;
+			imageGallery.Retrieve();
+			imageGallery.Deleteimages();
+			if (this.images!=null && this.images.Tables["ImageGallery"].Rows.Count>0)
+			{
+				foreach(DataRow row in this.images.Tables["ImageGallery"].Rows)
+				{
+					fileName = DALCImageGallery.GetFileName(Convert.ToString(row["FileName"]),Convert.ToString(row["FileExtension"]));	
+					try
+					{
+						fs = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None);														
+						bitmap = new Bitmap(fs);
+						imageFile = new FileInfo(fileName);
+						imageGallery.ImageAdd(bitmap, imageFile.Name, imageGallery.Name);
+						fs.Close();
+					}
+					catch{}
+				}
+			}
+		}
+		
+		public int ImageAdd(Image image, string originalFileName, string imageType)
+		{
+			return ImageAdd(image, originalFileName, IMAGE_MAX_WIDTH,  IMAGE_MAX_HEIGHT, imageType);
+		}
+
+		public int ImageAdd(Image image, string originalFileName, float width,  float height, string imageType)
+		{
+			int returnValue = 0;
+			
+			float maxWidth;
+			float maxHeight;
+			
+			BLImageGalleryConfig configOption = new BLImageGalleryConfig();
+			configOption.LoadParams(imageType);
+			
+			maxWidth = configOption.MaxWidth;
+			maxHeight = configOption.MaxHeight;
+
+			/*
+			width = width == IMAGE_MAX_WIDTH ? maxWidth : width;
+			height = height == IMAGE_MAX_HEIGHT ? maxHeight : height;
+			
+			width = width > maxWidth ? maxWidth : width;
+			height = height > maxHeight ? maxHeight : height;
+			*/
+
+			width = image.Width;
+			height = image.Height;
+			
+			System.Drawing.Imaging.ImageFormat format = image.RawFormat;
+			if( image.Width > maxWidth  || image.Height > maxHeight )
+			{
+				image = GetThumbnailImage((Bitmap)image,  width, height, maxWidth, maxHeight);
+			}
+
+			DALCImageGallery.ImageUpdate(-1 ,this.id, image, originalFileName, width, height, format);
+			
+			return returnValue;
+		}
+
+		private bool ThumbnailCallback()
+		{
+			return false;
+		}
+
+/*
+		public Image GetThumbnailImage(Bitmap bitmap,  float width, float height, float maxWidth, float maxHeight)
+		{
+			Image.GetThumbnailImageAbort myCallback =
+				new Image.GetThumbnailImageAbort(ThumbnailCallback);
+			
+			Resize(ref width, ref height, maxWidth, maxHeight);
+			
+			Image myThumbnail = bitmap.GetThumbnailImage(
+				(int)width, (int)height, myCallback, IntPtr.Zero);
+			
+			return myThumbnail;
+		}
+*/
+
+
+		public Image GetThumbnailImage(Bitmap bitmap,  float width, float height, float maxWidth, float maxHeight)
+		{
+			System.Drawing.Image g = bitmap;
+			System.Drawing.Imaging.ImageFormat thisFormat=g.RawFormat;
+  
+			//somehow find required image size
+			//Size thumbSize = newThumbSize(g.Width, g.Height);
+			Resize(ref width, ref height, maxWidth, maxHeight);
+			Size thumbSize = new Size((int)width, (int)height);
+  
+			//Creating blank image as a canvas
+			Bitmap imgOutput = new Bitmap(thumbSize.Width,thumbSize.Height);
+			
+			imgOutput.MakeTransparent();
+			imgOutput.MakeTransparent(Color.Black);
+			//Create graphics object for alteration
+			Graphics newGraphics = Graphics.FromImage(imgOutput);
+			newGraphics.Clear(Color.FromArgb(0, 255, 255, 255)); //blank the image
+			//Setting High Quality Transformation
+			newGraphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+			newGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+			newGraphics.DrawImage(g,0,0,thumbSize.Width,thumbSize.Height);
+			newGraphics.Flush();
+
+			return imgOutput;
+		}
+
+
+		private void Resize(ref float Width, ref float Height, float MaxWidth, float MaxHeight)
+		{
+			float tmpWidth = Width;
+			float tmpHeight = Height;
+
+			float div;
+
+			if(Width >= Height)
+			{
+				if(Width > MaxWidth)
+				{
+					tmpWidth = MaxWidth;
+					div = Width / Height;
+					tmpHeight = tmpWidth / div;
+				}
+				if(tmpHeight > MaxHeight)
+				{
+					div = tmpHeight / tmpWidth;
+					tmpHeight = MaxHeight;
+					tmpWidth = tmpHeight / div ;
+				}
+			}
+			else if(Width < Height)
+			{
+				if(Height > MaxHeight)
+				{
+					tmpHeight = MaxHeight;
+					div = Height / Width;
+					tmpWidth = tmpHeight / div;
+				}
+				if(tmpWidth > MaxWidth)
+				{
+					div = tmpWidth / tmpHeight;
+					tmpWidth = MaxWidth;
+					tmpHeight = tmpWidth / div;
+				}
+			}
+			
+			Width = tmpWidth;
+			Height = tmpHeight;
+		}
+		
+
+
+		public static void ImageDelete(int imageID)
+		{
+			DALCImageGallery.ImageDelete(imageID);
+		}
+		
+
+		public void Delete()
+		{
+			
+		}
+
+		public void Retrieve()
+		{
+			Init();
+		}
+
+		private void Init()
+		{
+			if( this.id > 0 )
+			{
+				DataSet items = DALCImageGallery.GetItem(this.id);
+
+				if( items.Tables.Count > 0 && items.Tables[0].Rows.Count > 0)
+				{
+					this.ID          = Convert.ToInt32( items.Tables["ImageGallery"].Rows[0]["ID"] );
+					this.Name        = Convert.ToString( items.Tables["ImageGallery"].Rows[0]["name"] );
+					this.Description = Convert.ToString( items.Tables["ImageGallery"].Rows[0]["description"] );
+					this.images      = DALCImageGallery.GetImageList(this.id, false);
+					try
+					{
+						this.Height      = Convert.ToInt32(this.images.Tables["ImageGallery"].Rows[0]["Height"]);
+					}
+					catch
+					{
+						this.Height = 0;
+					}
+					try
+					{
+						this.Width       = Convert.ToInt32(this.images.Tables["ImageGallery"].Rows[0]["Width"]);
+					}
+					catch
+					{
+						this.Width = 0;
+					}
+					
+				}
+				else
+				{
+					this.ID = 0;
+					ClearFields();
+				}
+			}
+			else
+			{
+				this.ID = 0;
+				ClearFields();
+			}
+		}
+
+		
+		private void ClearFields()
+		{
+			this.name = string.Empty;
+			this.description = string.Empty;
+			this.images = null;
+		}
+
+		
+		
+		#endregion
+
+		#endregion
+
+		public BLImageGallery()
+		{
+			//
+			// TODO: Add constructor logic here
+			//
+		}
+	}
+ 
+

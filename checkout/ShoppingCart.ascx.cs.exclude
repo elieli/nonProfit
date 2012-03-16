@@ -1,0 +1,1513 @@
+/*  
+'=====================================================
+' Project:      JomaDeals.com
+' Programmer:   Derek Souers
+' File:         ShoppingCart.ascx.cs
+' Description:  
+' Created:		07/30/09
+' Last Updated: 10/01/09
+'
+'=====================================================
+*/
+using System;
+using System.Collections;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using MainStreet.BusinessFlow.SDK;
+using MainStreet.BusinessFlow.SDK.Web;
+using MainStreet.BusinessFlow.SDK.Ws;
+
+public partial class controls_ShoppingCart : System.Web.UI.UserControl
+{
+    protected string MessageCart = "";
+    protected string MessageCoupon = "";
+  //  Repeater rCart = new Repeater();
+
+    //Change this depending on your setup.
+    private MainStreet.BusinessFlow.SDK.Ws.CartSubmitPayment m_paymentProcessing = MainStreet.BusinessFlow.SDK.Ws.CartSubmitPayment.AuthOnly;
+
+    private string m_sSubmitErrorPreface = "Your order could not be processed electronically at this time, please call in your order.";
+
+    protected string Message = "";
+    protected string SubTotal = "$0.00";
+    protected string Shipping = "Calculated at Checkout";
+    protected string Tax = "NY Only";
+    protected string Discount = "$0.00";
+    
+    protected string m_OrderId = "";
+    protected string m_OrderGuid = "";
+    protected Referrer r = new Referrer();
+        
+    private bool m_bEditable = true;
+    private bool m_bCalculateOthers = false;
+    private bool m_bShowTotal = true;
+    private bool m_bCheckActualNotCartQuantities = false;
+
+    private string m_sInvalidQuanitiesMessage = "There is only [Number] left of the item. Please adjust your Quantity on your order and try again.";
+
+    protected string Total = "$0.00";
+
+    public event EventHandler CartUpdated;
+
+
+    protected override void OnInit(EventArgs e)
+    {
+        base.OnInit(e);
+    }
+
+
+    protected override void OnPreRender(EventArgs e)
+    {
+        base.OnPreRender(e);
+
+        Refresh();
+    }
+
+
+    protected void OnCartUpdated(EventArgs e)
+    {
+        if (CartUpdated != null)
+        {
+            CartUpdated(this, e);
+        }
+    }
+
+
+    #region "Properties"
+    //*Properties*
+    ///<summary>
+    /// (Default: None) Gets or sets how payments should be processed by the <see cref="SubmitOrder" /> method.
+    /// </summary>
+    public MainStreet.BusinessFlow.SDK.Ws.CartSubmitPayment PaymentProcessing
+    {
+        get
+        {
+            return m_paymentProcessing;
+        }
+
+        set
+        {
+            m_paymentProcessing = value;
+        }
+    }
+
+
+    public string SubmitErrorPreface
+    {
+        get
+        {
+            return m_sSubmitErrorPreface;
+        }
+        set
+        {
+            m_sSubmitErrorPreface = value;
+        }
+    }
+
+
+    public string OrderId
+    {
+        get
+        {
+            return m_OrderId;
+        }
+        set
+        {
+            m_OrderId = value;
+        }
+    }
+
+
+    public string OrderGuid
+    {
+        get
+        {
+            return m_OrderGuid;
+        }
+        set
+        {
+            m_OrderGuid = value;
+        }
+    }
+    
+
+    public bool CalculateOthers
+    {
+        get
+        {
+            return m_bCalculateOthers;
+        }
+        set
+        {
+            m_bCalculateOthers = value;
+        }
+    }
+
+
+    public bool Editable
+    {
+        get
+        {
+            return m_bEditable;
+        }
+        set
+        {
+            m_bEditable = value;
+        }
+    }
+
+
+    public bool ShowTotal
+    {
+        get
+        {
+            return m_bShowTotal;
+        }
+        set
+        {
+            m_bShowTotal = value;
+        }
+    }
+
+
+    public dsOrder.mf_ordersRow drOrderDetail
+    {
+        get
+        {
+            return BusinessFlow.DefaultCart.Data.OrderRow;
+        }
+    }
+
+
+    public bool CheckActualNotCartQuantities
+    {
+        get
+        {
+            return m_bCheckActualNotCartQuantities;
+        }
+        set
+        {
+            m_bCheckActualNotCartQuantities = value;
+        }
+    }
+#endregion
+
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        WebUtilities.SetDefaultButton(this.Page, txtCouponCode, btnApplyDiscount);
+
+        if (IsPostBack)
+            return;
+       
+        
+
+        ////UserControl ShoppingCart = (UserControl)this.FindControl("ShoppingCart1");
+
+        ////if (ShoppingCart != null)
+        ////{
+        ////  DropDownList ddQuantity = (DropDownList)ShoppingCart.FindControl("ddQuantity");
+        ////    //ddQuantity.Enabled = false;
+        ////    ///  uc.ddQuantity;
+
+        ////}
+
+        Session["prefex"] = "none";
+
+        lnkDeleteAll.Visible = Editable;
+            btnUpdateCart.Visible=Editable;
+        tdDeleteAll.Visible=Editable;
+            dvDltAll.Visible=Editable;
+            dvCoupon.Visible = Editable;
+            btnContinueShopping.Visible = Editable;
+       
+
+        //UpdateCart(); 
+        Refresh();
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	Refresh()
+    // Desc:		Redisplays the cart
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    public void Refresh()
+    {
+        //rCart.DataSource = null;
+        //rCart.DataBind();
+
+        DataTable dt = new DataTable();
+        dt.Columns.Add("OrderItemGuid");
+        dt.Columns.Add("ItemGuid");
+        dt.Columns.Add("ItemCode");
+        dt.Columns.Add("ItemImageThumb");
+        dt.Columns.Add("ItemImageTitle");
+        dt.Columns.Add("ItemUrl");
+        dt.Columns.Add("ItemTitle");
+        dt.Columns.Add("ItemQuantity");
+        dt.Columns.Add("ItemPrice");
+        dt.Columns.Add("ItemSubTotal");
+
+        //Sample item
+        /*
+        DataRow drNew = dt.NewRow();
+        Guid g = new Guid();
+        drNew["ItemOrderGuid"] = g.ToString();
+        drNew["ItemOrderCode"] = "FOSSIL-FS4303";
+        drNew["ItemImageThumb"] = BusinessFlow.Settings.Pages.images.get_UrlByImage(g, MainStreet.BusinessFlow.SDK.Ws.imagesize.Thumbnail).ToString();
+        drNew["ItemImageTitle"] = "FS4304";
+        drNew["ItemOrderTitle"] = "Fossil Analog Black Dial Watch FS4303";
+        drNew["ItemQuantity"] = "1";
+        drNew["ItemPrice"] = "$49";
+        drNew["ItemSubTotal"] = "$49";
+        drNew["ItemUrl"] = "../default.aspx";
+        dt.Rows.Add(drNew);
+        */
+
+        //customization
+       removeNonTodayDeals(BusinessFlow.DefaultCart.Data.OrderItems);
+        applyCouponsToOrder();
+
+  	 decimal subTotala = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.SubTotal);
+        if (subTotala < 0.03M)
+            {                
+                removeCouponCode();
+               
+            }
+
+       
+            //Load the cart
+            decimal sub = 0;
+            int cartcount = 0;
+             int totqty =0;
+
+            try
+            {
+
+            Cart c = BusinessFlow.DefaultCart;
+
+
+
+            foreach (DataRow dr in c.DisplayData.OrderItems)
+            {
+                cartcount++;
+
+                ProductDetails p = new ProductDetails(new Guid(dr["item_guid"].ToString()));
+
+                DataRow drNew = dt.NewRow();
+                Guid g = new Guid(dr["item_guid"].ToString());
+                drNew["OrderItemGuid"] = dr["order_item_guid"];
+                drNew["ItemGuid"] = dr["item_guid"];
+                drNew["ItemCode"] = p.GetItemCode();
+
+                string imgUrl = "", width = "", height = "", description = "";
+                p.GetMainThumbnailImage(out imgUrl, out width, out height, out description);
+                drNew["ItemImageThumb"] = imgUrl;
+
+                drNew["ItemImageTitle"] = PrgFunctions.TryCastString(p.GetStringFieldOrAttribute("item_tag"), drNew["ItemCode"].ToString());
+                drNew["ItemTitle"] = p.GetTitle();
+                drNew["ItemQuantity"] = dr["order_item_quantity"];
+                drNew["ItemPrice"] = dr["order_item_unit_price"];
+                drNew["ItemSubTotal"] = Convert.ToDecimal(dr["order_item_quantity"]) * Convert.ToDecimal(dr["order_item_unit_price"]);
+
+                //customization
+                drNew["ItemUrl"] = "../default.aspx";
+
+                dt.Rows.Add(drNew);
+
+                sub += Convert.ToDecimal(dr["order_item_quantity"]) * Convert.ToDecimal(dr["order_item_unit_price"]);
+
+
+                totqty    += (int) Convert.ToDecimal(dr["order_item_quantity"]);
+
+
+                //ItemImageThumb   ItemImageTitle  <a href='<%#Eval("ItemUrl").ToString()%>'>
+                //                                <%#Eval("ItemTitle").ToString()%></a>ItemPriceItemSubTotal
+
+
+                HtmlGenericControl prodcontainer = (HtmlGenericControl)this.FindControl("prodcontainer");
+                HtmlGenericControl dynDiv = new HtmlGenericControl("div");
+                dynDiv.ID = "Product" + cartcount;
+                //dynDiv.Style.Add(HtmlTextWriterStyle.BackgroundColor, "Gray");
+                //dynDiv.Style.Add(HtmlTextWriterStyle.Height, "20px");
+                //dynDiv.Style.Add(HtmlTextWriterStyle.Width, "300px");
+                dynDiv.InnerHtml = "I was created using Code Behind";
+                ///        this.Controls.Add(dynDiv);
+
+                string prod = "<div class='product1'><img src='" + drNew["ItemImageThumb"] + "' alt='" + drNew["ItemImageTitle"] + "' class='img7' />" +
+                    "    <a href='" + drNew["ItemUrl"] + "'> '" + drNew["ItemTitle"] + "'</a><h2>'" + drNew["ItemImageTitle"] + "' </h2>  <p> Size:<br />" +
+                 "Color:<br />Select Qty:  <asp:DropDownList ID='ddQuantity' runat='server' AutoPostBack='true' OnSelectedIndexChanged='ddQuantity_SelectedIndexChanged'> " +
+                 "<asp:ListItem>1</asp:ListItem><asp:ListItem>2</asp:ListItem><asp:ListItem>3</asp:ListItem>" +
+                 "<asp:ListItem>4</asp:ListItem><asp:ListItem>5</asp:ListItem><asp:ListItem>6</asp:ListItem><asp:ListItem>7</asp:ListItem>" +
+                 "<asp:ListItem>9</asp:ListItem>  <asp:ListItem>10</asp:ListItem>  </asp:DropDownList>" +
+                 " <br /> Price: " + drNew["ItemPrice"] + "<br />  " +
+                 " <br /> SubTotal: " + drNew["ItemSubTotal"] + "<br /> </div> ";
+
+                //  dynDiv.InnerHtml = prod;
+                //////////////prodcontainer.Controls.Add(dynDiv);
+
+
+            }
+
+        }
+        catch { }
+
+
+        rCart.DataSource = dt;
+        rCart.DataBind();
+
+        RadioButtonList rblShippingMethods = (RadioButtonList)this.Parent.FindControl("rblShippingMethods");
+        decimal s=0;
+        if (rblShippingMethods != null)
+        {
+            try
+            {
+            int selected = rblShippingMethods.SelectedIndex;
+
+            string amt = rblShippingMethods.SelectedValue;
+
+            string[] amttxt = rblShippingMethods.SelectedItem.Text.Split('$');
+
+           
+                s = decimal.Parse(amttxt[1]);
+            }
+            catch { s = 0; }
+
+        }
+        else
+        {
+            s = BusinessFlow.DefaultCart.Shipping==null ?  0 :   PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.Shipping);
+
+        }
+
+        decimal subTotal = 0;
+
+        SubTotal = sub.ToString("c");
+
+        if (CalculateOthers)
+        {
+           // decimal s = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.Shipping);
+            decimal t = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.Tax);
+            decimal d = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.Discount);
+
+            string couponCode = PrgFunctions.TryCastString(BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_cd"], "");
+            string couponCodeDesc = PrgFunctions.TryCastString(BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_description"], "");
+
+            Discount = d.ToString("c");
+
+            if (couponCodeDesc.Length != 0)
+                Discount += "(coupon)"; //" (" + couponCode + "-" + couponCodeDesc+")";
+
+            //if (PrgFunctions.TryCastString(BusinessFlow.DefaultCart.Data.OrderRow["order_ship_state_id"]).Length != 0)
+            //{
+            //    s = (s) * totqty;
+            //    Shipping = s.ToString("c");
+            //}
+            //else
+            //{
+            //   // Shipping = "Calculated at Checkout";
+            //    Shipping = "";
+            //    s =  s * totqty;
+            //    Shipping = s.ToString("c");
+            //}
+
+            Shipping = s.ToString("c");
+
+            if (PrgFunctions.TryCastString(BusinessFlow.DefaultCart.Data.OrderRow["order_ship_state_id"]).Length != 0)
+            {
+                Tax = t.ToString("c");
+            }
+            else
+            {
+                Tax = t.ToString("c");
+                //  Tax = "NY Only"; 
+               // Tax = "";
+            }
+
+            if (ShowTotal)
+            {
+                //TableRow trTotal = (TableRow)dlCart.FindControl("trTotal");
+                //trTotal.Visible = true;
+                Total = (sub + s + t - d).ToString("c");
+            }
+            else
+            {
+                Total = "";
+                //TableRow trTotal = (TableRow)dlCart.FindControl("trTotal");
+                //trTotal.Visible = false;
+            }
+        }
+        else
+        {
+            subTotal = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.SubTotal);
+            decimal d = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.Discount);
+            //decimal s = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.Shipping);
+            //decimal t = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.Tax);
+        
+            //Shipping = "Calculated at Checkout";
+            //Tax = "NY Only";
+            Shipping = "";
+            Tax = "";
+          
+            Discount = d.ToString("c");
+
+            Total = (subTotal - d).ToString("c");
+        }
+
+
+         
+
+        String subtotal = "";
+
+
+        subTotal += sub;
+
+
+
+        HtmlGenericControl spnSubTotal = (HtmlGenericControl)this.FindControl("spnSubTotal");
+        HtmlGenericControl spnTax = (HtmlGenericControl)this.FindControl("spnTax");
+        HtmlGenericControl spnDiscount = (HtmlGenericControl)this.FindControl("spnDiscount");
+        HtmlGenericControl spnShipping = (HtmlGenericControl)this.FindControl("spnShipping");
+        HtmlGenericControl spnTotal = (HtmlGenericControl)this.FindControl("spnTotal");
+        subtotal = subTotal.ToString("c");
+        spnSubTotal.InnerText = subtotal;// subTotal.ToString("c");
+        spnTax.InnerText = Tax;
+        spnDiscount.InnerText = Discount;
+        spnShipping.InnerText = Shipping;
+        spnTotal.InnerText = Total;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //Valentin
+	     foreach (RepeaterItem ri in rCart.Items)
+            {
+
+                DropDownList ddl = (DropDownList)ri.FindControl("ddQuantity");
+                LinkButton lb = (LinkButton)ri.FindControl("lnkDelete");
+
+                string orderItemGuid = lb.CommandArgument;
+
+                dsOrder.mf_order_itemsRow ir = BusinessFlow.DefaultCart.Data.OrderItems.FindByorder_item_guid((PrgFunctions.TryCastGuid(orderItemGuid)));
+
+                //Valentin
+                if (ir["item_guid"].ToString().Equals("6d24b51a-835c-4dd2-ba36-c3ede2503985"))
+                {
+                    ddl.Enabled = false;
+                }
+
+
+                HtmlInputControl tdLBQuantity = (HtmlInputControl)ri.FindControl("tdLBQuantity");
+
+                //Eli  second checkout page disable quantity 
+                if (Parent.Page.ToString() == ("ASP.checkout_checkout_step2_aspx"))
+                {
+                    ddl.Enabled = false;
+                    tdLBQuantity.Disabled= true;
+                }
+              
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	UpdateCart()
+    // Desc:		Update items quanitites in the cart
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    public void UpdateCart()
+    {
+        Session["prefex"] = "block";
+
+        foreach (RepeaterItem ri in rCart.Items)
+        {
+            if ((ri.ItemType == ListItemType.Item) || (ri.ItemType == ListItemType.AlternatingItem))
+            {
+                DropDownList ddl = (DropDownList)ri.FindControl("ddQuantity");
+                LinkButton lb = (LinkButton)ri.FindControl("lnkDelete");
+
+                string orderItemGuid = lb.CommandArgument;
+                dsOrder.mf_order_itemsRow ir = BusinessFlow.DefaultCart.Data.OrderItems.FindByorder_item_guid(PrgFunctions.TryCastGuid(orderItemGuid));
+
+                if (ir != null)
+                {
+                    //Update the quantity
+                    int quantity = Convert.ToInt16(ddl.SelectedValue);
+                    ir["order_item_quantity"] = quantity;
+
+                    //If there are less than one items, remove the row
+                    if (quantity < 1)
+                    {
+                        BusinessFlow.DefaultCart.Data.OrderItems.Removemf_order_itemsRow(ir);
+                    }
+
+                    //customization
+                    if (quantity > 10)
+                    {
+                        BusinessFlow.DefaultCart.Data.OrderItems.Removemf_order_itemsRow(ir);
+                    }
+                }
+            }
+        }
+
+        BusinessFlow.DefaultCart.Data.AcceptChanges();
+        BusinessFlow.DefaultCart.Save();
+
+        Refresh();
+
+        OnCartUpdated(null);
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	SubmitOrder()
+    // Desc:		Creates and order
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    public MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse SubmitOrder()
+    {
+        //customization
+        removeNonTodayDeals(BusinessFlow.DefaultCart.Data.OrderItems);
+        applyCouponsToOrder();
+
+        bool lbShowNotes = drOrderDetail["order_shipping"] == System.DBNull.Value;
+
+        m_OrderId = "";
+        m_OrderGuid = "";
+
+        MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse oResponse = default(MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse);
+
+        try 
+        {
+            if (CheckActualNotCartQuantities)
+            {
+                string val = "0";
+                //Parse thru the items
+                bool flag = false;
+                bool adjusted = false;
+
+                foreach (RepeaterItem ri in rCart.Items)
+                {
+                    if ((ri.ItemType == ListItemType.Item) || (ri.ItemType == ListItemType.AlternatingItem))
+                    {
+                        DropDownList ddl = (DropDownList)ri.FindControl("ddQuantity");
+                        LinkButton lb = (LinkButton)ri.FindControl("lnkDelete");
+
+                        string orderItemGuid = lb.CommandArgument;
+                        dsOrder.mf_order_itemsRow ir = BusinessFlow.DefaultCart.Data.OrderItems.FindByorder_item_guid(PrgFunctions.TryCastGuid(orderItemGuid));
+
+                        ProductDetails p = new ProductDetails(new Guid(ir["item_guid"].ToString()));
+                        int qoh = p.GetActualQuantityOnHand();
+                        val = qoh.ToString();
+                        int quantity = Convert.ToInt16(ddl.SelectedValue);
+
+                        ir["order_item_quantity"] = quantity;
+
+                        if (quantity < 1)
+                        {
+                            BusinessFlow.DefaultCart.Data.OrderItems.Removemf_order_itemsRow(ir);
+                            adjusted = true;
+                        }
+
+                        if (quantity > qoh)
+                        {
+                            flag = true;
+                            break;
+                        }
+
+                        //customization
+                        if (quantity > 10)
+                        {
+                            BusinessFlow.DefaultCart.Data.OrderItems.Removemf_order_itemsRow(ir);
+                            adjusted = true;
+                        }
+                    }
+                }
+
+                if (adjusted)
+                {
+                    BusinessFlow.DefaultCart.Data.AcceptChanges();
+                    BusinessFlow.DefaultCart.Save();
+                }
+
+                if (flag)
+                {
+                    string error = m_sInvalidQuanitiesMessage.Replace("[Number]", val);
+
+                    MainStreet.BusinessFlow.SDK.Ws.ResponseMessage msg = default(MainStreet.BusinessFlow.SDK.Ws.ResponseMessage);
+                    MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse exResponse = new MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse();
+
+                    exResponse.Status = MainStreet.BusinessFlow.SDK.Ws.ResponseStatuses.Failure;
+
+                    msg = new MainStreet.BusinessFlow.SDK.Ws.ResponseMessage();
+                    msg.DisplayHint = MainStreet.BusinessFlow.SDK.Ws.DisplayHints.DeveloperOnly;
+                    msg.Message = error;
+                    msg.Severity = MainStreet.BusinessFlow.SDK.Ws.ResponseMessageSeverity.Error;
+                    msg.DisplayHint = MainStreet.BusinessFlow.SDK.Ws.DisplayHints.EndUserAppropriate;
+
+                    exResponse.AddMessage(new ResponseMessage());
+                    exResponse.Messages[0] = msg;
+                    
+                    Message = exResponse.GetFilteredSummary(MainStreet.BusinessFlow.SDK.Ws.DisplayHints.EndUserAppropriate, "");
+
+                    return exResponse;
+                }
+            }
+
+            oResponse = BusinessFlow.WebServices.Cart.Submit(BusinessFlow.DefaultCart, this.PaymentProcessing);
+
+            //if Success/Warning, then the order got into the system and we can proceed.
+            if (oResponse.Status == MainStreet.BusinessFlow.SDK.Ws.ResponseStatuses.Success || oResponse.Status == MainStreet.BusinessFlow.SDK.Ws.ResponseStatuses.Warning)
+            {
+                Message = "Your Order# " + oResponse.OrderID + " has been processed.";
+
+                m_OrderId = oResponse.OrderID;
+                m_OrderGuid = oResponse.OrderGUID;
+            }
+            else
+            {
+                //If we have end user appropriate comments then include them in the error message
+                MainStreet.BusinessFlow.SDK.Ws.ResponseMessage[] filteredMsgs = oResponse.GetFilteredMessages(MainStreet.BusinessFlow.SDK.Ws.DisplayHints.EndUserAppropriate);
+                if (filteredMsgs.Length > 0)
+                {
+                    Message += "<ul>";
+                    foreach (MainStreet.BusinessFlow.SDK.Ws.ResponseMessage msg in filteredMsgs)
+                    {
+                        Message += "<li>" + msg.Message + "</li>";
+                    }
+                    Message += "</ul>";
+                }
+
+                return oResponse;
+            }
+        }
+        catch (Exception ex)
+        {
+            //Insure that logging gets a crack, but don't dump out to the error page.
+            SdkManagerModule.HandleError(ex);
+
+            MainStreet.BusinessFlow.SDK.Ws.ResponseMessage msg = default(MainStreet.BusinessFlow.SDK.Ws.ResponseMessage);
+            MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse exResponse = new MainStreet.BusinessFlow.SDK.Ws.CartSubmitResponse();
+            exResponse.Status = MainStreet.BusinessFlow.SDK.Ws.ResponseStatuses.Failure;
+
+            if ((exResponse.Messages==null)||(exResponse.Messages.Length == 0))
+            {
+                exResponse.AddMessage(new ResponseMessage());
+                exResponse.AddMessage(new ResponseMessage());
+            }
+            else
+            {
+                exResponse.AddMessage(new ResponseMessage());
+            }
+
+            msg = new MainStreet.BusinessFlow.SDK.Ws.ResponseMessage();
+            msg.DisplayHint = MainStreet.BusinessFlow.SDK.Ws.DisplayHints.DeveloperOnly;
+            msg.Message = ex.Message;
+            msg.Severity = MainStreet.BusinessFlow.SDK.Ws.ResponseMessageSeverity.Error;
+            exResponse.Messages[0] = msg;
+
+            msg = new MainStreet.BusinessFlow.SDK.Ws.ResponseMessage();
+            msg.DisplayHint = MainStreet.BusinessFlow.SDK.Ws.DisplayHints.EndUserAppropriate;
+            msg.Message = SubmitErrorPreface;
+            msg.Severity = MainStreet.BusinessFlow.SDK.Ws.ResponseMessageSeverity.Error;
+            exResponse.Messages[1] = msg;
+
+            Message = exResponse.GetFilteredSummary(MainStreet.BusinessFlow.SDK.Ws.DisplayHints.EndUserAppropriate,"");
+
+            return exResponse;
+        }
+
+        UnloadCart();
+
+        // Immediately redirect to somewhere else typically PayPal
+        //If lbRedirect Then Response.Redirect(lsURL)
+
+        //OR Return the OrderDetail 
+
+        return oResponse;
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	UnloadCart()
+    // Desc:		
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    public void UnloadCart()
+    {
+        BusinessFlow.DefaultCart = null;
+    }
+
+
+    protected void rCart_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Header)
+        {
+            System.Web.UI.HtmlControls.HtmlGenericControl tc = (System.Web.UI.HtmlControls.HtmlGenericControl)e.Item.FindControl("tdDeleteAll");
+            tc.Visible = Editable;
+
+            //if (!Editable)
+            //{
+            //    System.Web.UI.HtmlControls.HtmlTableCell hc = (System.Web.UI.HtmlControls.HtmlTableCell)e.Item.FindControl("headerCell");
+            //    hc.ColSpan = 6;
+            //}
+        }
+        if (e.Item.ItemType == ListItemType.Footer)
+        {
+            //if (!Editable)
+            //{
+            //    System.Web.UI.HtmlControls.HtmlTableCell fc = (System.Web.UI.HtmlControls.HtmlTableCell)e.Item.FindControl("footerCell");
+            //    fc.ColSpan = 6;
+            //}
+        }
+
+        if ((e.Item.ItemType == ListItemType.Item) || ((e.Item.ItemType == ListItemType.AlternatingItem)))
+        {
+            //Show/Hides controls depending on if editing mode is enabled
+            DropDownList ddl = (DropDownList)e.Item.FindControl("ddQuantity");
+
+            DataRowView drv = (DataRowView)e.Item.DataItem;
+
+            ListItem li = ddl.Items.FindByValue(drv["ItemQuantity"].ToString());
+            li.Selected = true;
+            ddl.SelectedIndex = ddl.Items.IndexOf(li);
+            //System.Web.UI.HtmlControls.tc = (System.Web.UI.HtmlControls.HtmlTableCell)e.Item.FindControl("tdDDQuantity");
+
+            //System.Web.UI.HtmlControls.htmlse tc = (System.Web.UI.HtmlControls.HtmlGenericControl)e.Item.FindControl("ddQuantity");
+            //tc.Visible = Editable;
+            ddl.Visible = Editable;
+            ddl.Text = drv["ItemQuantity"].ToString();
+
+            HtmlInputText tcc = (System.Web.UI.HtmlControls.HtmlInputText)e.Item.FindControl("tdLBQuantity");
+          //lc.  tcc.Visible = !Editable;
+            
+           /// tdDeleteAll.InnerText = drv["ItemQuantity"].ToString();
+            tcc.Value = drv["ItemQuantity"].ToString();
+
+            HtmlGenericControl tc = (System.Web.UI.HtmlControls.HtmlGenericControl)e.Item.FindControl("tdBtnDelete");
+            tc.Visible = Editable;
+        }   
+    }
+
+
+    protected void rCart_ItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+        if (Editable)
+        {
+            if (e.CommandName == "Delete")
+            {
+                dsOrder.mf_order_itemsRow dr = BusinessFlow.DefaultCart.Data.OrderItems.FindByorder_item_guid(PrgFunctions.TryCastGuid(e.CommandArgument));
+
+                if (dr!=null)
+                    BusinessFlow.DefaultCart.Data.OrderItems.Removemf_order_itemsRow(dr);
+
+                removeCouponCode();
+
+                BusinessFlow.DefaultCart.Data.AcceptChanges();
+                BusinessFlow.DefaultCart.Save();
+                Refresh();
+            }
+            if (e.CommandName == "DeleteAll")
+            {
+                BusinessFlow.DefaultCart.Data.OrderItems.Clear();
+
+                removeCouponCode();
+
+                BusinessFlow.DefaultCart.Data.AcceptChanges();
+                BusinessFlow.DefaultCart.Save();
+                Refresh();
+            }
+        }
+    }
+
+     //--------------------------------------------------------------------
+    // Function:	removeNonTodayDeals()
+    // Desc:		
+    // Receives:	mf_order_itemsDataTable
+    // Returns:		nada
+    // NOTICE:      customization
+    //--------------------------------------------------------------------
+
+    private DataSet TodayDealssx (PrgFunctions f)
+    {
+       
+
+  //      string cmditem = "Select   id FROM [Events]" +
+  //   " WHERE  eventStartDate  <= " + DateTime.Now.ToString("#yyyy-MM-dd#") +
+  //" and   eventEndDate  >= " + DateTime.Now.ToString("#yyyy-MM-dd#") + "";
+       
+        
+  //      if (!f.IsGenericServerUp())
+  //          return null;
+
+  //      if (!f.DoesGenericFieldExists(cmditem))
+  //          return null;
+       
+  //      DataSet ds = f.ReturnGenericDataSet(cmditem);
+
+  //      string cmditemevent = " Select   itemcode FROM [Eventitems] where ";
+
+  //       foreach  (DataRow dr in ds.Tables[0].Rows)
+  //      {
+  //          cmditemevent += "   eventid = " + dr["id"].ToString() + "   or  ";
+          
+
+
+
+
+  //       }
+
+  //      int lastindx =  cmditemevent.LastIndexOf("or")!=-1 ?  cmditemevent.LastIndexOf("or") : cmditemevent.Length ;
+
+  //      cmditemevent = cmditemevent.Substring(0, lastindx);
+   
+
+
+
+
+
+
+        //DataSet dts = f.ReturnGenericDataSet(cmditemevent);
+
+
+        string itemcode = "";
+        string    eventid = "";
+        string title = "";
+        string status = "";
+        string commandName = "v_getEventItems";
+        string dealDate = "";
+        string site = "";
+        // string itemcodew = "";
+        string opt = "3";
+
+
+        DataSet dts = r.GetDeals(commandName, dealDate, site, eventid, itemcode, title, status, opt);
+
+
+
+
+
+        return dts;
+
+
+    }
+
+
+
+
+
+    //--------------------------------------------------------------------
+    // Function:	removeNonTodayDeals()
+    // Desc:		
+    // Receives:	mf_order_itemsDataTable
+    // Returns:		nada
+    // NOTICE:      customization
+    //--------------------------------------------------------------------
+    private void removeNonTodayDeals(dsOrder.mf_order_itemsDataTable oi)
+    {
+        PrgFunctions f = new PrgFunctions((MainStreet.BusinessFlow.SDK.Web.BusinessFlowWebContext)BusinessFlow.Context);
+
+
+
+
+      DataSet dst =   TodayDealssx( f);
+
+
+
+
+
+
+
+
+        //Get the current date time
+        DateTime dt = DateTime.Now;
+
+
+        string cmd = "SELECT [ItemCode]" +
+            " FROM [DealOfTheDay]" +
+            " WHERE MONTH([DealDate])=" + dt.Month +
+            " AND DAY([DealDate])=" + dt.Day +
+            " AND YEAR([DealDate])=" + dt.Year;
+
+        if (!f.IsGenericServerUp())
+            return;
+
+        //if (!f.DoesGenericFieldExists(cmd))
+        //    return;
+
+      /////////  DataSet ds = f.ReturnGenericDataSet(cmd);
+
+
+
+
+
+
+
+        string commandName = "v_getDeals";
+        string dealDate = "";
+        string site = "";
+        string opt = "7";
+        string title = "";
+        string status = "";
+
+        string itemcode = "";
+
+        string eventid = "";
+        // DataSet dsEventItems = r.GetDeals(commandName, dealDate, site, eventid, itemcode, title, status, opt);
+        DataSet ds = r.GetDeals(commandName, dealDate, site, eventid, itemcode, title, status, opt);
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+        if ((ds == null)||(ds.Tables.Count<1) )
+            return;
+
+        if ((dst != null) && (dst.Tables.Count > 0) && (dst.Tables[0].Rows.Count > 0))
+        { ds.Tables[0].Merge(dst.Tables[0]); }
+
+
+
+        //Get the item guids
+        Hashtable ht = new Hashtable();
+        foreach (DataRow dr in ds.Tables[0].Rows)
+        {
+            ProductDetails p = new ProductDetails(dr["ItemCode"].ToString());
+
+            if (p.IsLoaded())
+            {
+                //Add in children items
+                if (p.IsMasterItem())
+                {
+                    DataTable dtChildren = p.GetChildItems();
+                    if ((dtChildren != null) && (dtChildren.Rows.Count > 0))
+                    {
+                        foreach (DataRow drChild in dtChildren.Rows)
+                        {
+                            if (!ht.ContainsKey(drChild["item_guid"].ToString().ToLower()))
+                            {
+                                ht.Add(drChild["item_guid"].ToString().ToLower(), drChild["item_guid"].ToString().ToLower());
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (!ht.ContainsKey(p.GetItemGuid().ToLower()))
+                    {
+                        ht.Add(p.GetItemGuid().ToLower(), p.GetItemGuid().ToLower());
+                    }
+                }
+            }
+        }        
+        
+        //Check thru the cart
+        int end=oi.Count-1;
+
+        if (oi.Count > 0)
+        {
+            for (int i = 0; i <= end; i++)
+            {
+                DataRow dr = oi[i];
+
+                //Remove all non-deal of the day items
+                string cartContainingItemGuid = dr["item_guid"].ToString().ToLower();
+		
+		  //Valentin for GiftFREE
+                if (!(cartContainingItemGuid.Equals("6d24b51a-835c-4dd2-ba36-c3ede2503985") && end>0) )
+                {
+
+                	if (!ht.ContainsKey(cartContainingItemGuid))
+                	{
+                    		dsOrder.mf_order_itemsRow ir = BusinessFlow.DefaultCart.Data.OrderItems.FindByorder_item_guid(new Guid(dr["order_item_guid"].ToString()));
+
+                    		if (ir !=null)
+                        BusinessFlow.DefaultCart.Data.OrderItems.Removemf_order_itemsRow(ir);
+                	}
+		}
+            }
+
+
+	     BusinessFlow.DefaultCart.Data.AcceptChanges();
+            BusinessFlow.DefaultCart.Save();
+        }    
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	custom: DoesCartContainFreeShippingItem()
+    // Desc:		
+    // Receives:	nada
+    // Returns:		bool
+    //--------------------------------------------------------------------
+    public bool DoesCartContainFreeShippingItem()
+    {
+        PrgFunctions f = new PrgFunctions((MainStreet.BusinessFlow.SDK.Web.BusinessFlowWebContext)BusinessFlow.Context);
+
+
+        DataSet dst = TodayDealssx(f);
+
+
+        //Get the current date time
+        DateTime dt = DateTime.Now;
+
+        //////string cmd = "SELECT [ItemCode]" +
+        //////    " FROM [DealOfTheDay]" +
+        //////    " WHERE MONTH([DealDate])=" + dt.Month +
+        //////    " AND DAY([DealDate])=" + dt.Day +
+        //////    " AND YEAR([DealDate])=" + dt.Year +
+        //////    " AND [FreeShipping]=1";
+
+        //////if (!f.IsGenericServerUp())
+        //////    return false;
+
+        //if (!f.DoesGenericFieldExists(cmd))
+        //    return false;
+
+     //   fixed bug  - was only checking for first free shipping item but didn't take in to account
+     //                        if more than one item was free shipping 
+        //   string itemCode = f.GetGenericString(cmd);
+
+
+        //////DataSet ds = f.ReturnGenericDataSet(cmd);
+
+
+
+
+
+
+
+
+
+        
+
+            string commandName = "v_getDeals";
+            string dealDate = "";
+            string site = "1";
+            string opt = "7";
+            string title = "";
+            string status = "";
+
+            string itemcode = "";
+
+            string eventid = "";
+            // DataSet dsEventItems = r.GetDeals(commandName, dealDate, site, eventid, itemcode, title, status, opt);
+             DataSet ds = r.GetDeals(commandName, dealDate, site, eventid, itemcode, title, status, opt);
+
+
+            
+
+
+
+
+
+
+
+        if ((dst != null) && (dst.Tables.Count > 0) && (dst.Tables[0].Rows.Count > 0) && (ds.Tables.Count > 0))
+        { ds.Tables[0].Merge(dst.Tables[0]); }
+
+
+        foreach (DataRow drw in ds.Tables[0].Rows)
+        {
+            string itemCode = drw["ItemCode"].ToString();
+        //Get the corresponding itemguid from the itemcode
+        ItemDetail id = BusinessFlow.WebServices.Item.GetDetail(itemCode, MainStreet.BusinessFlow.SDK.Ws.ItemGetDataRequestIncludes.Default);
+        if ((id != null) && (id.ItemRow != null))
+        {
+            string itemGuid = id.ItemRow["item_guid"].ToString();
+
+            foreach (DataRow dr in BusinessFlow.DefaultCart.Data.OrderItems)
+            {
+                if (String.Compare(itemGuid, dr["item_guid"].ToString(), true) == 0)
+                {
+                    return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	IsCouponApplied()
+    // Desc:		Determines if a coupon has been used
+    // Receives:	nada
+    // Returns:		bool
+    //--------------------------------------------------------------------
+    public bool IsCouponApplied()
+    {
+        if (BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"].ToString().Length != 0)
+            return true;
+
+        return false;
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	ApplyCouponCode()
+    // Desc:		Applies a coupon to the cart
+    // Receives:	
+    // Returns:		bool
+    //--------------------------------------------------------------------
+    public bool ApplyCouponCode(string code, out string message)
+    {
+        code = code.Trim();
+        code = PrgFunctions.StrictCleanInput(code);
+        code = PrgFunctions.Left(code, 80);
+
+        if (code.Length == 0)
+        {
+            message = "Invalid CouponCode";
+            return false;
+        }
+
+        MainStreet.BusinessFlow.SDK.Ws.PromotionValidateResponse oCheckPromotionResponse = BusinessFlow.WebServices.Promotion.Validate(code, BusinessFlow.DefaultCart);
+
+        if (oCheckPromotionResponse.Valid)
+        {
+            DataRow dr = oCheckPromotionResponse.Promotion.mf_promotions.Rows[0];
+
+            if (BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"].ToString().Length != 0)
+            {
+                message = "A coupon has already been applied to this order.";
+                return false;
+            }
+
+            BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"] = dr["promotion_guid"];
+            BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_cd"] = dr["promotion_code"].ToString();
+            BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_description"] = dr["promotion_description"].ToString();
+
+            //BusinessFlow.DefaultCart.Data.AcceptChanges();
+            //BusinessFlow.DefaultCart.Save();
+
+	     //Valentin FREEGIFT	 
+            if (code.ToUpper().Equals("FREEGIFT"))
+            {
+                BusinessFlow.DefaultCart.AddItem(new Guid("6d24b51a-835c-4dd2-ba36-c3ede2503985"), 1, null, 0.01);
+		 
+            }
+	     else
+            {
+
+                decimal subTotal = PrgFunctions.TryCastDecimal(BusinessFlow.DefaultCart.SubTotal);
+                if (subTotal < 0.03M)
+                {
+                    BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_cd"] = "";
+			removeCouponCode();
+                    message = "Coupons and other special offers are not valid for this product.";
+                    return false;
+                }
+            }
+
+		
+
+
+            message = "Coupon has been applied to the shopping cart";
+            return true;
+        }
+        else
+        {
+            message = "The code you entered is incorrect or no longer valid.";
+            BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_cd"] = "";
+            return false;
+        }
+    }
+
+
+    /*
+    //--------------------------------------------------------------------
+    // Function:	applyCouponsToItems()
+    // Desc:		Applies the coupon to the items in an order
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    private void applyCouponsToItems()
+    {
+        string g=PrgFunctions.TryCastString(BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"]);
+
+        if (g.Length == 0)
+            return;
+
+        PromotionDetail pd = BusinessFlow.WebServices.Promotion.GetDetail(new Guid(g));
+
+        foreach (DataRow dr in BusinessFlow.DefaultCart.Data.OrderItems)
+        {
+            dsOrder.mf_order_itemsRow ir = BusinessFlow.DefaultCart.Data.OrderItems.FindByorder_item_guid(PrgFunctions.TryCastGuid(dr["order_item_guid"]));
+            
+            for (int i = 0; i < pd.PromotionItems.Count; i++)
+            {
+                if (ir["item_guid"] == pd.PromotionItems[i]["item_guid"])
+                {
+                    decimal qty = Convert.ToDecimal(ir["order_item_quantity"]);
+                    decimal unitPrice = Convert.ToDecimal(ir["order_item_unit_price"]);
+                    decimal unitDiscountRate = Convert.ToDecimal(ir["order_item_discount_rate"]);
+                    decimal extDiscount = Convert.ToDecimal(ir["order_item_discount"]);
+                    decimal extPrice = Convert.ToDecimal(ir["order_item_extended_price"]);
+
+                    //TODO
+                    if (pd.PromotionRow.promotion_calc_method_id == 1) // actual
+                    {
+                        ;
+                    }
+                    if (pd.PromotionRow.promotion_calc_method_id == 2) // Markdown %
+                    {
+                        ;
+                    }
+                    if (pd.PromotionRow.promotion_calc_method_id == 3) // Markdown $
+                    {
+                        ;
+                    }
+                    if (pd.PromotionRow.promotion_calc_method_id == 4) // Markup %
+                    {
+                        ;
+                    }
+                    if (pd.PromotionRow.promotion_calc_method_id == 5) // Markup $
+                    {
+                        ;
+                    }
+                }
+            }
+            
+        }
+
+        BusinessFlow.DefaultCart.Data.AcceptChanges();
+        BusinessFlow.DefaultCart.Save();
+    }
+    */
+
+
+    //--------------------------------------------------------------------
+    // Function:	applyCouponsToOrder()
+    // Desc:		Applies the coupon to the order, uses existing promotion admin interface in MainStreet
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    private void applyCouponsToOrder()
+    {
+        string g = PrgFunctions.TryCastString(BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"]);
+
+        if (g.Length == 0)
+            return;
+
+        PromotionDetail pd = BusinessFlow.WebServices.Promotion.GetDetail(new Guid(g));
+
+        if ((pd == null) || (pd.PromotionRow == null))
+            return;
+
+        //customization
+        bool found = true;
+
+        /*
+        //Search thru the cart looking for specific items to ensure the discount
+        bool found = false;
+
+        foreach (DataRow dr in BusinessFlow.DefaultCart.Data.OrderItems)
+        {
+            dsOrder.mf_order_itemsRow ir = BusinessFlow.DefaultCart.Data.OrderItems.FindByorder_item_guid(PrgFunctions.TryCastGuid(dr["order_item_guid"]));
+
+            for (int i = 0; i < pd.PromotionItems.Count; i++)
+            {
+                if (String.Compare(ir["item_guid"].ToString(),pd.PromotionItems[i]["item_guid"].ToString(),true)==0)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+                break;
+        }
+        */
+
+        if (found)
+        {
+            BusinessFlow.DefaultCart.Data.OrderRow["order_discount_description"] = BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_description"];
+
+            double orderDiscountRate = PrgFunctions.TryCastDouble(pd.PromotionRow.promotion_value);
+
+            /*
+            if (pd.PromotionRow.promotion_calc_method_id == 1) // actual
+            {
+                BusinessFlow.DefaultCart.Data.OrderRow["order_subtotal"] = orderDiscount;
+            }
+            */
+            if (pd.PromotionRow.promotion_calc_method_id == 2) // Markdown %
+            {
+                BusinessFlow.DefaultCart.Data.OrderRow["order_discount_rate"] = (orderDiscountRate / 100);
+            }
+            if (pd.PromotionRow.promotion_calc_method_id == 3) // Markdown $
+            {
+                BusinessFlow.DefaultCart.Data.OrderRow["order_discount"] = orderDiscountRate;
+            }
+            if (pd.PromotionRow.promotion_calc_method_id == 4) // Markup %
+            {
+                BusinessFlow.DefaultCart.Data.OrderRow["order_discount_rate"] = -(orderDiscountRate / 100);
+            }
+            if (pd.PromotionRow.promotion_calc_method_id == 5) // Markup $
+            {
+                BusinessFlow.DefaultCart.Data.OrderRow["order_discount"] = -orderDiscountRate;
+            }
+        }
+        else
+        {
+            //Remove the coupon since its containing item no longer exists
+            removeCouponCode();
+        }
+
+        BusinessFlow.DefaultCart.Data.AcceptChanges();
+        BusinessFlow.DefaultCart.Save();
+    }
+
+
+    private void removeCouponCode()
+    {
+        BusinessFlow.DefaultCart.Data.OrderRow["promotion_guid"] = System.DBNull.Value;
+        BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_cd"] = System.DBNull.Value;
+        BusinessFlow.DefaultCart.Data.OrderRow["order_promotion_description"] = System.DBNull.Value;
+
+        BusinessFlow.DefaultCart.Data.OrderRow["order_discount_rate"] = System.DBNull.Value;
+        BusinessFlow.DefaultCart.Data.OrderRow["order_discount"] = System.DBNull.Value;
+    }
+
+
+    protected void ddQuantity_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        UpdateCart();
+    }
+
+
+
+
+
+
+    protected void btnContinueShopping_Click(object sender, EventArgs e)
+    {
+       // Response.Redirect(ResolveUrl("default.aspx"));
+
+        if (Session["savedURL"] != null)
+        {
+            string savedURL = Session["savedURL"].ToString();
+            Session["savedURL"] = null;
+
+            Response.Redirect(savedURL);
+
+        }
+
+        else 
+        {
+            Response.Redirect( Session["Path"] + "default.aspx" );
+        }
+ 
+
+
+        //Response.Redirect("~/default.aspx");
+    }
+
+
+    protected void btnCheckoutNow_Click(object sender, EventArgs e)
+    {
+        Response.Redirect(ResolveUrl(Session["sPath"] + "checkout2/checkout_step1.aspx"));
+    }
+
+
+    protected void btnApplyDiscount_Click(object sender, EventArgs e)
+    {
+        if (ApplyCouponCode(txtCouponCode.Text, out MessageCoupon))
+        {
+            /*
+            //Hide the existing controls since we only allow one code
+            trCouponCode1.Visible=false;
+            trCouponCode2.Visible=false;
+            trCouponCode3.Visible=false;
+            */
+        }
+
+         UpdateCart();
+        
+
+     
+
+
+    }
+
+
+    protected void btnUpdateCart_Click(object sender, EventArgs e)
+    {
+         UpdateCart();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

@@ -1,0 +1,514 @@
+//namespace Shof.modules
+//{
+	using System;
+	using System.Data;
+	using System.Drawing;
+	using System.Web;
+	using System.Web.UI.WebControls;
+	using System.Web.UI.HtmlControls;
+	using System.Collections;
+	using System.Collections.Specialized;
+	using System.Configuration;
+	using System.Globalization;
+	using System.Data.SqlClient;
+	//using D3DM.ECom.BusinessLogic;
+	using Lib;
+
+	/// <summary>
+	///		Summary description for list.
+	/// </summary>
+	public partial class list : System.Web.UI.UserControl
+	{
+
+		DataSet dsProductList;
+		protected int categoryID;
+		protected int itemCount;
+		protected int countItemsPage;
+		protected int pageNum;
+		protected int pageCount;
+		protected System.Web.UI.WebControls.Panel SearchPanel;
+		protected System.Web.UI.WebControls.TextBox txtSearch;
+		protected System.Web.UI.WebControls.Button btnSearch;
+
+		protected void Page_Load(object sender, System.EventArgs e)
+		{
+			categoryID = -1;
+			FProductPanel.Visible = false;
+
+			NameValueCollection queryString = Page.Request.QueryString;
+
+			try
+			{
+                string search = "";//((index)this.Page).SearchParameter;
+				if( search == null )
+					try
+					{
+						search = this.ViewState["searchParam"].ToString();
+					}catch{}
+
+				if( search != null )
+				{
+					string strSearchQuery = search;
+					if(strSearchQuery.ToLower().IndexOf("and") < 0 && strSearchQuery.ToLower().IndexOf("or") < 0)
+						strSearchQuery.Replace(" ", "\" \"");
+					else
+					{
+						strSearchQuery = strSearchQuery.Replace(" And ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" aNd ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" anD ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" AnD ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" ANd ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" aND ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" AND ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" and ", "\" And \"");
+						strSearchQuery = strSearchQuery.Replace(" or ", "\" or \"");
+						strSearchQuery = strSearchQuery.Replace(" oR ", "\" or \"");
+						strSearchQuery = strSearchQuery.Replace(" Or ", "\" or \"");
+						strSearchQuery = strSearchQuery.Replace(" OR ", "\" or \"");
+					}
+					string Constring = System.Configuration.ConfigurationSettings.AppSettings["sqlConnectionString"];
+					string strSQL = "select ecomProduct.*,  dbo.ecom_Price_Fn_GetPrice(ecomProduct.prdID, 1)"
+						+ " AS Price from ecomProduct inner join CONTAINStable(ecomProduct, *, '\"" +
+						strSearchQuery + "\"',30) as freeTxt on ecomProduct.prdID = freeTxt.[KEY]"
+						+ "where ecomProduct.prdEnabled = CASE (1) WHEN 1 THEN 1 ELSE ecomProduct.prdEnabled"
+						+ " END order by freeTxt.RANK DESC";
+					this.ViewState["searchParam"] = search;
+				///////	dsProductList = ConvertList(Microsoft.ApplicationBlocks.Data.SqlHelper.ExecuteDataset(Constring, CommandType.Text, strSQL));
+					//dsProductList = BLProduct.GetList(search, true);
+					lListhead.Text = "CATALOG SEARCH RESULTS FOR <font style=\"FONT-WEIGHT: bold; FONT-SIZE: 12px\">\"" + search + "\"</font>";
+				}
+			}
+			catch( SqlException )
+			{
+				tdNoItems.InnerText = "Please refine your query to get more relevant results.";
+				dsProductList = new DataSet();
+				dsProductList.Tables.Add();
+			}
+
+			if( this.Request.Cookies["itemsOnPage"] == null )
+			{
+				countItemsPage = 6;
+				HttpCookie cookie = new HttpCookie("itemsOnPage", countItemsPage.ToString());
+				cookie.Expires = System.DateTime.Now.AddYears(1);
+				Response.Cookies.Add(cookie);
+			}
+			else
+			{
+				countItemsPage = int.Parse(this.Request.Cookies["itemsOnPage"].Value);
+				drpItemsOnPage.SelectedValue = countItemsPage.ToString();
+				this.drpItemsOnPageBott.SelectedValue = countItemsPage.ToString();
+				
+			}	
+			
+			if( this.ViewState["pageNum"] != null )
+				this.pageNum = (int)this.ViewState["pageNum"];			
+
+			if( dsProductList == null )
+			{
+				this.categoryID = System.Convert.ToInt32(queryString.Get("idc"));
+				if (this.categoryID<=0)	Response.Redirect(".");
+
+				BLCategory category = new BLCategory();
+				category.ID=categoryID;
+				category.Retrieve();
+
+				if (category.Level>=2)
+				{
+					lListhead.Text="PRODUCT LIST";
+					dsProductList = BLProduct.GetList(this.categoryID, true);
+				}
+				else
+				{
+					lListhead.Text="PRODUCT LIST";//"FEATURED ITEMS";
+					dsProductList = BLProduct.GetListRec(this.categoryID, true, "SFeatured");
+				}
+			}
+
+			this.itemCount = dsProductList.Tables[0].Rows.Count;
+			this.pageCount = System.Convert.ToInt32( (this.itemCount / this.countItemsPage) + (((itemCount % this.countItemsPage)>0)?1:0));
+		}
+
+		protected void Page_PreRender(object sender, System.EventArgs e)
+		{				
+			this.pageCount = System.Convert.ToInt32( (this.itemCount / this.countItemsPage) + (((itemCount % this.countItemsPage)>0)?1:0));
+			
+			if (this.itemCount>0)
+			{
+				HtmlContainerControl spanItemCount = (HtmlContainerControl) FindControl("spanItemCount");
+				spanItemCount.InnerText = this.itemCount.ToString();
+				this.spanItemCountB.InnerText = this.itemCount.ToString();
+			}
+			else
+			{
+				NoItemspanel.Visible = true;
+				Itemspanel.Visible = false;
+			}
+
+			if( categoryID >= 0 )
+			{
+				DataSet bProducts = BLProduct.GetList(this.categoryID,true,"SFeatured");
+				if( bProducts!=null && bProducts.Tables.Count > 0 && bProducts.Tables["Product"].Rows.Count > 0)
+				{
+					BLProduct product = new BLProduct();
+					product.ID = (int)bProducts.Tables["Product"].Rows[0]["prdID"];
+					product.Retrieve();
+					aFPrdName.InnerText = product.Name;
+					aFPrdName.HRef=".?page=detail&id=8&idc=0&idp="+product.ID;
+					aFPrdImg.HRef=aFPrdName.HRef;
+					aFPrdMore.HRef=aFPrdName.HRef;
+					spanFPrdDescription.InnerHtml = product.Description.Replace(""+(char)13,"<br/>");
+
+                    //BLImageGallery imageGallery = new BLImageGallery();
+					imgFPrdImage.Src    = imageGallery.GetimgInfo("productdetail",product.ID.ToString());
+					imgFPrdImage.Width  = imageGallery.Width;
+					imgFPrdImage.Height = imageGallery.Height;
+					imgFPrdImage.Visible = ((imgFPrdImage.Src != "") && (imgFPrdImage.Src != null));
+
+                    FProductPanel.Visible = true;
+				}
+			}
+
+			if (this.itemCount>0)
+			{
+				ArrayList pageSelectBind = new ArrayList();
+				for(int i=0; i < this.pageCount; i++)
+				{
+					pageSelectBind.Add(new lib.linkHelper(i.ToString(), (i * this.countItemsPage+1).ToString() + "-"+(((i * this.countItemsPage+this.countItemsPage)>this.itemCount)?this.itemCount:(i * this.countItemsPage+this.countItemsPage)).ToString()));
+				}
+                
+				ddlPageSelect.DataSource = pageSelectBind;
+				ddlPageSelect.DataTextField = "title";
+				ddlPageSelect.DataValueField = "url";
+				ddlPageSelect.DataBind();
+
+				ddlPageSelectBott.DataSource = pageSelectBind;
+				ddlPageSelectBott.DataTextField = "title";
+				ddlPageSelectBott.DataValueField = "url";
+				ddlPageSelectBott.DataBind();
+
+				try
+				{
+					ddlPageSelect.SelectedIndex = this.pageNum;
+					this.ddlPageSelectBott.SelectedIndex = this.pageNum;
+				}
+				catch
+				{
+					this.ddlPageSelectBott.SelectedIndex = 0;
+					ddlPageSelect.SelectedIndex = 0;
+					this.pageNum = 0;
+				}
+
+				int start = this.pageNum * this.countItemsPage;
+				int end   = ((start + this.countItemsPage)>this.itemCount)?this.itemCount:(start + this.countItemsPage);
+
+				rptProductList.DataSource = lib.GetPage(dsProductList.Tables[0],++start,end);
+				rptProductList.DataBind();
+			}
+			this.ViewState["pageNum"] = this.pageNum;
+		}
+
+		protected void rptProductList_OnItemDataBound(object sender, System.Web.UI.WebControls.DataListItemEventArgs e) 
+		{
+			switch(e.Item.ItemType)	
+			{
+				case ListItemType.Item:
+				case ListItemType.AlternatingItem:
+					
+					//HtmlContainerControl spanPrdName = (HtmlContainerControl) e.Item.FindControl("spanPrdName");
+					HtmlContainerControl spanPrdDescription = (HtmlContainerControl) e.Item.FindControl("spanPrdDescription");
+					HtmlContainerControl spanPrdRegPrice = (HtmlContainerControl) e.Item.FindControl("spanPrdRegPrice");
+					HtmlContainerControl spanPrdPrice = (HtmlContainerControl) e.Item.FindControl("spanPrdPrice");
+					HtmlImage imgPrdImage = (HtmlImage) e.Item.FindControl("imgPrdImage");
+					HtmlAnchor aPrdDetailhref = (HtmlAnchor) e.Item.FindControl("aPrdDetailhref");
+					HtmlAnchor aPrdNameDetailhref = (HtmlAnchor) e.Item.FindControl("aPrdNameDetailhref");
+					HtmlAnchor aPrdMore = (HtmlAnchor) e.Item.FindControl("aPrdMore");
+					Panel RRPPanel = (Panel) e.Item.FindControl("RRPPanel");
+					HtmlAnchor aAddToCart = (HtmlAnchor) e.Item.FindControl("aAddToCart");
+					HtmlContainerControl tdAddToCart = (HtmlContainerControl) e.Item.FindControl("tdAddToCart");
+					HtmlContainerControl id_s = (HtmlContainerControl) e.Item.FindControl("id_s");
+					HtmlContainerControl spanRpFeatured = (HtmlContainerControl) e.Item.FindControl("spanRpFeatured");
+					
+					//spanPrdName.InnerText = ((DataRowView)e.Item.DataItem)["prdName"].ToString();
+					string lpDesc = ((DataRowView)e.Item.DataItem)["prdDescription"].ToString();
+					int cutmin = 130;
+					if (lpDesc.Length>cutmin)
+						lpDesc = lpDesc.Substring(0,cutmin-1)+" ...";
+					spanPrdDescription.InnerHtml = lpDesc.Replace(""+(char)13,"<br/>");
+					//spanPrdDescription.InnerText = ((DataRowView)e.Item.DataItem)["prdDescription"].ToString();
+					if ((bool)((DataRowView)e.Item.DataItem)["prdOnSale"] && (decimal)( (DataRowView)e.Item.DataItem)["prdRegPrice"]>0)
+					{
+						spanPrdRegPrice.InnerText = ((decimal)((DataRowView)e.Item.DataItem)["prdRegPrice"]).ToString("c");
+						//spanPrdRegPrice.InnerText = this.GeneratePrice(System.Convert.ToDouble(((DataRowView)e.Item.DataItem)["prdRegPrice"]));
+						RRPPanel.Visible=true;
+					}
+					else{RRPPanel.Visible=true;id_s.Visible=false;}
+					spanPrdPrice.InnerText = ((decimal)((DataRowView)e.Item.DataItem)["Price"]).ToString("c");
+					if((int)((DataRowView)e.Item.DataItem)["prdAmountPerCase"] > 1)
+						spanPrdPrice.InnerText = (((decimal)((DataRowView)e.Item.DataItem)["Price"]) / ((int)((DataRowView)e.Item.DataItem)["prdAmountPerCase"])).ToString("c");
+					//spanPrdPrice.InnerText = this.GeneratePrice(System.Convert.ToDouble(((DataRowView)e.Item.DataItem)["prdPrice"]));
+					aPrdDetailhref.HRef = ".?page=detail&id=8&idc="+this.categoryID+"&idp="+((DataRowView)e.Item.DataItem)["prdID"].ToString();
+
+					if( (int)((DataRowView)e.Item.DataItem)["prdInventory"] > 0 )
+						//temp disable of add directly to cart
+						//aAddToCart.HRef = ".?page=cart&id=8&idp=" + ((DataRowView)e.Item.DataItem)["prdID"].ToString() + "&quantity=" + ((DataRowView)e.Item.DataItem)["prdDefQuantity"].ToString();
+						aAddToCart.HRef = aPrdDetailhref.HRef;
+					else
+						tdAddToCart.InnerHtml = "<font color=\"red\">Out of Stock</font>";
+
+					aPrdNameDetailhref.HRef = aPrdDetailhref.HRef;
+					aPrdNameDetailhref.InnerText = ((DataRowView)e.Item.DataItem)["prdName"].ToString();
+
+					aPrdMore.HRef = aPrdDetailhref.HRef;
+
+                    spanRpFeatured.Visible = (bool)((DataRowView)e.Item.DataItem)["ifSpecial"];
+
+                    ///BLImageGallery imageGallery = new BLImageGallery();
+                    imgPrdImage.Src    = imageGallery.GetimgInfo("productList",((DataRowView)e.Item.DataItem)["prdID"].ToString());
+					imgPrdImage.Width  = imageGallery.Width;
+					imgPrdImage.Height = imageGallery.Height;
+					imgPrdImage.Visible = ((imgPrdImage.Src != "") && (imgPrdImage.Src != null));
+					break;
+			}
+		}
+
+		public void ddlPageSelectChangePage(object sender, System.EventArgs e)
+		{
+			this.pageNum = ((DropDownList)sender).SelectedIndex;
+			this.ViewState["pageNum"] = this.pageNum;
+		}
+
+		public void setPage(object sender, System.Web.UI.WebControls.CommandEventArgs e)
+		{
+			switch(e.CommandName)
+			{
+				case "start" : this.pageNum = 0; break;
+				case "back" : if(this.pageNum > 0){this.pageNum--;}break;
+				case "next" : if(this.pageNum < (this.pageCount-1) ){this.pageNum++;}break;
+				case "end" : this.pageNum = (this.pageCount == 0)?0:this.pageCount-1; break;
+			}
+			this.ViewState["pageNum"] = this.pageNum;
+		}
+
+		#region Web Form Designer generated code
+		override protected void OnInit(EventArgs e)
+		{
+			//
+			// CODEGEN: This call is required by the ASP.NET Web Form Designer.
+			//
+			InitializeComponent();
+			base.OnInit(e);
+		}
+		
+		/// <summary>
+		///		Required method for Designer support - do not modify
+		///		the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+
+		}
+		#endregion
+
+		protected void drpItemsOnPage_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			this.drpItemsOnPageBott.SelectedIndex = this.drpItemsOnPage.SelectedIndex;
+			countItemsPage = int.Parse(drpItemsOnPage.SelectedItem.Value);	
+			this.Response.Cookies["itemsOnPage"].Expires = System.DateTime.Now.AddYears(1);
+			this.Response.Cookies["itemsOnPage"].Value = this.countItemsPage.ToString();
+		}
+		private static DataSet ConvertList(DataSet tmpDataSet)
+		{
+			DataSet dataSet = null;
+
+			dataSet = new DataSet("Products");
+			
+			DataTable table = new DataTable("Product");
+
+			table.Columns.Add("prdID", int.MinValue.GetType() );
+			table.Columns.Add("prdSkuNumber", string.Empty.GetType() );
+			table.Columns.Add("prdEnabled", false.GetType() );
+			table.Columns.Add("prdPersonalize", false.GetType() );
+			table.Columns.Add("prdPersRequired", false.GetType() );
+			table.Columns.Add("prdName", string.Empty.GetType() );
+			table.Columns.Add("prdDescription", string.Empty.GetType() );
+			table.Columns.Add("prdWeight", decimal.MinValue.GetType() );
+			table.Columns.Add("prdPrice", decimal.MinValue.GetType() );
+			table.Columns.Add("prdRegPrice", decimal.MinValue.GetType() );
+			table.Columns.Add("prdPersPrice", decimal.MinValue.GetType() );
+			table.Columns.Add("prdCCSurcharge", false.GetType() );
+			table.Columns.Add("prdOnSale", false.GetType() );
+			table.Columns.Add("prdSaleText", string.Empty.GetType() );
+			table.Columns.Add("prdInventory", int.MinValue.GetType() );
+			table.Columns.Add("prdReorder", int.MinValue.GetType() );
+			table.Columns.Add("prdDefQuantity", int.MinValue.GetType() );
+			table.Columns.Add("prdMinQuantity", int.MinValue.GetType() );
+			table.Columns.Add("c2pOrder", int.MinValue.GetType() );
+			table.Columns.Add("ifSpecial", typeof(bool) );
+			table.Columns.Add("Price", decimal.MinValue.GetType() );
+			table.Columns.Add("prdAmountPerCase", int.MinValue.GetType());
+			
+			if( tmpDataSet.Tables.Count > 0)
+			{
+				foreach(DataRow row in tmpDataSet.Tables[0].Rows)
+				{
+					DataRow newRow = table.NewRow();
+					newRow["prdID"] = Convert.ToInt32( row["prdID"] );
+					newRow["prdSkuNumber"] = Convert.ToString( row["prdSkuNumber"] );
+					try
+					{
+						newRow["prdEnabled"] = Convert.ToBoolean( row["prdEnabled"] );
+					}
+					catch
+					{
+						newRow["prdEnabled"] = false;
+					}
+					try
+					{
+						newRow["prdPersonalize"] = Convert.ToBoolean( row["prdPersonalize"] );
+					}
+					catch
+					{
+						newRow["prdPersonalize"] = false;
+					}
+					try
+					{
+						newRow["prdPersRequired"] = Convert.ToBoolean( row["prdPersRequired"] );
+					}
+					catch
+					{
+						newRow["prdPersRequired"] = false;
+					}
+					newRow["prdName"] = Convert.ToString( row["prdName"] );
+					newRow["prdDescription"] = Convert.ToString( row["prdDescription"] );
+					try
+					{
+						newRow["prdWeight"] = Convert.ToDecimal( row["prdWeight"] );
+					}
+					catch
+					{
+						newRow["prdWeight"] = 0;
+					}
+					try
+					{
+						newRow["prdPrice"] = Convert.ToDecimal( row["prdPrice"] );
+					}
+					catch
+					{
+						newRow["prdPrice"] = 0;
+					}
+					try
+					{
+						newRow["prdRegPrice"] = Convert.ToDecimal( row["prdRegPrice"] );
+					}
+					catch
+					{
+						newRow["prdRegPrice"] = 0;
+					}
+					try
+					{
+						newRow["prdPersPrice"] = Convert.ToDecimal( row["prdPersPrice"] );
+					}
+					catch
+					{
+						newRow["prdPersPrice"] = 0;
+					}
+					try
+					{
+						newRow["prdCCSurcharge"] = Convert.ToBoolean( row["prdCCSurcharge"] );
+					}
+					catch
+					{
+						newRow["prdCCSurcharge"] = false;
+					}
+					try
+					{
+						newRow["prdOnSale"] = Convert.ToBoolean( row["prdOnSale"] );
+					}
+					catch
+					{
+						newRow["prdOnSale"] = false;
+					}
+					newRow["prdSaleText"] = Convert.ToString( row["prdSaleText"] );
+					try
+					{
+						newRow["prdInventory"] = Convert.ToInt32( row["prdInventory"] );
+					}
+					catch
+					{
+						newRow["prdInventory"] = 0;
+					}
+					try
+					{
+						newRow["prdReorder"] = Convert.ToInt32( row["prdReorder"] );
+					}
+					catch
+					{
+						newRow["prdReorder"] = 0;
+					}
+					try
+					{
+						newRow["prdDefQuantity"] = Convert.ToInt32( row["prdDefQuantity"] );
+					}
+					catch
+					{
+						newRow["prdDefQuantity"] = 0;
+					}
+					try
+					{
+						newRow["prdMinQuantity"] = Convert.ToInt32( row["prdMinQuantity"] );
+					}
+					catch
+					{
+						newRow["prdMinQuantity"] = 0;
+					}
+					try
+					{
+						newRow["c2pOrder"] = Convert.ToInt32( row["c2pOrder"] );
+					}
+					catch
+					{
+						newRow["c2pOrder"] = int.MinValue;
+					}
+					try
+					{
+						newRow["ifSpecial"] = Convert.ToBoolean( row["ifSpecial"] );
+					}
+					catch
+					{
+						newRow["ifSpecial"] = false;
+					}
+					try
+					{
+						newRow["Price"] = Convert.ToDecimal( row["Price"] );
+					}
+					catch
+					{
+						newRow["Price"] = 0;
+					}
+					try
+					{
+						newRow["prdAmountPerCase"] = Convert.ToInt32(row["prdAmountPerCase"]);
+					}
+					catch
+					{
+						newRow["prdAmountPerCase"] = 1;
+					}
+					table.Rows.Add(newRow);
+				}
+			}
+
+			dataSet.Tables.Add(table);
+			
+			return dataSet;
+		}
+
+		protected void drpItemsOnPageBott_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			this.drpItemsOnPage.SelectedIndex = this.ddlPageSelectBott.SelectedIndex;
+			countItemsPage = int.Parse(drpItemsOnPageBott.SelectedItem.Value);	
+			this.Response.Cookies["itemsOnPage"].Expires = System.DateTime.Now.AddYears(1);
+			this.Response.Cookies["itemsOnPage"].Value = this.countItemsPage.ToString();
+		}
+
+	}
+//}

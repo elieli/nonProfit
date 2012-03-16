@@ -1,0 +1,121 @@
+<%@ Page Language="C#" Inherits="Shof.index" CodeFile="index.aspx.cs" %>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+<title>Shluchim Office</title>
+
+<!-- Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; AIRF; .NET CLR 1.0.3705)-->
+
+<style type="text/css"> @media All { IE\:homePage { BEHAVIOR: url(#default#homepage) }}
+	</style>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link rel="StyleSheet"  href ="../css/mainIE.css" type="text/css"/>
+
+<!--   --> 
+
+</head>
+
+<body class="body"   id="oHomePage" >
+<!--div style="height:132px">&nbsp;</div-->
+
+<!-- CheckCookies -->
+
+
+<!--   if (strLoggedInUsername == "Guest")  { 
+	Response.Redirect("/registration/login.asp?pagesreturn=" + Request.ServerVariables["URL"] + Server.urlencode(paramStr)); }   -->
+<script  type="text/javascript" language="JavaScript">
+<!--
+//MM_preloadImages('../main/img/menu00_h.gif','../main/img/menu01_h.gif','../main/img/menu02_h.gif','../main/img/menu03_h.gif','../main/img/menu04_h.gif','../main/img/menu05_h.gif','../main/img/menu06_h.gif','../main/img/menu07_h.gif','../main/img/jewish_h.gif','../main/img/brochures_h.gif','../main/img/campalgn_h.gif','../main/img/birthday_h.gif','../main/img/bureau_h.gif','../main/img/young_h.gif');
+
+function fnSet(){
+	oHomePage.setHomePage(document.URL);
+	event.returnValue = false;
+}
+
+ -->
+</script>
+
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td align="center" valign="top">
+
+		<table width="760" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="top"><img  alt="" name="main" src="../main/img/spacer.gif" width="103" height="1" border="0"  /></td>
+				<td width="128"  > <img  alt=""  src="../main/img/bg_left1.gif"  /></td>
+
+<!----------------------------->	 <td width="428" valign="top">  <img  alt=""  src="../main/img/bg_h1.gif"  /></td> 
+ 
+							
+					<asp:placeholder id="CategoryListPlaceHolder" Runat="server"></asp:placeholder>
+<!----------------------------->
+</tr> </table>
+				</td>
+				<td width="428" valign="top"   >
+					<table border="0" cellpadding="0" cellspacing="0" width="428">
+					<tr>
+						<td valign="top" ><img  alt="" src="../main/img/sep_h3.gif" width="428" height="5"/></td>
+					</tr>
+					</table>
+
+<!----------------------------->
+                    <asp:placeholder id="CategoryPathPlaceHolder" Runat="server"></asp:placeholder>
+<!----------------------------->
+
+					<table width="428" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td align="right" width="428" valign="top"  class="content">
+
+									    <table cellpadding="0" cellspacing="0" border="0" width="426">
+										   <tr>
+											 <td width="382" valign="top"><img src="../main/img/spacer.gif" width="1" height="5" border="0" alt=""/></td>
+									<!-- 	   <form id="mainTemplate" method="post" runat="server" name="main" enctype="multipart/form-data">  --> </tr>
+										</table>
+
+
+
+<!----------------------------->
+
+<asp:placeholder id="CenterPlaceHolder" Runat="server"></asp:placeholder>
+
+<!----------------------------->										        
+
+											
+							  				
+						</td> <!-- </FORM>  --> 
+					</tr>
+					</table>
+				</td>
+				<td bgcolor="#006496"><img src="../main/img/spacer.gif" width="1" height="1" border="0" alt=""/></td>
+				<td width="100%" valign="top"><img  alt="" src="../main/img/right.jpg" width="82" height="104"/></td>
+			</tr>
+			<tr>
+				<td width="105" valign="top"><img src="../main/img/spacer.gif" width="105" height="1" border="0" alt=""/></td>
+				<td valign="top" align="right"><img src="../main/img/corner_l1.gif" width="128" height="50"   alt=""/></td>
+		
+				<td valign="bottom" align="right" colspan="2"><img src="../main/img/bg_v1.gif" width="278" height="50" alt="" /><img  alt="" src="../main/img/corner_r3.gif" width="151" height="50"/></td>
+						
+				<td width="100%"><img src="../main/img/spacer.gif" width="1" height="1" border="0" alt=""/></td>
+			</tr>
+			</table>
+		 
+		 
+		 
+	
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr>
+	<td>&nbsp;</td>
+</tr>
+  <tr>
+    <td align="center"> </td>
+  
+  
+    <!--include virtual="downloads/footer.aspx" -->
+
+   
+ </tr>
+</table>
+ 
+
+
+</body>
+</html>

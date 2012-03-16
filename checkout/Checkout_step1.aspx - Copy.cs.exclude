@@ -1,0 +1,1191 @@
+﻿/*  
+'=====================================================
+' Project:      JomaDeals.com
+' Programmer:   Derek Souers
+' File:         Checkout_step1.aspx
+' Description:  
+' Created:		07/24/09
+' Last Updated: 09/30/09
+'
+'=====================================================
+*/
+
+using System;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+using MainStreet.BusinessFlow.SDK;
+using MainStreet.BusinessFlow.SDK.Web;
+using MainStreet.BusinessFlow.SDK.Ws;
+
+using AddressValidationWebService.AddressValidationServiceWebReference;
+using System.Web.Services.Protocols;
+
+public partial class checkout_Checkout_step1 : System.Web.UI.Page
+{
+    private System.Collections.ArrayList al = new System.Collections.ArrayList();
+    private WebUtilities.LoadDropDownDisplayText m_CountryDisplayText = WebUtilities.LoadDropDownDisplayText.Label;
+    private WebUtilities.LoadDropDownDisplayText m_StateDisplayText = WebUtilities.LoadDropDownDisplayText.Label;
+    private MainStreet.BusinessFlow.SDK.Ws.CountryIDs m_defaultCountryId = MainStreet.BusinessFlow.SDK.Ws.CountryIDs.UnitedStates;
+
+    private int m_iDefaultCountry = Convert.ToInt32(MainStreet.BusinessFlow.SDK.Ws.CountryIDs.UnitedStates);//Default to the US
+
+    protected string Message = "";
+    protected string MessageLogin = "";
+    protected string MessageForgot = "";
+
+
+    #region "Properties"
+    public dsOrder.mf_ordersRow drOrderDetail
+    {
+        get
+        {
+            return BusinessFlow.DefaultCart.Data.OrderRow;
+        }
+    }
+
+
+    protected int DefaultCountry
+    {
+        get
+        {
+            return m_iDefaultCountry;
+        }
+        set
+        {
+            m_iDefaultCountry = value;
+        }
+    }
+
+
+    public MainStreet.BusinessFlow.SDK.Ws.dsShippingEstimate ShippingMethods
+    {
+        get
+        {
+            return (MainStreet.BusinessFlow.SDK.Ws.dsShippingEstimate)ViewState["dsShip"];
+        }
+    }
+
+
+    /// <summary>
+    /// Gets or sets the lookup value the Country drop-down will use for display
+    /// </summary>
+    public WebUtilities.LoadDropDownDisplayText CountryDisplayText
+    {
+        get { return m_CountryDisplayText; }
+        set { m_CountryDisplayText = value; }
+    }
+
+
+    /// <summary>
+    /// Gets or sets the lookup value the State drop-down will use for display
+    /// </summary>
+    public WebUtilities.LoadDropDownDisplayText StateDisplayText
+    {
+        get { return m_StateDisplayText; }
+        set { m_StateDisplayText = value; }
+    }
+#endregion
+
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Convert.ToInt32(BusinessFlow.DefaultCart.ItemCount) < 1)
+            Response.Redirect(ResolveUrl("~/default.aspx"));
+
+        if (BusinessFlow.Identity.IsAuthenticated)
+        {
+            //tdAlreadyRegistered1.Visible = false;
+            //tdAlreadyRegistered2.Visible = false;
+            //tdForgotPassword1.Visible = false;
+            //tdForgotPassword2.Visible = false;
+            //trCreateAccount1.Visible = false;
+            //trCreateAccount2.Visible = false;
+        }
+        else
+        {
+            //tdAlreadyRegistered1.Visible = true;
+            //tdAlreadyRegistered2.Visible = true;
+            //tdForgotPassword1.Visible = true;
+            //tdForgotPassword2.Visible = true;
+            //trCreateAccount1.Visible = true;
+            //trCreateAccount2.Visible = true;
+        }
+
+        WebUtilities.SetDefaultButton(this.Page, txtLoginEmail, btnLogin);
+        WebUtilities.SetDefaultButton(this.Page, txtLoginPassword, btnLogin);
+        WebUtilities.SetDefaultButton(this.Page, txtForgotPasswordEmail, btnNewPassword);
+
+        if (Page.IsPostBack)
+            return;
+
+        //WebUtilities.LoadDropDown(MainStreet.BusinessFlow.SDK.Ws.LookupTables.Countries, cmbBillCountry, false, "", "", CountryDisplayText);
+        ListItem liNew = new ListItem("United States", "232");
+        cmbBillCountry.Items.Add(liNew);
+
+        liNew = new ListItem("United States APO/FPO", "271");
+        cmbBillCountry.Items.Add(liNew);
+
+        //Default to usa if available
+        ListItem li = null;
+        int countryId = PrgFunctions.TryCastInt(drOrderDetail["order_bill_country_id"], Convert.ToInt16(MainStreet.BusinessFlow.SDK.Ws.CountryIDs.UnitedStates));
+        li = cmbBillCountry.Items.FindByValue(countryId.ToString());
+        if (li != null)
+        {
+            li.Selected = true;
+        }
+        WebUtilities.LoadDropDown(MainStreet.BusinessFlow.SDK.Ws.LookupTables.CountryRegions, cmbBillState, true, "", cmbBillCountry.SelectedValue, StateDisplayText);
+
+        //customization
+        //WebUtilities.LoadDropDown(MainStreet.BusinessFlow.SDK.Ws.LookupTables.Countries, cmbShipCountry, false, "", "", CountryDisplayText);
+        liNew = new ListItem("United States", "232");
+        cmbShipCountry.Items.Add(liNew);
+
+        liNew = new ListItem("United States APO/FPO", "271");
+        cmbShipCountry.Items.Add(liNew);
+
+        //Default to usa, if one is not set
+        countryId = PrgFunctions.TryCastInt(drOrderDetail["order_ship_country_id"],Convert.ToInt16(MainStreet.BusinessFlow.SDK.Ws.CountryIDs.UnitedStates));
+
+        li = null;
+        li = cmbShipCountry.Items.FindByValue(countryId.ToString());
+        if (li != null)
+        {
+            li.Selected = true;
+        }
+
+        WebUtilities.LoadDropDown(MainStreet.BusinessFlow.SDK.Ws.LookupTables.CountryRegions, cmbShipState, true, "", cmbShipCountry.SelectedValue, StateDisplayText);
+
+        //Load the user's data
+        string name = "";
+        string firstName = "";
+        string lastName = "";
+
+        //Try to fill in the name
+        if (BusinessFlow.Identity.IsAuthenticated)
+        {
+            //Fill the name from the customer
+            firstName = BusinessFlow.Identity.FirstName;
+            lastName = BusinessFlow.Identity.LastName;
+
+            if ((BusinessFlow.Identity.Name != null) && (BusinessFlow.Identity.FullName.Contains(" ")))
+            {
+                name = PrgFunctions.TryCastString(BusinessFlow.Identity.FullName);
+            }
+
+            /*
+            UserDetails u = new UserDetails(UserDetails.GetCurrentCustomerGuid());
+            if (u.IsLoaded())
+                rbYes.Checked = (u.GetStringFieldOrAttribute("CustomerPromosNewsletters") == "1");   
+            */
+        }
+        else
+        {
+            //Fill in the name from the attention
+            name = PrgFunctions.TryCastString(drOrderDetail["order_bill_attention"]);
+
+            chkCreateAccount.Checked = true;
+        }
+
+        //Extact the first and last name from a single field
+        if (name.Contains(" "))
+        {
+            int lastIndex = name.LastIndexOf(' ');
+
+            if (firstName.Length == 0)
+            {
+                firstName = name.Substring(0,lastIndex).Trim();
+            }
+
+            if (lastName.Length == 0)
+            {
+                lastName = name.Substring(lastIndex).Trim();
+            }
+        }
+
+        //Update the fields if they are blank
+        txtBillFirstName.Text = firstName;
+        txtBillLastName.Text = lastName;
+
+        //Fill in the name from the attention
+        name = PrgFunctions.TryCastString(drOrderDetail["order_ship_attention"]);
+
+        //Extact the first and last name from a single field
+        if (name.Contains(" "))
+        {
+            int lastIndex = name.LastIndexOf(' ');
+
+            if (firstName.Length == 0)
+            {
+                firstName = name.Substring(0, lastIndex).Trim();
+            }
+
+            if (lastName.Length == 0)
+            {
+                lastName = name.Substring(lastIndex).Trim();
+            }
+        }
+        txtShipFirstName.Text = firstName;
+        txtShipLastName.Text = lastName;
+
+        txtBillAddress.Text = drOrderDetail["order_bill_address"].ToString();
+        txtBillAddress2.Text = drOrderDetail["order_bill_address2"].ToString();
+        txtBillCity.Text = drOrderDetail["order_bill_city"].ToString();
+        txtBillZip.Text = drOrderDetail["order_bill_postal_code"].ToString();
+        
+        try
+        {
+            cmbBillCountry.ClearSelection();
+            cmbBillCountry.SelectedValue = GetCountryID(drOrderDetail["order_bill_country_id"]).ToString();
+        }
+        catch
+        {
+            cmbBillCountry.SelectedValue = GetCountryID(DefaultCountry).ToString();
+        }
+
+        cmbBillCountry_SelectedIndexChanged(null, null);
+
+        try
+        {
+            cmbBillState.ClearSelection();
+            cmbBillState.SelectedValue = drOrderDetail["order_bill_state_id"].ToString();
+        }
+        catch
+        {
+        }
+
+        txtBillPhone.Text = drOrderDetail["order_bill_phone"].ToString();
+        txtBillEmail.Text = drOrderDetail["order_bill_email"].ToString();
+        
+        txtShipAddress.Text = drOrderDetail["order_ship_address"].ToString();
+        txtShipAddress2.Text = drOrderDetail["order_ship_address2"].ToString();
+        txtShipCity.Text = drOrderDetail["order_ship_city"].ToString();
+        txtShipZip.Text = drOrderDetail["order_ship_postal_code"].ToString();
+        try
+        {
+            cmbShipCountry.ClearSelection();
+            cmbShipCountry.SelectedValue = GetCountryID(Convert.ToString(drOrderDetail["order_ship_country_id"])).ToString();
+        }
+        catch
+        {
+            cmbShipCountry.SelectedValue = GetCountryID(DefaultCountry).ToString();
+        }
+
+        cmbShipCountry_SelectedIndexChanged(null, null);
+
+        try
+        {
+            cmbShipState.ClearSelection();
+            cmbShipState.SelectedValue = drOrderDetail["order_ship_state_id"].ToString();
+        }
+        catch
+        {
+        }
+
+        vdlBillFirstName.Enabled = true;
+        vdlBillLastName.Enabled = true;
+        vdlBillAddress.Enabled = true;
+        vdlBillCity.Enabled = true;
+        vdlBillState.Enabled = true;
+        vdlBillZip.Enabled = true;
+        vdlBillCountry.Enabled = true;
+        vdlBillPhone.Enabled = true;
+        vdlBillEmail.Enabled = true;
+
+        vdlShipFirstName.Enabled = true;
+        vdlShipLastName.Enabled = true;
+        vdlShipAddress.Enabled = true;
+        vdlShipCity.Enabled = true;
+        vdlShipState.Enabled = true;
+        vdlShipZip.Enabled = true;
+        vdlShipCountry.Enabled = true;
+
+        //Default to the usa
+        dsOrder.mf_ordersRow drCart = BusinessFlow.DefaultCart.Data.OrderRow;
+        drCart["order_bill_country_id"] = cmbBillCountry.SelectedValue;
+        drCart["order_ship_country_id"] = cmbShipCountry.SelectedValue;
+        CartPaymentForm1.Cart = BusinessFlow.DefaultCart;
+
+        try
+        {
+            chkShipToBillAddress.Checked = Convert.ToBoolean(Session["ShipToBillAddress"]);
+
+            if (chkShipToBillAddress.Checked)
+                toggleShippingInformation();
+
+            if (rblShippingMethods.Items.Count == 0)
+            {
+                loadShippingOptions();
+                ShoppingCart1.Refresh();
+            }
+        }
+        catch
+        {
+            ;
+        }
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	GetCountryID()
+    // Desc:		, ported from mainstreet sdk
+    // Receives:	
+    // Returns:		
+    //--------------------------------------------------------------------
+    protected int GetCountryID(object value)
+    {
+        int intVal = PrgFunctions.TryCastInt(value, -1);
+        if (intVal == -1)
+        {
+            intVal = DefaultCountry;
+        }
+        return intVal;
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	loadShippingOptions()
+    // Desc:		Reloads the shipping radiolist, based on the country set in the cart, ported from mainstreet sdk
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    private void loadShippingOptions()
+    {
+        MainStreet.BusinessFlow.SDK.Ws.CartGetShippingMethodsResponse oShippingMethodsResponse = default(MainStreet.BusinessFlow.SDK.Ws.CartGetShippingMethodsResponse);
+        MainStreet.BusinessFlow.SDK.Ws.dsShippingEstimate dsShip = default(MainStreet.BusinessFlow.SDK.Ws.dsShippingEstimate);
+        string lsShippingTerms = "";
+        
+        try
+        {
+            oShippingMethodsResponse = BusinessFlow.WebServices.Cart.GetShippingMethods(BusinessFlow.DefaultCart);
+            dsShip = oShippingMethodsResponse.ShippingEstimate;
+            lsShippingTerms = oShippingMethodsResponse.Terms;
+
+            //customization
+            checkAndApplyFreeShipping(ref dsShip);
+            
+            //Has shipping cost not been assigned
+            if (drOrderDetail["order_shipping"] == System.DBNull.Value)
+            {
+                // Shipping TBD
+                if (!(drOrderDetail["shipping_method_id"] == System.DBNull.Value))
+                {
+                    dsShip.Tables[0].DefaultView.RowFilter = "shipping_method_id = " + drOrderDetail["shipping_method_id"].ToString();
+                }
+                else
+                {
+                    //BF may send 0 (FixedShipping when no shipping is setup on the backend)
+                    //so we filter for that in case it came back. if not then we will add one later
+                    dsShip.Tables[0].DefaultView.RowFilter = "shipping_method_id = 0";
+                }
+
+                //dsShip.Tables[0].DefaultView[0]["shipping_default"] = 1;
+            }
+            else
+            {
+                // Shipping Cost has been set
+                System.Diagnostics.Debug.WriteLine("ShippingSet:" + drOrderDetail["order_shipping"], "MS_CART_SHIPPING.ASPX");
+                
+                if (drOrderDetail["shipping_method_id"] != System.DBNull.Value)
+                {
+                    //Select an existing set shipping
+                    dsShip.Tables[0].DefaultView.RowFilter = "shipping_method_id = " + drOrderDetail["shipping_method_id"].ToString();
+                }
+                else
+                {
+                    //BF may send 0 (FixedShipping when no shipping is setup on the backend)
+                    //so we filter for that in case it came back. if not then we will add one later
+                    dsShip.Tables[0].DefaultView.RowFilter = "shipping_method_id = 0";
+                }
+                
+                //Fixed a bug in the mainstreet code
+                if (dsShip.Tables[0].DefaultView.Count == 1)
+                {
+                    //Unset all items
+                    foreach (DataRow dr in dsShip.Tables[0].Rows)
+                        dr["shipping_default"] = 0;
+                }
+                else
+                {
+                    //shipping method not present in the estimated shipping results.
+                    //so we add in a row for the current method for fixed fee shipping
+                    foreach (DataRow dr in dsShip.Tables[0].Rows)
+                        dr["shipping_default"] = 0;
+
+                    DataRow drNew = dsShip.Tables[0].NewRow();
+                    drNew["shipping_method_guid"] = Guid.NewGuid();
+                    drNew["shipping_method_id"] = drOrderDetail["shipping_method_id"];
+                    adjustShippingRow(drNew);
+                    dsShip.Tables[0].Rows.Add(drNew);
+                }
+            }
+        }
+        catch (Exception ex)
+        {    
+            SdkManagerModule.HandleError(ex);
+            return;
+        }
+
+        int m_llDefaultMethod = 1001; //Default to standard shipping
+
+        if (dsShip.Tables[0].DefaultView.Count == 1)
+        {
+            m_llDefaultMethod = Convert.ToInt16(dsShip.Tables[0].DefaultView[0]["shipping_method_id"]);
+        }
+        
+        ViewState["dsShip"] = dsShip;
+
+        DataView dv=dsShip.Tables[0].DefaultView;
+        dv.RowFilter = "";
+        dv.Sort = "shipping_default DESC, shipping_method_description";
+
+        rblShippingMethods.Items.Clear();
+        rblShippingMethods.DataSource = null;
+        rblShippingMethods.DataBind();
+        
+        rblShippingMethods.DataTextField = "shipping_method_description_ext";
+        rblShippingMethods.DataValueField = "shipping_method_id";
+        rblShippingMethods.DataSource = dv;
+        rblShippingMethods.DataBind();
+
+        //Try to select the item
+        try
+        {
+            ListItem li = rblShippingMethods.Items.FindByValue(m_llDefaultMethod.ToString());
+
+            if (li!=null)
+                li.Selected = true;
+        }
+        catch 
+        {
+            ;
+        }
+
+        /*
+        //Check the default item, or the first item
+        ListItem li = null;
+        if (rblShippingMethods.Items.Count > 0)
+        {
+            li = rblShippingMethods.Items[0];
+            li.Selected = true;
+
+            drOrderDetail["shipping_method_id"] = rblShippingMethods.Items[0].Value;
+        }
+        */
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	adjustShippingRow()
+    // Desc:		Adjust the shipping row, ported from mainstreet sdk
+    // Receives:	DataRow
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    private void adjustShippingRow(DataRow dr)
+    {
+        dr["shipping_base"] = drOrderDetail["order_shipping"];
+        if (!(drOrderDetail["order_handling"] == System.DBNull.Value)) dr["shipping_handling"] = drOrderDetail["order_handling"];
+
+        if (dr["shipping_method_id"] == System.DBNull.Value) dr["shipping_method_id"] = 0;
+        if (dr["shipping_method_description"] == System.DBNull.Value)
+        {
+            dr["shipping_method_description"] = BusinessFlow.WebServices.LookupTables[MainStreet.BusinessFlow.SDK.Ws.LookupTables.ShippingMethods].TranslateToLabel(dr["shipping_method_id"],null);
+        }
+
+        if (dr["shipping_handling"] == System.DBNull.Value) dr["shipping_handling"] = 0;
+        if (dr["shipping_insurance"] == System.DBNull.Value) dr["shipping_insurance"] = 0;
+        if (dr["shipping_insurance_required"] == System.DBNull.Value) dr["shipping_insurance_required"] = 0;
+        if (dr["shipping_default"] == System.DBNull.Value) dr["shipping_default"] = 1;
+
+        if (dr["shipping_actual"] == System.DBNull.Value) dr["shipping_actual"] = 0;
+
+        dr["shipping_estimate"] = Convert.ToDecimal(dr["shipping_base"]) + Convert.ToDecimal(dr["shipping_handling"]);
+
+        dr["shipping_method_description_ext"] = string.Format("{0} - {1:c}", dr["shipping_method_description"], dr["shipping_estimate"]);
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	saveShippingOptions()
+    // Desc:		save the shipping option, ported from mainstreet sdk
+    // Receives:	nada
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    protected void saveShippingOptions()
+    {
+        object origOrderShipMethod = drOrderDetail["shipping_method_id"];
+        object origOrderShipping = drOrderDetail["order_shipping"];
+
+        //if we don't know the original shipping method, BUT the cost was specified,
+        //then the method will be treated as FixedShipping
+        if (origOrderShipMethod == System.DBNull.Value && !(origOrderShipping == System.DBNull.Value))
+        {
+            origOrderShipMethod = (int)MainStreet.BusinessFlow.SDK.Ws.ShippingMethodIDs.FixedShipping;
+        }
+
+        drOrderDetail["shipping_method_id"] = DBNull.Value;
+        drOrderDetail["order_shipping"] = DBNull.Value;
+
+        // Determine the select radiobutton
+        if (rblShippingMethods.SelectedItem == null)
+        {
+            Message = "Please select a shipping method";
+            return;
+        }
+
+        string shippingMethod = rblShippingMethods.SelectedItem.Value;
+
+        // Set the shipping amount
+        if (!string.IsNullOrEmpty(shippingMethod))
+        {
+            MainStreet.BusinessFlow.SDK.Ws.dsShippingEstimate ds = ShippingMethods;
+            if ((ds != null))
+            {
+                MainStreet.BusinessFlow.SDK.Ws.ShippingMethodIDs shipmethod = (MainStreet.BusinessFlow.SDK.Ws.ShippingMethodIDs)PrgFunctions.TryCastInt(shippingMethod);
+                //shipping_method_description_ext
+                ds.Tables[0].DefaultView.RowFilter = "shipping_method_id = " + shippingMethod;
+                if (ds.Tables[0].DefaultView.Count == 1)
+                {
+                    if (Convert.ToInt32(ds.Tables[0].DefaultView[0]["shipping_estimate"]) != -1)
+                    {
+                        //If there was an override of shipping set
+                        //AND the user has not changed the chosen method
+                        if (!(origOrderShipping == System.DBNull.Value) && MainStreet.BusinessFlow.SDK.PublicDataModule.IsColumnEqual(drOrderDetail["shipping_method_id"], origOrderShipMethod))
+                        {
+                            //Since we nulled the order shipping above, 
+                            //we must write back the cost of the current choice 
+                            //(which was fixed up by AdjustShippingRow to match the override)
+                            drOrderDetail["order_shipping"] = ds.Tables[0].DefaultView[0]["shipping_estimate"];
+                        }
+
+                        drOrderDetail["order_shipping"] = ds.Tables[0].DefaultView[0]["shipping_estimate"];
+
+                        drOrderDetail["order_insurance"] = DBNull.Value;
+                        drOrderDetail["shipping_method_id"] = shippingMethod;
+                    }
+                }
+                else if (ds.Tables[0].DefaultView.Count == 0)
+                {
+                    throw new Exception("Unrecognized Shipping Method. ShippingMethodID=" + shippingMethod + " (" + shipmethod.ToString() + ") could not be located in the Estimated Shipping table.");
+                }
+                else
+                {
+                    throw new Exception("Invalid Shipping Configuration. ShippingMethodID=" + shippingMethod + " (" + shipmethod.ToString() + ") was configured " + ds.Tables[0].DefaultView.Count + " times for the same region. A shipping method must resolve to a single rule for a given location. Please review the shipping provider configuration in the BusinessFlow Admin.");
+                }
+            }
+        }
+    }
+
+
+    //--------------------------------------------------------------------
+    // Function:	checkAndApplyFreeShipping()
+    // Desc:		
+    // Receives:	DataSet
+    // Returns:		nada
+    //--------------------------------------------------------------------
+    private void checkAndApplyFreeShipping(ref MainStreet.BusinessFlow.SDK.Ws.dsShippingEstimate ds)
+    {
+        if (!ShoppingCart1.DoesCartContainFreeShippingItem())
+            return;
+
+        //Adjust the shipping DataSet
+        DataRow[] drRes = ds.Tables[0].Select("shipping_method_description LIKE 'Standard%'");
+
+        decimal shippingEstimate = 0;
+        decimal shippingBase = 0;
+
+        if (drRes.Length > 0)
+        {
+            shippingEstimate = PrgFunctions.TryCastDecimal(drRes[0]["shipping_estimate"]);
+            shippingBase = PrgFunctions.TryCastDecimal(drRes[0]["shipping_base"]);
+
+            drRes[0]["shipping_estimate"] = 0;
+            drRes[0]["shipping_base"] = 0;
+
+            string desc = drRes[0]["shipping_method_description_ext"].ToString();
+            desc = desc.Substring(0, desc.LastIndexOf("-") - 1) + " - FREE";
+            drRes[0]["shipping_method_description_ext"] = desc;
+        }
+
+        //Markdown each of the rates
+        /*
+        drRes = ds.Tables[0].Select("shipping_method_description NOT LIKE 'Standard%'");
+        foreach (DataRow dr in drRes)
+        {
+            decimal e = PrgFunctions.TryCastDecimal(dr["shipping_estimate"]);
+            decimal b = PrgFunctions.TryCastDecimal(dr["shipping_base"]);
+
+            e = e - shippingEstimate;
+            b = b - shippingBase;
+
+            dr["shipping_estimate"] = e;
+            dr["shipping_base"] = b;
+
+            string desc = dr["shipping_method_description_ext"].ToString();
+            desc = desc.Substring(0, desc.LastIndexOf("-") - 1) + " - " + (e).ToString("c2");
+            dr["shipping_method_description_ext"] = desc;
+        }
+        */
+    }
+
+
+    //=====================================================
+    // Function:    createNewAccount()
+    // Desc:		Creates a new customer account
+    // Programmer:  Peter Tran
+    // Receives:	nada
+    // Returns:		bool
+    // Created:     11/25/08 
+    // Last Updated: 09/16/09
+    //
+    //=====================================================
+    private bool createNewAccount()
+    {
+        //TODO: This will have to be adjusted for username support
+
+        //Trim off whitespace
+        txtBillEmail.Text = txtBillEmail.Text.Trim();
+        txtCreateAccountPassword.Text = txtCreateAccountPassword.Text.Trim();
+        txtCreateAccountConfirmPassword.Text = txtCreateAccountConfirmPassword.Text.Trim();
+
+        //TODO: Clean the input
+        txtBillEmail.Text = PrgFunctions.StrictCleanInput(txtBillEmail.Text.Trim());
+
+        //Adjust fields to their proper size
+        txtBillEmail.Text = PrgFunctions.Left(txtBillEmail.Text, 80);
+        txtCreateAccountPassword.Text = PrgFunctions.Left(txtCreateAccountPassword.Text, 100);
+        txtCreateAccountConfirmPassword.Text = PrgFunctions.Left(txtCreateAccountConfirmPassword.Text, 100);
+
+        if (txtBillEmail.Text.Length == 0)
+        {
+            Message = "Please specify a billing email address.";
+            return false;
+        }
+
+        if (!PrgFunctions.IsValidEmail(txtBillEmail.Text))
+        {
+            Message = "Please specify a valid billing email address.";
+            return false;
+        }
+
+        if (txtCreateAccountConfirmPassword.Text != txtCreateAccountPassword.Text && txtCreateAccountPassword.Text.Length > 0)
+        {
+            Message = "Your passwords do not match.";
+            return false;
+        }
+
+        if ((BusinessFlow.WebServices.Customer.Exists(txtBillEmail.Text)))
+        {
+            Message = "This email has already been registered. If you forgot your password, please go back and click on the Forgot Password link.";
+            return false;
+        }
+
+        BusinessFlow.DefaultCart.Data.OrderRow.order_bill_email = txtBillEmail.Text;
+
+        CustomerSync custSync = new CustomerSync();
+        MainStreet.BusinessFlow.SDK.Ws.dsCustomer.mf_customersRow custRow = default(MainStreet.BusinessFlow.SDK.Ws.dsCustomer.mf_customersRow);
+        Guid custGuid = default(Guid);
+
+        bool result = false;
+
+        custGuid = System.Guid.NewGuid();
+
+        custRow = custSync.Customers.Newmf_customersRow();
+        custRow.customer_guid = custGuid;
+        custRow.customer_cd = null;
+
+        //Billing Info
+        custRow.customer_name = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_attention;
+        custRow.customer_first_name = txtBillFirstName.Text; //This should already be cleaned at this point
+        custRow.customer_last_name = txtBillLastName.Text; //This should already be cleaned at this point
+        custRow.customer_email = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_email;
+        custRow.customer_password = txtCreateAccountPassword.Text;
+        custRow.customer_address = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_address;
+        custRow.customer_address2 = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_address2;
+        custRow.customer_city = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_city;
+        custRow.customer_state_id = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_state_id;
+        custRow.customer_postal_code = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_postal_code;
+        custRow.customer_country_id = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_country_id;
+        custRow.customer_phone = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_phone;
+        custRow.customer_attention = BusinessFlow.DefaultCart.Data.OrderRow.order_bill_attention;
+
+        //Shipping info
+        custRow.customer_sattention = BusinessFlow.DefaultCart.Data.OrderRow.order_ship_attention;
+        custRow.customer_saddress = BusinessFlow.DefaultCart.Data.OrderRow.order_ship_address;
+        custRow.customer_saddress2 = BusinessFlow.DefaultCart.Data.OrderRow.order_ship_address2;
+        custRow.customer_scity = BusinessFlow.DefaultCart.Data.OrderRow.order_ship_city;
+        custRow.customer_spostal_code = BusinessFlow.DefaultCart.Data.OrderRow.order_ship_postal_code;
+        custRow.customer_sstate_id = BusinessFlow.DefaultCart.Data.OrderRow.order_ship_state_id;
+        custRow.customer_scountry_id = BusinessFlow.DefaultCart.Data.OrderRow.order_ship_country_id;
+
+        custSync.Customers.Rows.Add(custRow);
+
+        try
+        {
+            BusinessFlow.WebServices.Customer.Sync(custSync);
+            BusinessFlow.DefaultCart.CustomerGuid = custGuid;
+            result = true;
+        }
+        catch (Exception ex)
+        {
+            Message = "Create account failed. " + ex.Message;
+        }
+
+        return result;
+    }
+
+
+    protected void cmbShipCountry_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrEmpty(cmbShipCountry.SelectedValue))
+        {
+            WebUtilities.LoadDropDown(MainStreet.BusinessFlow.SDK.Ws.LookupTables.CountryRegions, cmbShipState, true, "", cmbShipCountry.SelectedValue, StateDisplayText);
+        }
+    }
+
+
+    protected void cmbBillCountry_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrEmpty(cmbBillCountry.SelectedValue))
+        {
+            WebUtilities.LoadDropDown(MainStreet.BusinessFlow.SDK.Ws.LookupTables.CountryRegions, cmbBillState, true, "", cmbBillCountry.SelectedValue, StateDisplayText);
+        }
+    }
+
+
+    protected void ShoppingCart1_CartUpdated(object sender, EventArgs e)
+    {
+        loadShippingOptions();
+
+        ShoppingCart1.Refresh();
+    }
+
+
+    protected void btnContinueShopping_Click(object sender, EventArgs e)
+    {
+        Response.Redirect(ResolveUrl("~/default.aspx"));
+    }
+
+
+    protected void btnUpdateCart_Click(object sender, EventArgs e)
+    {
+        ShoppingCart1.UpdateCart();
+    }
+
+
+    protected void btnContinue_Click(object sender, EventArgs e)
+    {
+        Page.Validate("vgBill");
+
+        if (!Page.IsValid)
+        {
+            Message = "Some required field(s) in the Billing section were not filled in.";
+            return;
+        }
+
+        if (!chkShipToBillAddress.Checked)
+        {
+            Page.Validate("vgShip");
+
+            if (!Page.IsValid)
+            {
+                Message = "Some required field in the Shipping section were not filled in.";
+                return;
+            }
+        }
+
+
+        Page.Validate("vgBill");
+
+        if (!Page.IsValid)
+        {
+            Message = "Some required field(s) in the Billing section were not filled in.";
+            return;
+        }
+
+
+
+
+        //Trim
+        txtBillFirstName.Text = txtBillFirstName.Text.Trim();
+        txtBillLastName.Text = txtBillLastName.Text.Trim();
+        txtBillAddress.Text = txtBillAddress.Text.Trim();
+        txtBillAddress2.Text = txtBillAddress2.Text.Trim();
+        txtBillCity.Text = txtBillCity.Text.Trim();
+        //cmbBillState.SelectedValue = cmbBillState.SelectedValue.Trim();
+        txtBillZip.Text = txtBillZip.Text.Trim();
+        //cmbBillCountry.SelectedValue = cmbBillCountry.SelectedValue.Trim();
+        txtBillPhone.Text = txtBillPhone.Text.Trim();
+        txtBillEmail.Text = txtBillEmail.Text.Trim();
+
+        txtShipFirstName.Text = txtShipFirstName.Text.Trim();
+        txtShipLastName.Text = txtShipLastName.Text.Trim();
+        txtShipAddress.Text = txtShipAddress.Text.Trim();
+        txtShipAddress2.Text = txtShipAddress2.Text.Trim();
+        txtShipCity.Text = txtShipCity.Text.Trim();
+        //cmbShipState.SelectedValue = cmbShipState.SelectedValue.Trim();
+        txtShipZip.Text = txtShipZip.Text.Trim();
+        //cmbShipCountry.SelectedValue = cmbShipCountry.SelectedValue.Trim();
+        txtShipPhone.Text = txtShipPhone.Text.Trim();
+        txtShipEmail.Text = txtShipEmail.Text.Trim();
+
+        //Clean
+        txtBillFirstName.Text = PrgFunctions.StrictCleanInput(txtBillFirstName.Text);
+        txtBillLastName.Text = PrgFunctions.StrictCleanInput(txtBillLastName.Text);
+        txtBillAddress.Text = PrgFunctions.StrictCleanInput(txtBillAddress.Text);
+        txtBillAddress2.Text = PrgFunctions.StrictCleanInput(txtBillAddress2.Text);
+        txtBillCity.Text = PrgFunctions.StrictCleanInput(txtBillCity.Text);
+        //cmbState
+        txtBillZip.Text = PrgFunctions.StrictCleanInput(txtBillZip.Text);
+        //cmbCountry
+        //txtBillPhone
+        txtBillEmail.Text = PrgFunctions.StrictCleanInput(txtBillEmail.Text, 80);//Bug: BusinessFlow should support 320
+
+        txtShipFirstName.Text = PrgFunctions.StrictCleanInput(txtShipFirstName.Text);
+        txtShipLastName.Text = PrgFunctions.StrictCleanInput(txtShipLastName.Text);
+        txtShipAddress.Text = PrgFunctions.StrictCleanInput(txtShipAddress.Text);
+        txtShipAddress2.Text = PrgFunctions.StrictCleanInput(txtShipAddress2.Text);
+        txtShipCity.Text = PrgFunctions.StrictCleanInput(txtShipCity.Text);
+        //cmbState
+        txtShipZip.Text = PrgFunctions.StrictCleanInput(txtShipZip.Text);
+        //cmbCountry
+        //txtShipPhone
+        txtShipEmail.Text = PrgFunctions.StrictCleanInput(txtShipEmail.Text, 80);//Bug: BusinessFlow should support 320
+
+        //Shorten
+        txtBillFirstName.Text = PrgFunctions.Left(txtBillFirstName.Text, 30);
+        txtBillLastName.Text = PrgFunctions.Left(txtBillLastName.Text, 30);
+        txtBillAddress.Text = PrgFunctions.Left(txtBillAddress.Text, 80);
+        txtBillAddress2.Text = PrgFunctions.Left(txtBillAddress2.Text, 80);
+        txtBillCity.Text = PrgFunctions.Left(txtBillCity.Text, 50);
+        //cmbState
+        txtBillZip.Text = PrgFunctions.Left(txtBillZip.Text, 20);
+        //cmbCountry
+        txtBillPhone.Text = PrgFunctions.Left(txtBillPhone.Text, 25);
+        txtBillEmail.Text = PrgFunctions.Left(txtBillEmail.Text, 80); //Bug: BusinessFlow should support 320
+
+        txtShipFirstName.Text = PrgFunctions.Left(txtShipFirstName.Text, 30);
+        txtShipLastName.Text = PrgFunctions.Left(txtShipLastName.Text, 30);
+        txtShipAddress.Text = PrgFunctions.Left(txtShipAddress.Text, 80);
+        txtShipAddress2.Text = PrgFunctions.Left(txtShipAddress2.Text, 80);
+        txtShipCity.Text = PrgFunctions.Left(txtShipCity.Text, 50);
+        //cmbState
+        txtShipZip.Text = PrgFunctions.Left(txtShipZip.Text, 20);
+        //cmbCountry
+        txtShipPhone.Text = PrgFunctions.Left(txtShipPhone.Text, 25);
+        txtShipEmail.Text = PrgFunctions.Left(txtShipEmail.Text, 80); //Bug: BusinessFlow should support 320
+
+        if (!PrgFunctions.IsValidEmail(txtBillEmail.Text))
+        {
+            Message = "Invalid Email Address";
+            return;
+        }
+
+        if ((txtShipEmail.Text.Length!=0) && (!PrgFunctions.IsValidEmail(txtShipEmail.Text)))
+        {
+            Message = "Invalid Email Address";
+            return;
+        }
+
+        //Save the info in the order row
+        dsOrder.mf_ordersRow drOrderDetail = BusinessFlow.DefaultCart.Data.OrderRow;
+        
+        drOrderDetail["order_bill_attention"] = txtBillFirstName.Text + " " + txtBillLastName.Text;
+        drOrderDetail["order_bill_address"] = txtBillAddress.Text;
+        drOrderDetail["order_bill_address2"] = txtBillAddress2.Text;
+        drOrderDetail["order_bill_city"] = txtBillCity.Text;
+        
+        if (!string.IsNullOrEmpty(cmbBillState.SelectedValue))
+            drOrderDetail["order_bill_state_id"] = cmbBillState.SelectedValue; 
+
+        if (!string.IsNullOrEmpty(cmbBillCountry.SelectedValue))
+            drOrderDetail["order_bill_country_id"] = cmbBillCountry.SelectedValue; 
+        
+        drOrderDetail["order_bill_postal_code"] = txtBillZip.Text;
+        drOrderDetail["order_bill_phone"] = txtBillPhone.Text;
+        drOrderDetail["order_bill_email"] = txtBillEmail.Text;
+        
+        if (chkShipToBillAddress.Checked)
+        {
+            drOrderDetail["order_ship_attention"] = drOrderDetail["order_bill_attention"];
+            drOrderDetail["order_ship_address"] = drOrderDetail["order_bill_address"];
+            drOrderDetail["order_ship_address2"] = drOrderDetail["order_bill_address2"];
+            drOrderDetail["order_ship_city"] = drOrderDetail["order_bill_city"];
+            drOrderDetail["order_ship_state_id"] = drOrderDetail["order_bill_state_id"];
+            drOrderDetail["order_ship_country_id"] = drOrderDetail["order_bill_country_id"];
+            drOrderDetail["order_ship_postal_code"] = drOrderDetail["order_bill_postal_code"];
+            drOrderDetail["order_ship_phone"] = drOrderDetail["order_bill_phone"];
+            drOrderDetail["order_ship_email"] = drOrderDetail["order_bill_email"];
+        }
+        else
+        {
+            drOrderDetail["order_ship_attention"] = txtShipFirstName.Text + " " + txtShipLastName.Text;
+            drOrderDetail["order_ship_address"] = txtShipAddress.Text;
+            drOrderDetail["order_ship_address2"] = txtShipAddress2.Text;
+            drOrderDetail["order_ship_city"] = txtShipCity.Text;
+            
+            if (!string.IsNullOrEmpty(cmbShipState.SelectedValue))
+                drOrderDetail["order_ship_state_id"] = cmbShipState.SelectedValue; 
+
+            if (!string.IsNullOrEmpty(cmbShipCountry.SelectedValue))
+                drOrderDetail["order_ship_country_id"] = cmbShipCountry.SelectedValue; 
+            
+            drOrderDetail["order_ship_postal_code"] = txtShipZip.Text;
+            drOrderDetail["order_ship_phone"] = txtShipPhone.Text;
+            drOrderDetail["order_ship_email"] = txtShipEmail.Text;
+        }
+
+        if (!CartPaymentForm1.IsValid)
+            return;
+
+        if (!chkShipToBillAddress.Checked)
+        {
+            if (cmbShipCountry.SelectedItem==null)
+            {
+                Message = "Please select a shipping method";
+                return;
+            }
+        }
+
+        CartPaymentForm1.Cart = BusinessFlow.DefaultCart;
+        CartPaymentForm1.Save();
+
+        if (rblShippingMethods.SelectedItem == null)
+        {
+            Message = "Please select a shipping method";
+            return;
+        }
+
+        saveShippingOptions();
+
+	//STI 10/30/09 Customization: Ensure shipping is not TBD
+        if (PrgFunctions.TryCastString(drOrderDetail["shipping_method_id"]) == "0")
+        {
+            Message = "Please select a shipping method";
+            return;
+        }
+
+        //Assign a customer guid, if they have one
+        if (BusinessFlow.Identity.IsAuthenticated)
+        {
+            drOrderDetail["customer_guid"] = BusinessFlow.Identity.CustomerGuid;
+        }
+        else
+        {
+            if (chkCreateAccount.Checked)
+            {
+                if (createNewAccount())
+                {
+                    UserDetails u = new UserDetails(new Guid(BusinessFlow.DefaultCart.CustomerGuid.ToString()));
+
+                    //Update the special attribute
+                    /*
+                    if (rbYes.Checked)
+                    {   
+                        u.UpdateAttribute("CustomerPromosNewsletters", "1");
+                    }
+                    else
+                    {
+                        u.UpdateAttribute("CustomerPromosNewsletters", "0");
+                    }
+                    */
+
+                    drOrderDetail["customer_guid"] = BusinessFlow.Identity.CustomerGuid;
+
+                    if (UserDetails.LoginUser(txtBillEmail.Text, txtCreateAccountPassword.Text, false, out Message, false))
+                    {
+                        //customization
+                        Referrer r = new Referrer();
+                        r.RegisterNewInvitee();
+                    }
+                    else
+                    {
+                        //Your custom message here
+                        //message="";
+                    }
+                }
+            }
+        }
+
+        //Address Verification
+        /*
+        string billOutput="", shipOutput="";
+        Cart myCart = BusinessFlow.DefaultCart;
+
+        if (AddressValidation.CheckAddress(true,true,ref myCart,out billOutput, out shipOutput))
+        {
+            bool requiresReentered = false;
+            if (billOutput.ToUpper().Contains("INCORRECT"))
+            {
+                Message += "<br>Billing Address" + billOutput;
+                requiresReentered = true;
+            }
+            if (shipOutput.ToUpper().Contains("INCORRECT"))
+            {
+                Message += "<br>Shipping Address" + shipOutput;
+                requiresReentered = true;
+            }
+
+            if (requiresReentered)
+            {
+                return;
+            }
+
+            bool requiresCheck = false;
+            if (billOutput.ToUpper().Contains("INCORRECT"))
+            {
+                Message += "<br>Billing Address" + billOutput;
+                requiresCheck = true;
+            }
+            if (shipOutput.ToUpper().Contains("INCORRECT"))
+            {
+                Message += "<br>Shipping Address" + shipOutput;
+                requiresCheck = true;
+            }
+        }
+        */
+        
+        Response.Redirect("Checkout_step2.aspx");
+    }
+
+
+    protected void btnLogin_Click(object sender, EventArgs e)
+    {
+        if (UserDetails.LoginUser(txtLoginEmail.Text, txtLoginPassword.Text, false, out MessageLogin, false))
+        {
+            BusinessFlow.DefaultCart.LoadCustomerInfo(BusinessFlow.Identity.CustomerGuid);
+            Response.Redirect("checkout_step1.aspx");
+        }
+        else
+        {
+            //Your custom message here
+            //message="";
+        }
+    }
+
+
+    protected void btnNewPassword_Click(object sender, EventArgs e)
+    {
+        if (!UserDetails.ResetPassword(txtForgotPasswordEmail.Text, "", false, out MessageForgot))
+        {
+            //Your custom message here
+            //message="";
+        }
+    }
+
+
+    protected void chkShipToBillAddress_CheckedChanged(object sender, EventArgs e)
+    {
+        toggleShippingInformation();
+    }
+
+
+    private void toggleShippingInformation()
+    {
+        if (chkShipToBillAddress.Checked)
+        {
+            txtShipAddress.Text = txtBillAddress.Text;
+            txtShipAddress2.Text = txtBillAddress2.Text;
+            txtShipFirstName.Text = txtBillFirstName.Text;
+            txtShipLastName.Text = txtBillLastName.Text;
+            txtShipCity.Text = txtBillCity.Text;
+            txtShipZip.Text = txtBillZip.Text;
+            cmbShipCountry.SelectedIndex = cmbBillCountry.SelectedIndex;
+            txtShipPhone.Text = txtBillPhone.Text;
+            txtShipEmail.Text = txtBillEmail.Text;
+
+            try
+            {
+                WebUtilities.LoadDropDown(MainStreet.BusinessFlow.SDK.Ws.LookupTables.CountryRegions, cmbShipState, true, "", cmbShipCountry.SelectedValue, StateDisplayText);
+            }
+            catch (Exception ex)
+            {
+                string test = ex.Message;
+            }
+
+            cmbShipState.SelectedIndex = cmbBillState.SelectedIndex;
+
+            //Change the background color
+            txtShipAddress.BackColor = System.Drawing.Color.LightGray;
+            txtShipAddress2.BackColor = System.Drawing.Color.LightGray;
+            txtShipFirstName.BackColor = System.Drawing.Color.LightGray;
+            txtShipLastName.BackColor = System.Drawing.Color.LightGray;
+            txtShipCity.BackColor = System.Drawing.Color.LightGray;
+            txtShipZip.BackColor = System.Drawing.Color.LightGray;
+            cmbShipCountry.BackColor = System.Drawing.Color.LightGray;
+            cmbShipState.BackColor = System.Drawing.Color.LightGray;
+            txtShipPhone.BackColor = System.Drawing.Color.LightGray;
+            txtShipEmail.BackColor = System.Drawing.Color.LightGray;
+
+            //Read only
+            txtShipAddress.ReadOnly = true;
+            txtShipAddress2.ReadOnly = true;
+            txtShipFirstName.ReadOnly = true;
+            txtShipLastName.ReadOnly = true;
+            txtShipCity.ReadOnly = true;
+            txtShipZip.ReadOnly = true;
+            cmbShipCountry.Enabled = false;
+            cmbShipState.Enabled = false;
+            txtShipPhone.ReadOnly = true;
+            txtShipEmail.ReadOnly = true;
+        }
+        else
+        {
+            //Change the background color
+            txtShipAddress.BackColor = System.Drawing.Color.Empty;
+            txtShipAddress2.BackColor = System.Drawing.Color.Empty;
+            txtShipFirstName.BackColor = System.Drawing.Color.Empty;
+            txtShipLastName.BackColor = System.Drawing.Color.Empty;
+            txtShipCity.BackColor = System.Drawing.Color.Empty;
+            txtShipZip.BackColor = System.Drawing.Color.Empty;
+            cmbShipCountry.BackColor = System.Drawing.Color.Empty;
+            cmbShipState.BackColor = System.Drawing.Color.Empty;
+            txtShipPhone.BackColor = System.Drawing.Color.Empty;
+            txtShipEmail.BackColor = System.Drawing.Color.Empty;
+
+            //Remove Read only
+            txtShipAddress.ReadOnly = false;
+            txtShipAddress2.ReadOnly = false;
+            txtShipFirstName.ReadOnly = false;
+            txtShipLastName.ReadOnly = false;
+            txtShipCity.ReadOnly = false;
+            txtShipZip.ReadOnly = false;
+            cmbShipCountry.Enabled = true;
+            cmbShipState.Enabled = true;
+            txtShipPhone.ReadOnly = false;
+            txtShipEmail.ReadOnly = false;
+        }
+
+        Session["ShipToBillAddress"] = chkShipToBillAddress.Checked;
+    }
+
+
+    protected void cmbBillState_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ShoppingCart1.UpdateCart();
+    }
+
+
+    protected void cmbShipState_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrEmpty(cmbShipState.SelectedValue))
+            drOrderDetail["order_ship_state_id"] = cmbShipState.SelectedValue;
+
+        if (!string.IsNullOrEmpty(cmbShipCountry.SelectedValue))
+            drOrderDetail["order_ship_country_id"] = cmbShipCountry.SelectedValue;
+
+        ShoppingCart1.UpdateCart();
+    }
+
+
+    protected void rblShippingMethods_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        //Try to save the current shipping method
+        if (rblShippingMethods.SelectedItem != null)
+            BusinessFlow.DefaultCart.Data.OrderRow["shipping_method_id"] = rblShippingMethods.SelectedItem.Value;
+
+        ShoppingCart1.UpdateCart();
+    }
+}

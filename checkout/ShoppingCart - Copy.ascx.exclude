@@ -1,0 +1,142 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="ShoppingCart.ascx.cs"
+    Inherits="controls_ShoppingCart" %>
+<table width="600px" cellpadding="4px" cellspacing="4px" style="clear: both; border-collapse: separate;
+    background-color: White; padding-bottom: 0px">
+    <tr>
+        <td>
+            <asp:Repeater ID="rCart" runat="server" onitemcommand="rCart_ItemCommand" 
+                onitemdatabound="rCart_ItemDataBound">
+                <HeaderTemplate>
+                    <table width="600px" cellpadding="4px" cellspacing="4px" style="clear: both; border-collapse: separate;
+                        background-color: White; padding-bottom: 0px">
+                        <tr>
+                            <td colspan="7" class="iqHeaderBoxBlock" id="headerCell" runat="server">
+                                <b>Shopping Cart</b>
+                            </td>
+                        </tr>
+                        <tr class="iqBodyBoxBlock" align="center">
+                            <td width="150">
+                                <b>Code</b>
+                            </td>
+                            <td width="100px">
+                                <b>Picture</b>
+                            </td>
+                            <td width="250">
+                                <b>Description</b>
+                            </td>
+                            <td width="45">
+                                <b>Qty</b>
+                            </td>
+                            <td>
+                                <b>Price</b>
+                            </td>
+                            <td>
+                                <b>SubTotal</b>
+                            </td>
+                            <td runat="server" id="tdDeleteAll">
+                                <asp:LinkButton ID="lnkDeleteAll" CommandName="DeleteAll" CommandArgument="" runat="server">
+                                    <asp:Image ID="iqRermoveItemImg" runat="server" SkinID="iqCartDelete" />
+                                </asp:LinkButton>
+                            </td>
+                        </tr>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <tr class="iqBodyBoxBlock" valign="middle">
+                        <td valign="middle">
+                            <center>
+                                <%#Eval("ItemCode").ToString()%></center>
+                        </td>
+                        <td style="background-color: White;" align="center">
+                            <asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("ItemImageThumb") %>' ToolTip='<%# Eval("ItemImageTitle") %>'
+                                AlternateText='<%# Eval("ItemImageTitle").ToString() %>' />
+                        </td>
+                        <td valign="middle">
+                            <a href='<%#Eval("ItemUrl").ToString()%>'>
+                                <%#Eval("ItemTitle").ToString()%></a>
+                        </td>
+                        <td valign="middle" runat="server" id="tdDDQuantity" align="center">
+                            <asp:DropDownList ID="ddQuantity" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddQuantity_SelectedIndexChanged">
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>3</asp:ListItem>
+                                <asp:ListItem>4</asp:ListItem>
+                                <asp:ListItem>5</asp:ListItem>
+                                <asp:ListItem>6</asp:ListItem>
+                                <asp:ListItem>7</asp:ListItem>
+                                <asp:ListItem>8</asp:ListItem>
+                                <asp:ListItem>9</asp:ListItem>
+                                <asp:ListItem>10</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td valign="middle" runat="server" id="tdLBQuantity" visible="false" align="center">
+                            <%#Eval("ItemQuantity").ToString()%>
+                        </td>
+                        <td valign="middle" align="center">
+                            <%#Convert.ToDecimal(Eval("ItemPrice")).ToString("c")%>
+                        </td>
+                        <td valign="middle" align="center">
+                            <%#Convert.ToDecimal(Eval("ItemSubTotal")).ToString("c")%>
+                        </td>
+                        <td valign="middle" runat="server" id="tdBtnDelete">
+                            <asp:LinkButton ID="lnkDelete" CommandName="Delete" CommandArgument='<%#Eval("OrderItemGuid").ToString()%>'
+                                runat="server">
+                                <asp:Image ID="imgCartRowDelete" runat="server" SkinID="iqCartDelete" />
+                            </asp:LinkButton>
+                        </td>
+                    </tr>
+                </ItemTemplate>
+                <FooterTemplate>
+                    <tr>
+                        <td colspan="7" align="right" style="padding: 0" id="footerCell" runat="server">
+                            <table cellpadding="4px" cellspacing="4px" style="padding: 0">
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>SubTotal:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=SubTotal %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>Shipping:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Shipping %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>Tax:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Tax %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock">
+                                    <td>
+                                        <b>Discount:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Discount %>
+                                    </td>
+                                </tr>
+                                <tr class="iqBodyBoxBlock" id="trTotal" visible="false">
+                                    <td>
+                                        <b>Total:</b>
+                                    </td>
+                                    <td align="right">
+                                        <%=Total %>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </table>
+                </FooterTemplate>
+            </asp:Repeater>
+        </td>
+    </tr>
+</table>
+<span class="ErrorMessage">
+    <%=Message %></span> 

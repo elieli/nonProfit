@@ -1,0 +1,3006 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Site" %>
+
+<%@ Register Assembly="rjs.web.webcontrol.popcalendar" Namespace="RJS.Web.WebControl"
+    TagPrefix="rjs" %>
+
+<%--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+--%>    <html xmlns="http://www.w3.org/1999/xhtml"     >
+<head id="MyHeader" runat="server" >
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Penny Bid Auction</title> 
+    
+<link rel="stylesheet" type="text/css" href="css/style.css"  />
+     <script type="text/javascript" src="javascript/jquery-1.2.3.js" ></script> 
+ <%--  <link rel="stylesheet" type="text/css" href="App_Themes/professional.css" />--%>
+   
+  
+<script type="text/javascript">
+//    window.onload = "javascript:capture();"
+
+    $(document).ready(function() {
+        getlogin();
+    capture(); 
+    })
+
+   
+   function opnlog(login)
+   {
+       var logobj = document.getElementById(login);
+       var log = logobj.innerHTML;
+     if (log.indexOf('Log out') != -1) {
+     //alert('simple')
+           loginSimple();
+       }
+
+       else {
+//           alert('notsimple')
+       window.open('Login.aspx?login=' + log ,  ''  , 'width=350   height=250');
+   }
+      ////////////// window.location.reload(true);
+   }
+   
+   
+   
+   
+   
+   
+   
+   
+    function query() {
+//        $(document).ready(jqtest());
+
+        location.querystring = (function() {
+
+            // The return is a collection of key/value pairs
+
+            var queryStringDictionary = {};
+
+            // Gets the query string, starts with '?'
+
+            var querystring = unescape(location.search);
+
+            // document.location.search is empty if no query string
+          
+            if (!querystring) {
+                return {};
+            }
+
+            // Remove the '?' via substring(1)
+
+            querystring = querystring.substring(1);
+
+            // '&' seperates key/value pairs
+
+            var pairs = querystring.split("&");
+
+            // Load the key/values of the return collection
+
+            for (var i = 0; i < pairs.length; i++) {
+                var keyValuePair = pairs[i].split("=");
+                queryStringDictionary[keyValuePair[0]] = keyValuePair[1];
+            }
+
+            // Return the key/value pairs concatenated
+
+            queryStringDictionary.toString = function() {
+
+                if (queryStringDictionary.length == 0) {
+                    return "";
+                }
+
+                var toString = "?";
+
+                for (var key in queryStringDictionary) {
+                    toString += key + "=" + queryStringDictionary[key];
+                }
+
+                return toString;
+            };
+
+            // Return the key/value dictionary
+
+            return queryStringDictionary;
+        })();
+
+    }
+
+
+
+
+
+
+
+
+
+
+    function getlogin() {
+
+        var xml = typeof XMLHttpRequest == "undefined" ? new ActiveXObject() : new XMLHttpRequest();
+
+        xml.open("GET", "simpleGetLoginPage.aspx", true);
+        ///alert(xml); 
+        xml.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+
+
+
+        xml.onreadystatechange = function() {
+            if (xml.readyState == 4) {
+                //alert(xml + '  getTotBidsxmlreadyState');
+                ////////
+                show = xml.responseText;
+                //////////////// alert(show + '  show');
+
+
+                var cartcount = ajaxlog(show, 'cartcount');
+                var credits = ajaxlog(show, 'credits');
+                var loginorg = ajaxlog(show, 'loginorg');
+                var logincust = ajaxlog(show, 'logincust');
+
+
+                var loginname1 = document.getElementById('loginname1');
+
+
+                var loginname = document.getElementById('loginname');
+
+
+                var dvshop = document.getElementById('dvshop');
+
+                var spn_credits = document.getElementById('spn_credits');
+
+                loginname1 = logincust == '' ? loginorg : logincust;
+                loginname=     loginname1;
+                dvshop=cartcount;
+                spn_credits = credits;
+
+
+
+
+
+
+                return show;
+                ////alert(show + '  showgetTotBidsxmlreadyState'); return show;
+            }
+        }
+
+
+        ////////  
+
+        try {
+            xml.send();
+
+            /// alert(xml);
+            //////// 
+        }
+        catch (ex) {
+            //// alert(ex.message);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function loginSimple() {
+
+        var xml = typeof XMLHttpRequest == "undefined" ? new ActiveXObject() : new XMLHttpRequest();
+
+        xml.open("GET", "simpleLoginPageBtn.aspx", true);
+        ///alert(xml); 
+        xml.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        try {
+            xml.send();
+            xml = null;
+            //alert(xml + '    xmlclose');
+        }
+        catch (ex) {
+           alert(ex.message+ 'Gevald1');
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    function watchlog(auid) {
+        ///alert('wattch');
+         
+        var xml = typeof XMLHttpRequest == "undefined" ? new ActiveXObject() : new XMLHttpRequest();
+
+        ///xml.Close
+
+        //////////
+        ///alert(xml);
+        xml.open("GET", "simpleWatchPageBtn.aspx?auid=" + auid  , true);
+        ///alert(xml);  
+        
+         ////alert('wattchss');
+        //xml.setRequestHeader("Content-Type", "text/xml");
+        xml.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+        /////alert('wattchsswwww');
+        ///alert(xml + '    xml');
+
+
+        try {
+            xml.send();
+
+
+
+            xml = null;
+            //alert(xml + '    xmlclose');
+        }
+        catch (ex) {
+    alert(ex.message+'watchmsg');
+        }
+
+
+
+
+
+        //             simpleSponsorPageBtn.aspx
+    }             
+         
+               
+
+
+
+
+
+
+
+
+    function captures() {
+
+//        sfHover = function() {
+//            var sfEls = document.getElementById("menu").getElementsByTagName("LI");
+//            for (var i = 0; i < sfEls.length; i++) {
+//                sfEls[i].onmouseover = function() {
+//                    this.className += " sfhover";
+//                }
+//                sfEls[i].onmouseout = function() {
+//                    this.className = this.className.replace(new RegExp(" sfhover\\b"), "");
+//                }
+//            }
+//        }
+
+//        if (window.attachEvent){ window.attachEvent("onload", sfHover);}
+try{
+    alert('nuuu');
+        GetCount();  
+        capture();
+         }
+         catch (ex) { alert(ex.message+'gevald2'); }
+    }
+
+
+
+
+    function keepMeAlive(imgName) {
+
+        myImg = document.getElementById(imgName);
+
+        if (myImg) myImg.src = myImg.src.replace(/\?.*$/, '?' + Math.random());
+
+    }
+
+    function capture() {
+
+
+
+
+//        window.setInterval("keepMeAlive('imgAlive')", 100000);
+
+
+
+
+
+
+
+
+        var cover;
+        var auid=0;
+        var anchorProfile;
+
+        var name; 
+        var watch;
+        var price;
+
+        var live;
+        var login;
+        var countbox;
+        var hrefh;
+
+        var sponsors;
+        var bidlog;
+        var credits = 0;
+
+        var counter = 0;
+
+        try {
+
+
+            var table;
+
+            var gettable = document.getElementsByTagName("Table");//.getElementById("ctl00_Body_orgProducts2_dtalstItems");
+
+          
+           
+                    for (z=0; z  < gettable.length; z++ ) {
+                       ///// alert(gettable[z].id + 'gettable');
+                        if (gettable[z].id.indexOf('dtalstItems') != -1) {
+                            table = gettable[z];
+                            break;
+                         }
+                    } 
+        
+
+        ///    var orgProducts2 = document.getElementById("ctl00_Body_orgProducts2_dtalstItems");
+
+        
+        
+        
+        
+        
+        
+         
+        ////////////    var table = orgProducts2; //document.getElementById("mytab1");
+
+      //////// alert(table+'table'  );
+            //
+           /// alert(table.rows.count);
+            
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                // alert(i+ ' i');
+                for (var j = 0, col; col = row.cells[j]; j++) {
+                    var all = col.getElementsByTagName('*');
+                    //  alert(j+' j');
+                    var display = col.innerHTML;
+
+                    ////////                    alert(col.innerHTML   );
+                    ////////                
+                    ////////                    alert( col.nextSibling );
+
+                    ////////                    alert(col.firstChild.nodeValue + col.firstChild.nodeName);
+
+
+                  ///  alert(display + 'display');
+
+                    /// alert(col.innerHTML.substring(indexOf('aid='), 5)   );
+
+                    //                    var auctionid = col.innerHTML.substring(300, 5)
+                    //                  
+                    //                    var auctionid = col.innerHTML.substring(indexOf('aid='), 5)
+                   
+
+                    //             alert('sss');
+                    //             alert(all[1] );
+
+
+                    ////            
+                    for (var x = 0; x <= all.length - 1; x++) {
+
+                        //                                 alert(all[x].id + '  all[x].id   ' + all[x].getAttribute("href"));
+                        //                                 alert(all[x].innerHTML + '  all[x].innerHTML   ' ) ;
+
+                        var href = all[x].id + '  ' + all[x].getAttribute("href");
+
+                        //  alert(href);
+////                        if (href.indexOf('Auction') != -1) {
+////                            ///  alert('next');
+////                            hrefh = href.substring(href.indexOf('Auction.aspx?') + 13, href.length);
+////                            ///  alert(hrefh + 'hrefh1');
+////                        }
+////                        if (href.indexOf('Auction.aspx?aid=') != -1) {
+
+////                            hrefh = href.substring(href.indexOf('Auction.aspx?aid=') + 16, href.indexOf('&'));
+////                            ///       alert(hrefh + 'hrefh');
+////                        }
+
+              ///////////  alert(all[x]+'all[x]');
+
+                        
+
+                        if (all[x].id.indexOf('login') != -1) {
+                                  login = all[x];
+                        }
+
+
+                        if (all[x].id.indexOf('dvwatch') != -1) {
+
+
+                            watch = all[x]; 
+                        }
+
+
+
+
+
+                        if (all[x].id.indexOf('live') != -1) {
+
+                            ///amount = all[x].id.substring(all[x].id.indexOf('amounter') + 12, all[x].id.length);
+                            ///  alert(amount + 'amount');
+                            live = all[x];
+
+
+                            ///////alert(live+'live');
+                        }
+
+
+
+                        if (all[x].id.indexOf('sponsors') != -1) {
+                            sponsors = all[x];
+                         //   alert(sponsors + ' sponsors');
+                        }
+
+
+                        if (all[x].id.indexOf('bidlog') != -1) {
+                            bidlog = all[x]; //alert(bidlog + ' bidlog');
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                                     
+                        
+                        if (all[x].id.indexOf('credits') != -1) {
+
+                            ///amount = all[x].id.substring(all[x].id.indexOf('amounter') + 12, all[x].id.length);
+                            ///  alert(amount + 'amount');
+                            credits = all[x];
+                        }
+
+                        if (all[x].id.indexOf('auctionid') != -1) {
+
+                            ///amount = all[x].id.substring(all[x].id.indexOf('amounter') + 12, all[x].id.length);
+                            ///  alert(amount + 'amount');
+                          /////////////  hrefh = all[x];
+                          
+                            auid = all[x].innerHTML;
+                             
+                          //  auid = all[x];
+                           /// alert(auid + 'auctionidf'   );
+                        }
+
+
+
+                        if (all[x].id.indexOf('amounter') != -1) {
+
+                            amount = all[x].id.substring(all[x].id.indexOf('amounter') + 12, all[x].id.length);
+                            ///  alert(amount + 'amount');
+                            amount = all[x];
+                        }
+
+
+
+
+
+
+                        if (all[x].id.indexOf('dvprice') != -1) {
+                            //  alert('counter'  );
+                            price = all[x].id.substring(all[x].id.indexOf('dvprice') + 12, all[x].id.length);
+                            //  alert(countbox);
+                            price = all[x];
+                        }
+
+
+
+                        if (all[x].id.indexOf('anchorProfile') != -1) {
+                            //  alert('counter'  );
+                           /////////// price = all[x].id.substring(all[x].id.indexOf('dvprice') + 12, all[x].id.length);
+                            //  alert(countbox);
+                            anchorProfile = all[x];
+                        }
+
+
+
+
+
+
+                        if (all[x].id.indexOf('dvusername') != -1) {
+                            //  alert('counter'  );
+                            name = all[x].id.substring(all[x].id.indexOf('dvusername') + 12, all[x].id.length);
+                            //  alert(countbox);
+                            name = all[x];
+                        }
+
+
+
+
+                        if (all[x].id.indexOf('dvcountboxCover') != -1) {
+                          
+                            cover = all[x];
+                        }
+
+
+
+
+
+
+
+                        if (all[x].id.indexOf('counter') != -1) {
+                            //  alert('counter'  );
+                            counter = all[x].id.substring(all[x].id.indexOf('counter') + 12, all[x].id.length);
+                            //  alert(countbox);
+                            counter = all[x];
+
+
+
+                        }
+
+
+                        ////    alert(all[x] + ' all[x]   ' + x);
+                    
+                        
+                        
+                        if (all[x].id.indexOf('countbox') != -1) {
+                            // alert('countbox');
+                            countbox = all[x].id.substring(all[x].id.indexOf('countbox') + 12, all[x].id.length);
+                            /////alert(countbox + 'countbox');
+                            countbox = all[x];
+
+                          
+                          
+                            if (counter.innerHTML > amount.innerHTML) {
+                                ///////   alert('countboxGevald' +amount+'  '+out);
+
+                                if (amount == 0) { amount = 0; }
+                                
+                            if (cover)    cover.style.left = 'auto';
+                                
+                                    out = calcamount(amount);
+                                    if (cover) cover.style.left = '-999px';
+                               
+                                //alert('countboxGevald' + amount + '  ' + out);
+
+                                 var dvcountboxCover = document.getElementById('dvcountboxCover');
+                                ///dvcountboxCover.style.visibility = visible;
+                              dvcountboxCover.style.left = 'auto';
+                                countbox.innerHTML = out;
+
+
+                           dvcountboxCover.style.left = '-999px'; ;
+                                
+                                
+                                
+                                
+                            }
+
+
+
+
+
+                        }
+
+
+
+
+
+
+
+
+                        ////
+                    }
+
+
+
+
+
+
+                    ///  alert('col.nextSibling');
+                   /////////////////////////////////////////////////////// var auctionid = hrefh.innerHTML;
+                   /// alert('countbox1');
+                    //  alert(auctionid +  amount + counter + countbox);
+
+                    //  alert(auctionid + ' auctionid ' + amount + ' amount  ' + counter.id + '  counter  ' + countbox.id  + '   countbox');
+                    ///         gevald('gevald');
+                    // alert(artimer);
+                    // var show = ajaxsender(auctionid, col, artimer);
+                    ///////   alert('col.nextSibling333');
+
+
+
+                    var show = ajaxsender(auid, amount, counter, countbox, name, price, credits, live, watch, login, anchorProfile, sponsors, bidlog, col);
+
+                 //   var show = setTimeout("ajaxsender(" + auid + ", " + amount + ", " + counter + ", " + countbox + ", " + name + ", " + price + ", " + credits + ", " + live + ", " + watch + ", " + login + ", " + anchorProfile + ", " + sponsors + ", " + bidlog + ", " + col + "  )", 3000);  
+
+
+
+                  //  alert('col.nextSibling333');
+
+
+
+
+
+
+                }
+            }
+
+
+
+        }
+        catch (ex) {
+           ////  alert(ex.message);
+
+           ////////////////////////////////////// var show = ajaxsender(0, 0, 0, '', '', 0, 0, '', '', '', '', '', '');
+
+
+        }
+         
+         
+
+        var artimer = new Array();
+
+
+        var settime = setTimeout("capture()", 1000);
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+    function ajaxsender(auid, amount, counter, countbox, name, price, credits, live, watch,  login, anchorProfile, sponsors, bidlog, col) {
+        var show = '';
+       /// alert('lstCreditLog');
+
+         //alert(auctionid);
+        if (auid != null) {
+            ////////     
+            var xml = typeof XMLHttpRequest == "undefined" ? new ActiveXObject() : new XMLHttpRequest();
+
+          ///////////////////  alert(auctionid + 'auctionid');
+            ///// xml.open("GET", "simplePage.aspx", true);  
+            xml.open("GET", "simplePage.aspx?auid=" + auid, true);
+            ////////     
+            //////////     
+            /// xml.open("GET", "simplePage.aspx?auid=" + auid, true);
+            ////// alert(xml + '  getTotBidsxml');
+            ////////     
+            xml.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            ////////
+
+           // alert(xml+'auctionid');
+
+            xml.onreadystatechange = function() {
+                if (xml.readyState == 4) {
+                    // alert(xml + '  getTotBidsxmlreadyState');
+                    ////////
+                    show = xml.responseText;
+                    
+                   /// alert(show);
+
+                    ////  alert(show + '  show'); alert(col + '  colshow');
+
+                    insert(show, amount, counter, countbox, name, price, credits, live, watch, login, anchorProfile, auid, sponsors, bidlog, col);
+                    return show;
+                    ////alert(show + '  showgetTotBidsxmlreadyState'); return show;
+                }
+            }
+
+
+            ////////  
+
+            try {
+                xml.send();
+
+
+                //////// 
+            }
+            catch (ex) {
+                ///alert(ex.message);
+            }
+
+        }
+        return show;
+    }
+
+
+
+
+
+
+
+
+    function ajaxlog(show, val) {
+
+        var loged = ajaxvalues(show, val);
+        loged= loged.replace("amp;", "");
+    //  alert(loged + '  loged' +val);
+        
+       
+       
+        
+        return loged;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    function insert(show, amount, counter, countbox, namev, pricev, credits, live, watch, login, anchorProfile, auctionid, sponsors, bidlogs, col) {
+
+       //   alert('insertcol.nextSibling2');
+      ///  alert(anchorProfile.innerHTML+ 'ddddddd');
+
+
+   ////////  alert(show);
+        
+
+     var   login    =    document.getElementById('login')
+
+
+
+
+     var livests = ajaxvalues(show, 'live');
+
+
+
+  ///////////////   var auction_id = ajaxvalues(show, 'auctionid');
+
+
+
+          //// alert(livests=='BID' );
+//            alert(livests + 'livests');
+//            alert(watch + 'watch');
+//        alert(show);
+      //////////////////  anchorProfile.innerHTML = livests  ;
+        ///alert(anchorProfile.innerHTML + 'dddddddff');
+        anchorProfile.href = "Auction.aspx?" + "auctionid=" + auctionid;
+        try {
+            //            anchorProfile.href = "#";
+
+
+
+
+
+
+           //// alert(livests + 'livests');
+
+            if (livests == 'Countdown') {
+                anchorProfile.setAttribute("class", "btncountdown");
+
+
+            }
+            
+           
+            if (livests == 'BID')
+             {
+             
+            anchorProfile.setAttribute("class", "btn");
+         
+
+
+            anchorProfile.setAttribute("onmouseover", function() {   
+             var  anchor_Profile = document.getElementById("anchorProfile"); 
+       anchor_Profile.className="btnsold"; }    )
+
+       anchorProfile.setAttribute("onmouseout", function() {
+     var  anchor_Profile  = document.getElementById("anchorProfile"); 
+     
+       var  anchor_Profile = document.getElementById("anchorProfile"); 
+           anchorProfile.className = "btn";
+       })
+
+       }
+
+
+
+
+       if (livests == 'Sold' || livests == 'SoldRegister') {
+           anchorProfile.setAttribute("class", "btnsold");
+
+           anchorProfile.setAttribute("onmouseover", function() {
+           
+           
+                var anchor_Profile = document.getElementById("anchorProfile");
+           
+            anchor_Profile.className = "btn"; })
+
+           anchorProfile.setAttribute("onmouseout", function() {
+           
+             var anchor_Profile = document.getElementById("anchorProfile");
+            anchor_Profile.className = "btnsold"; })
+
+
+
+
+
+       } else { anchorProfile.setAttribute("class", "btn"); }
+            
+            
+               if ( livests == 'BIDRegister'   ) {
+                   // anchorProfile.setAttribute("class", "btn");
+
+                   anchorProfile.setAttribute("onmouseover", function() { 
+                   
+                var anchor_Profile = document.getElementById("anchorProfile");
+                   
+                   anchor_Profile.className = "btnlogin"; })
+                  // anchorProfile.setAttribute("onmouseover", function(anchorProfile) { anchorProfile.setAttribute("class", "btnlogin"); })
+
+                   anchorProfile.href = '#';
+            }
+            
+            
+            
+            
+            
+            
+            
+        if (livests == 'Sold' || livests == 'Register') {
+
+
+            if (livests == 'Sold') {
+              if(namev)   namev.style.visibilty = 'hidden';
+                watch.style.visibilty = 'hidden';
+               ////////////// countbox.style.visibilty = 'hidden';
+
+            }
+            else {
+                if (namev) namev.style.visibilty = 'visible';
+                watch.style.visibilty = 'hidden';
+               ///////////// countbox.style.visibilty = 'hidden';
+            }
+          /////////////  watch.style.visibilty = 'hidden'; // . setAttribute('visible', 'false');  
+           // document.getElementById('btnwatch').setAttribute('visible', 'false');
+        }
+        else {
+
+            if (livests == 'BID') {
+                if (namev) namev.style.visibilty = 'visible';
+                watch.style.visibilty = 'visible';
+                countbox.style.visibilty = 'visible';
+                anchorProfile.href = "Auction.aspx?" + "auctionid=" + auctionid + "&lve=live";
+
+
+                watch.style.visibilty = 'visible';
+            }
+            else {
+                anchorProfile.href = "Auction.aspx?" + "auctionid=" + auctionid;
+                }    
+            
+            
+            //  watch.setAttribute('visible', 'true');  
+            ///document.getElementById('btnwatch').setAttribute('visible', 'true'); 
+         }
+        }
+        catch (ex) { }
+
+
+
+
+
+//        if (anchorProfile.innerHTML == 'BID') {
+//            anchorProfile.href = "Auction.aspx?" + "auctionid=" + auctionid;
+// 
+//        }
+//        else {
+//            anchorProfile.href = "#";
+//         }
+
+
+
+
+//         if (anchorProfile.innerHTML == 'Sold') {
+
+//             namev.style.visibilty = 'visible';
+//             watch.style.visibilty = 'hidden';
+//             countbox.style.visibilty = 'hidden';
+
+
+//         }
+//         else {
+
+
+//             if (anchorProfile.innerHTML == 'Register') {
+//                 namev.style.visibilty = 'hidden';
+//                 watch.style.visibilty = 'hidden';
+//                 countbox.style.visibilty = 'hidden';
+//             }
+
+//             else {
+
+//                 if (anchorProfile.innerHTML == 'BID') {
+//                     namev.style.visibilty = 'visible';
+//                     watch.style.visibilty = 'visible'; watch.innerHTML = 'Watch';
+//                     countbox.style.visibilty = 'visible';
+//                 }
+
+
+
+
+//             } 
+  //       }
+
+        var ncredits = ajaxvalues(show, 'credits');
+
+        ///alert(ncredits)
+        if (ncredits == '' || ncredits == '0') {
+            var bidbtn = document.getElementById('bidbtn');
+
+           // alert('  bidbtn.style.left  ' + bidbtn.style.left);
+            
+            
+            if (bidbtn &&   bidbtn.style.left != '-9999px'  ) {
+               /// alert(ncredits + 'ncredits');
+           bidbtn.style.left = '-9999px';
+
+
+ 
+                bidbtnCredits.style.left = 'auto';
+                
+            }
+        }
+        
+        
+        
+        else{
+            if ((livests == 'BID' || livests == 'BIDRegister' || livests == 'SoldRegister') && bidbtn) {
+                bidbtn.style.left = 'auto';
+                
+                
+                bidbtnCredits.style.left = '-9999px';
+             }
+        }
+
+
+        var price = ajaxvalues(show, 'price');
+
+        var loginorg = ajaxvalues(show, 'loginorg');
+        var logincust = ajaxvalues(show, 'logincust');
+
+        //alert(logincust + 'logincust');                               /////////////////////////////////////////////////////////////////////////////
+        
+        //              alert(price + 'price');
+
+     /////////////////   alert('insertcol.nextSibling2');
+        var buyer = ajaxvalues(show, 'buyer');
+
+
+        /// alert(logins + 'logins');
+
+ 
+           // loginorglogincust
+    
+
+ /// var pOtherViews = document.getElementById('<'''''''''%''''=pOtherViews.ClientID''''%''''''''''>');
+  var dvshop = document.getElementById('dvshop');
+    var lispn_credits = document.getElementById('lispn_credits');
+  if (logincust == ''   )
+  {
+////////////      lispn_credits.style.visibility = 'hidden';
+////////////          dvshop.style.visibility = 'hidden'
+  }
+  else{  lispn_credits.style.visibility = 'visible';
+          dvshop.style.visibility = 'visible'
+  }
+
+        var dvlogin = document.getElementById('dvlogin');
+
+        dvlogin.style.visibility='visible'
+
+
+        var login_cover = document.getElementById('login_cover');
+       ///////////////////////alert('loginorg'+loginorg+'             logincust'+logincust);
+//        if (logincust == '' && loginorg == ''  && login.innerHTML != ' Log In ' &&   login.innerHTML != '' ) {
+//           alert ('gevald');
+        //        }
+
+   ///   alert(logincust+' gevald'+loginorg);
+
+
+
+
+      var top_row  = document.getElementById("top_row");
+      var lispn_shop = document.getElementById("lispn_shop");
+      var lispn_credits = document.getElementById("lispn_credits");
+      var lispn_login = document.getElementById("lispn_login");
+      var logina = document.getElementById("logina");
+      var loginname1 = document.getElementById("loginname1");
+      var loginname = document.getElementById("loginname");
+      
+        if (logincust == '' && loginorg == '' )
+        {
+           ////// login.innerHTML = ' Log In '
+            top_row.style.visibility = 'hidden';
+            lispn_login.style.visibility = 'visible';
+            lispn_credits.style.visibility = 'hidden';
+            lispn_shop.style.visibility = 'hidden';
+            logina.style.left = 'auto';
+            
+             }
+        else {
+//            if (
+//        logincust != '') {
+
+            top_row.style.visibility = 'visible';
+            lispn_login.style.visibility = 'hidden';
+            lispn_credits.style.visibility = 'visible';
+            lispn_shop.style.visibility = 'visible';
+            logina.style.left = '-9999px';
+
+
+
+
+
+               ///////// alert(logincust + ' Log out ' +  login.innerHTML);
+
+            if (logincust != '') {
+                if (logincust != loginname1.innerHTML) {
+                    loginname1.innerHTML = logincust;
+
+                    loginname.innerHTML = logincust;
+
+
+                    ///   login_cover.style.left = 'auto';
+
+                    ////////////                login.innerHTML = logincust + ' Log out ';
+                    ///   login_cover.style.left = '-9999px';
+                }
+
+            }
+            else {
+                if (loginorg != '') {
+                    if (loginorg != loginname1.innerHTML) {
+
+
+                        loginname.innerHTML = loginorg;
+
+                        loginname1.innerHTML = loginorg;
+
+                        ///   login_cover.style.left = 'auto';
+                        /// login.innerHTML = loginorg + ' Log out ';
+                        ///  login_cover.style.left = '-999px';
+                    }
+                }
+            }
+          }
+
+
+       
+
+       ////////////////////////////////// dvlogin.style.visibility = 'hidden'
+       
+       
+       
+       
+        var amountshow = ajaxvalues(show, 'amount');
+
+   try{
+        var spncredits = document.getElementById('spncredits');
+        spncredits.innerHTML = ncredits;
+        }
+
+        catch (E) { }    
+
+            try{
+
+                var spn_credits_cover = document.getElementById('spn_credits_cover');
+                spn_credits_cover.style.left = 'auto';
+                
+                var spn_credits = document.getElementById('spn_credits');
+                spn_credits.innerHTML = ncredits;
+
+                spn_credits_cover.style.left = '-9999px';
+                
+                //spn_credits.style.visibility=   'visible';
+                
+            }
+            catch(E){}
+
+            
+        credits.innerHTML = ncredits;
+
+
+        var artimer = new Array();
+
+        artimer.push(amount);
+
+        var amounts;
+        amount.innerHTML = amountshow;
+
+
+
+
+
+
+
+    ////    alert(price + '  prc ' + pricev);
+
+
+
+////        if (counter && counter > amount) {
+////        
+////            
+////        }
+////        else {
+////            amount = amount >= 1000 ? amount - 1000 : 0;
+////            counter = amount;
+          
+//        }
+
+        //        if (amount &&  amount >  0  || !amount) {
+
+        //        }
+
+
+
+    ///  alert(counter.innerHTML + 'buyer       ' + amountshow + 'show       amount.innerHTML ' + amount.innerHTML);
+
+        if (counter.innerHTML == null || counter.innerHTML == '' || amountshow > counter.innerHTML) {
+            counter.innerHTML = amountshow;
+            amounts = amountshow;
+
+          ///  alert(amounts +' first');
+        }
+        else {
+            amounts = counter.innerHTML;
+            amounts = amounts>=1000 ? amounts- 1000 : 0;
+            counter.innerHTML = amounts;
+           // alert(amounts + ' second');
+
+
+        }
+
+
+        //, amount, counter
+        ////              alert('countboxGevaldamount.innerHTML'+amounts +'vvvvv'+ amount.innerHTML + '  ' + counter.innerHTML);
+
+
+
+
+        //              if (counter.innerHTML > amount.innerHTML) {
+
+        //                  var amounts = amount.innerHTML;
+        //    amounts-=1000;
+        //    
+        //               
+        //              }
+        //              else { amount.innerHTML = counter.innerHTML; }
+
+
+        out = calcamount(amounts);
+
+      //  alert(out + 'buyer       ' + amounts + 'show       amount.innerHTML ' + amount.innerHTML);
+
+        /// alert('countboxGevald' + amounts + '  ' + out);
+        ////////countbox.innerHTML = out;
+
+        // alert(out + '   countbox.innerHTML' + countbox.innerHTML);
+
+
+        //   var div = document.createElement("div");
+
+        if (amounts <= 0) {
+
+            out = '00:00';
+            var div = document.createElement("div");
+
+
+           // div.innerHTML = out;
+            ///alert('first check ' + countbox.firstChild);
+
+//////            while (countbox.childNodes[0]) {
+//////                countbox.removeChild(countbox.childNodes[0]);
+//////            }
+        }
+
+
+
+
+        //////////    alert('countbox'+countbox);
+
+
+
+
+
+
+
+
+        countbox.innerHTML  =    out  ;
+        //   alert('second check ');
+
+
+        //                 alert(div + 'div countbox' + div.innerHTML);
+        //                 alert(countbox.innerHTML + "countboxinnerHTML");
+
+        var divname = document.createElement("div");
+
+
+        live.innerHTML = livests;
+        
+        
+
+
+//        while (namev.childNodes[0]) {
+//            namev.removeChild(namev.childNodes[0]);
+//        }
+        //alert(divname + 'buyer  ' + buyer + '  ' + namev );
+       
+         try {
+        namev.innerHTML = buyer;
+
+        if (buyer == ''  &&  namev) {
+            namev.innerHTML =    ' ';
+            namev.style.visibilty = 'hidden';
+         }
+        
+        
+        }
+        catch(ex){}
+////////        divname.innerHTML = buyer;
+//////        namev.appendChild(divname);
+       //////// alert(divname.innerHTML + "divname"+namev);
+
+////        while (pricev.childNodes[0]) {
+////            pricev.removeChild(pricev.childNodes[0]);
+////        }
+////        var divprice = document.createElement("div");
+////        divprice.innerHTML = price;
+////        pricev.appendChild(divprice);
+
+        if (pricev) {
+
+            pricev.innerHTML ='$ '+ price;
+
+
+            if (price == '') {
+                pricev.innerHTML = '$ 0.00';
+                pricev.style.visibilty = 'hidden';
+            }
+        }
+        
+       /// pricev.innerHTML = price;
+        
+        
+        //              var div = document.createElement("div");
+        //              var p = document.createElement("p");
+        //             alert(p + 'price');
+
+       /////////  alert(divprice.innerHTML + "divname" + pricev +' '+ divprice);
+        //                namev.innerHTML = buyer;
+
+        //             pricev.innerHTML =  price;
+
+
+        ///alert(namev + 'pricev' + pricev);
+        ///alert(buyer + 'buyer' + price);
+        //alert(pricev.innerHTML + '    pricev.innerHTML' + namev.innerHTML);
+
+
+
+        //////////////              div.appendChild(p);
+        //////////////              ///////alert(div.innerHTML + 'div.innerHTML');
+
+
+
+        //////////////            //////  alert('col.firstChild.innerHTML');
+
+
+        //////////////              p.innerHTML = "buyer : " + buyer;
+        //////////////              div.appendChild(p);
+        //////////////             //////// alert(div.innerHTML + 'div.innerHTML');
+
+
+
+        //////////////              p.innerHTML = "amount : " + amount;
+        //////////////              div.appendChild(p);
+
+        //////////////              col.appendChild(div);
+        //////////////         alert(col + 'coldiv.innerHTML' );
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+    function ajaxvalues(show, val) {
+
+        //     alert(val);
+        var indx = show.indexOf(val);
+        //     alert(indx);
+        /// alert(val.substring(indx, indx + 30));
+        //     alert(indx);
+
+        var showq = show.substring(indx, indx + 30);
+        /// alert(showq + "showq");
+
+        var fshow = showq.substring(showq.indexOf('>') + 1, showq.indexOf('<'));
+        //  alert(fshow + "fshow");
+        return fshow;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function calcamount(amount) {
+        ///    document.getElementById('dvBid').style.visibility='block';
+        // date is still good
+        days = 0; hours = 0; mins = 0; secs = 0; out = "";
+        var tempAmount = Math.floor(amount / 1000);
+        days = Math.floor(tempAmount / 86400);
+        tempAmount = tempAmount % 86400;
+        hours = Math.floor(tempAmount / 3600);
+        tempAmount = tempAmount % 3600;
+        mins = Math.floor(tempAmount / 60); //minutes
+        tempAmount = tempAmount % 60;
+        secs = Math.floor(tempAmount); //seconds
+//        if (days != 0) {
+//            out += pad(days.toString(), '0').toString() + ":";
+//        }
+
+//        alert(out);
+//        if (days != 0 || hours != 0) {
+//            out += pad(hours.toString(), '0').toString() + ":";
+//        }
+//        alert(out);
+//        
+//        if (days != 0 || hours != 0 || mins != 0) {
+            out += pad(mins.toString(), '0').toString() + ":";
+            out += pad(secs.toString(), '0').toString();
+            //                        document.getElementById('countbox').innerHTML=out;
+            //                      setTimeout("GetCount()", 1000);
+            //                        amount=amount-1000;
+//        }
+        //              }
+////        alert(out);
+
+        ///   alert('out   '  + out);
+        return out;
+    }
+
+
+
+
+
+
+
+
+    function GetCounter() {
+
+
+
+
+
+
+
+        if (amount > 0) {
+
+            document.getElementById('dvBid').style.visibility = 'block';
+            // date is still good
+            days = 0; hours = 0; mins = 0; secs = 0; out = "";
+            var tempAmount = Math.floor(amount / 1000);
+            days = Math.floor(tempAmount / 86400);
+            tempAmount = tempAmount % 86400;
+            hours = Math.floor(tempAmount / 3600);
+            tempAmount = tempAmount % 3600;
+            mins = Math.floor(tempAmount / 60); //minutes
+            tempAmount = tempAmount % 60;
+            secs = Math.floor(tempAmount); //seconds
+            if (days != 0) {
+                out += pad(days.toString(), '0').toString() + ":";
+            }
+            if (days != 0 || hours != 0) {
+                out += pad(hours.toString(), '0').toString() + ":";
+            }
+            if (days != 0 || hours != 0 || mins != 0) {
+                out += pad(mins.toString(), '0').toString() + ":";
+                out += pad(secs.toString(), '0').toString();
+                document.getElementById('countbox').innerHTML = out;
+                setTimeout("GetCount()", 1000);
+                amount = amount - 1000;
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    function pad(val, ch) {
+        if (val < 10)
+            return ch + val;
+        return val;
+    }
+
+
+
+
+
+
+
+
+
+           
+           
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function GetCount(oldamount ,amount , auctionid ) {
+
+
+     
+
+
+            //  alert('no');
+            var out;
+            //  alert(amount + '         amount');
+            if (amount < 0) { amount = 0 }
+            out = calcamount(amount);
+
+
+            //         else{out}
+            //  alert(out + '         out');
+            try {
+                /// alert(out + '         out');
+                var counter = document.getElementById('counterx').value;
+                ///   alert('yes');
+                /// document.getElementById('counterx').value : null ;
+                ///alert(counter + '         counter');
+
+                if (document.getElementById('countbox') != null)
+
+                ////////////////            var dvcountboxCover = document.getElementById(dvcountboxCover);
+                ////////////////        dvcountboxCover.style.visibility = visible;
+                { document.getElementById('countbox').innerHTML = out };
+                // alert(countbox + '         countbox  '+out);
+
+                ////////////////////////////////////dvcountboxCover.style.visibility = hidden;
+                ///////////// getTotBids();
+
+                //              if (counter <2000  ) {
+            }
+            catch (ex) {
+                //// alert(ex.message);
+            }
+
+
+            //              }
+            ///alert(amount + '   amount ' + counter );
+
+
+
+            //if (counter.innerHTML == null || counter.innerHTML == '' || amountshow > counter.innerHTML) {
+            //    counter.innerHTML = amountshow;
+            //    amounts = amountshow;
+
+            //    ///  alert(amounts +' first');
+            //}
+            //else {
+            //    amounts = counter.innerHTML;
+            //    amounts = amounts >= 1000 ? amounts - 1000 : 0;
+            //    counter.innerHTML = amounts;
+            //    // alert(amounts + ' second');
+
+
+            //}
+
+
+
+
+
+
+            //alert(amount + '   amount< ' + counter);
+            ////alert(amount + '   amount> ' + counter + 'counter');
+
+            if (counter && counter > amount) {
+                //        oldamount = counter;
+                ////alert(amount + '   amount>>>> ' + counter + 'counter');
+                ///  alert(counter + '   counter');
+                amount = counter;
+                //  setTimeout("GetCount(" + oldamount + "," + amount + "," + auctionid + ")", 1000);
+                //  setTimeout(" getTotBids(" + auctionid +")", 1000);
+            }
+            else {
+                amount = amount >= 1000 ? amount - 1000 : 0;
+                counter = amount;
+                // setTimeout("GetCount(" + oldamount + "," +  amount + "," + auctionid + ")", 1000);
+                //   setTimeout(" getTotBids(" + auctionid + ")", 1000);
+            }
+
+            //        if (amount &&  amount >  0  || !amount) {
+
+            //        }
+
+            //        else {
+            if (amount && amount < 1000 || !amount) {
+                //////////// alert(amount + '  dvBid amounthidden> ' + counter);
+                
+                
+                  if (document.getElementById('bidbtn'))                  
+                   { 
+                   document.getElementById('bidbtn').setAttribute("class", "btnsold");
+
+                   var HighestBidder = document.getElementById('HighestBidder');
+                 var loginname = document.getElementById("loginname");
+
+                 //                    bidbtnCredits
+
+               ///  alert(HighestBidder.innerHTML + '   HighestBidder.innerHTML   ' + loginname.innerHTML + '   loginname.innerHTML   ');
+                 
+                 if (HighestBidder.innerHTML == loginname.innerHTML &&   !elementIsEmpty(HighestBidder)   ) {
+                     document.getElementById('bidbtnWinner').style.left = 'auto';
+                 }
+
+                 else {
+
+                     if (document.getElementById('bidbtnWinner'))
+                     { document.getElementById('bidbtnWinner').style.left = '-9999px'; }
+                 }
+                     
+                       
+                    }
+                
+                
+//                if (document.getElementById('dvBid')) { document.getElementById('dvBid').style.visibility = 'hidden'; }
+
+//                if (document.getElementById('dvSoldout')) { document.getElementById('dvSoldout').style.visibility = 'visible'; }
+            }
+            else {
+
+
+                if (document.getElementById('dvBid')) {
+                    document.getElementById('bidbtn').setAttribute("class", "btn");
+
+                    document.getElementById('bidbtnWinner').style.left = '-9999'; 
+                  }  
+               
+               
+               
+                //            alert(amount + '  dvBid amountvisible> ' + counter);
+//                if (document.getElementById('dvBid')) document.getElementById('dvBid').style.visibility = 'visible';
+//                if (document.getElementById('dvSoldout')) document.getElementById('dvSoldout').style.visibility = 'hidden';
+            }
+
+
+            //        }
+
+            /////////////////alert(auctionid + 'auctionid');
+
+//           alert(document.location.search.indexOf('auction') != -1);
+
+//           alert(document.location.search);
+
+            if (document.location.href.indexOf('Auction') != -1 )  {
+
+       
+            getTotBids(auctionid);
+
+        }
+        
+            setTimeout("GetCount(" + oldamount + "," + amount + "," + auctionid + ")", 1000);
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function filTotBids(show) {
+
+
+
+        var search = document.location.search;
+
+        var sar = search.split('&');
+
+//        var id = sar[1].split('=');
+
+
+
+//        if (id[1] == null || id[1] == '') {
+
+       // alert(sar[0]);
+
+
+      ///  alert('sar.length'+sar[0]+ sar);
+        
+        
+        var bidbtn = document.getElementById('bidbtn');
+        if ( sar.length<=1   &&   bidbtn &&  bidbtn.style.left=='auto'  )
+        {
+
+            bidbtn.style.left == '-9999px'  
+           ///bidbtn.style.visibilty = 'visible';
+        }
+        
+        
+        else { //////////////////////////////bidbtn.style.visibilty = 'hidden';
+        
+        
+         }
+       //////////// alert('sar.length');
+        
+        var sponsor = new Array();
+        var bidlog = new Array();
+
+
+        ////alert(show);
+        sponsor = ajaxlog(show, 'sponsors');
+
+
+        var arsponsor = sponsor.split('&');
+
+        bidlog = ajaxlog(show, 'bidlog');
+
+        var arbidlog = bidlog.split('&');
+
+
+        ///alert(sponsor + '      sponsor' + bidlog + '          bidlog');
+
+      /// alert(show);
+
+      //  var dvsponsorName = document.getElementById('dvsponsorName');
+
+      //  var dvsponsorAmount = document.getElementById('dvsponsorAmount');
+
+        var dvsponsors = document.getElementById('dvsponsors');
+
+
+        if (dvsponsors) {
+
+            while (dvsponsors.childNodes[0]) {
+                dvsponsors.removeChild(dvsponsors.childNodes[0]);
+            }
+
+
+
+
+//#right_container .prodcts_details ul.p_lists li a { text-decoration:none; color:#363636; float:left; }
+//#right_container .prodcts_details ul.p_lists li span { font-size:11px; line-height:13px; color:#e97f0e; float:right; }
+
+
+
+
+            var x = 0;
+            if (arsponsor.length >= 1) {
+
+                for (x = 0; x <= arsponsor.length - 2; x++) {
+
+                    var spnsr = arsponsor[x].split(',');
+                    //   alert(spnsr);
+
+                    //            dvsponsorName.innerHTML = spnsr[0].replace('amp;', '');
+                    //            dvsponsorAmount.innerHTML = spnsr[1];        
+                    //            dvsponsorName.innerHTML = spnsr[0].replace('amp;', '');
+
+
+                    if (spnsr[0] != 'undefined' && spnsr[1] != 'undefined') {
+                        var dvsponsor = document.createElement('P');
+                        var dvsponsorname = document.createElement('SPAN');
+                        var dvsponsoramount = document.createElement('SPAN');
+                        var br = document.createElement('BR');
+
+                        dvsponsorname.innerHTML = spnsr[0].replace('amp;', '');
+                        // dvsponsoramount.innerHTML = '$' + spnsr[1];
+                        dvsponsoramount.innerHTML =  spnsr[1];
+                        //                dvsponsorname.setAttribute('float', 'left');
+                        dvsponsor.setAttribute('style', 'border:solid 4px white;text-align:center;text-align:center; ');
+                        dvsponsors.setAttribute('style', 'text-align:center;');
+                      
+                        dvsponsorname.setAttribute('style', 'float:left;text-align:center;   color:#363636;   font-weight:bold;height:15px; width;25px;');
+                        dvsponsoramount.setAttribute('style', 'float:right;text-align:center;  color:#e97f0e; font-weight:bold;height:15px; width;25px;');
+
+                        var dvSpace = document.createElement('DIV');
+
+                        dvSpace.setAttribute('style', 'height:1px; width; 75px;');
+
+                        //                 dvsponsorname.setAttribute('width', '50px');
+                        ////                dvsponsoramount.setAttribute('float', 'right');
+                        //                dvsponsoramount.setAttribute('width', '50px');
+                        //////////////////   dvsponsor.setAttribute('style', 'border: solid 8px white; height:25px; width:275px; ');
+
+
+                        /// dvsponsor.appendChild(dvsponsorname + br + dvsponsoramount);
+                        dvsponsor.appendChild(dvsponsorname);
+                        dvsponsors.appendChild(dvsponsor);
+                        
+                        dvsponsor.appendChild(dvsponsoramount);
+
+                        dvsponsor.appendChild(br);
+                        dvsponsors.appendChild(dvsponsor);
+
+                        // dvsponsors.appendChild(dvSpace);
+                        dvsponsors.appendChild(br);
+
+
+                    }
+
+
+
+                }
+            }
+
+        }
+
+
+        if (arbidlog.length >= 1) {
+
+            //        var dvbuyername = document.getElementById('dvbuyername');
+            //        var dvbidprice = document.getElementById('dvbidprice');
+            var dvbidders = document.getElementById('dvbidders');
+            
+            if(dvbidders){
+            
+            while (dvbidders.childNodes[0]) {
+                dvbidders.removeChild(dvbidders.childNodes[0]);
+
+            }
+
+            var x = 0;
+
+            for (x = 0; x <= arbidlog.length - 2; x++) {
+
+                var bid = arbidlog[x].split(',');
+                //   alert(bid);
+
+                //            dvbuyername.innerHTML = bid[0].replace('amp;','') ;
+                //            dvbidprice.innerHTML = bid[1];
+
+
+
+                if (bid[0] != 'undefined' && bid[1] != 'undefined') {
+
+
+                    //////alert(bid[0] + 'bid[0] ' + bid[1]);
+                    var dvbuyername_ = document.createElement('SPAN');
+                    var dvbidprice_ = document.createElement('SPAN');
+
+                    var dvemail_ = document.createElement('SPAN');
+
+
+                    var br = document.createElement('br');
+
+                    dvbuyername_.innerHTML = bid[0].replace('amp;', '');
+                    dvbidprice_.innerHTML ='$ '+ bid[1];
+
+                  dvemail_.innerHTML = bid[2];
+                    //  dvbuyername_.setAttribute('left', '0px');
+
+                  dvbuyername_.setAttribute('style', 'float:left;color:#363636;  text-align:center; font-weight:bold');
+
+                  dvbidprice_.setAttribute('style', 'float:right;color:#e97f0e;  text-align:right; font-weight:bold');
+                    dvemail_.setAttribute('style', 'float:right;  text-align:center; font-weight:bold');
+
+                    //                dvbidprice_.setAttribute('right', '0px');
+                    //                dvbuyername_.setAttribute('margin-left', '0px');
+                    //                dvbidprice_.setAttribute('margin-right', '0px');
+                    var dvbid = document.createElement('li');
+                    //////////  dvbid.setAttribute('style', 'border: solid 8px white; height:25px; width:275px;background-color:#eeeeee;  ');
+                    ///////////////////////////                      dvbid.appendChild(dvbuyername_ + dvbidprice_);
+                    dvbid.appendChild(dvbuyername_);
+                    dvbid.appendChild(dvbidprice_);
+
+                    dvbid.appendChild(br);
+                   /////////////////// dvbid.appendChild(dvemail_);
+
+
+                    dvbidders.appendChild(dvbid);
+
+                }
+
+                }
+
+            }
+        }
+
+
+        
+
+        var Bidamount = document.getElementById('Bidamount');
+        var CurrentBidPrice = document.getElementById('CurrentBidPrice');
+
+
+  ///  alert(CurrentBidPrice + 'CurrentBidPrice');
+
+        var HighestBidder = document.getElementById('HighestBidder');
+
+        var HighestBidder1 = document.getElementById('HighestBidder1');
+        
+        // var CartPrice = document.getElementById('CartPrice');
+      
+      ///////////////////  var highestbidder = document.getElementById('highestbidder');
+      
+        var amountleft = document.getElementById('counterx');
+
+     ///   CurrentBidPrice.value = CurrentBidPrice != null ? ajaxvalue(show, 'price') : null;
+
+     ///   alert( CurrentBidPrice ); 
+       
+        CurrentBidPrice.innerHTML = CurrentBidPrice != null ? ajaxvalue(show, 'price') : null;
+      /////  alert(CurrentBidPrice.innerHTML +' CurrentBidPrice.innerHTML');
+        
+      ///  CurrentBidPrice.value =  ajaxvalue(show, 'price')  ;
+
+
+      //////////  alert(ajaxvalue(show, 'buyer'));
+        ///alert(CurrentBidPrice.value + 'CurrentBidPrice');
+       // HighestBidder.value = HighestBidder != null ? ajaxvalue(show, 'buyer') : null;
+        HighestBidder.innerHTML = HighestBidder != null ? ajaxvalue(show, 'buyer') : null;
+        //////////////////////////////////////////    alert(HighestBidder.value+'HighestBidder');
+        //////////////// alert(show);
+
+        HighestBidder1.innerHTML = HighestBidder.innerHTML;
+        
+       ////////////// HighestBidder.innerHTML = HighestBidder != null ? ajaxvalue(show, 'buyer') : null;
+        
+        
+        
+        
+        amountleft.value = ajaxvalue(show, 'amount');
+      //  CartPrice.value = CurrentBidPrice.value;
+      ///  alert(amountleft.value  + ' amountleft.value');
+    }
+
+
+
+
+
+
+
+
+
+    function getTotBids(auctionid) {
+
+
+        //////(auctionid + 'auctionid');
+
+        var show;
+
+  try{
+
+
+
+       show = ajaxsend(auctionid);
+
+
+     //    ajaxsend(auctionid);
+        
+        
+   ////////   alert(show+ 'sh');
+//        alert(CurrentBidPrice + 'CurrentBidPrice');
+
+
+
+
+
+
+        /// alert(CurrentBidPrice.value);
+             }
+
+            catch (ex) {
+             alert(ex.Message); 
+              }
+              ///   setTimeout("getTotBids("+auctionid+")", 2000);
+
+    }
+
+
+ 
+
+
+
+
+
+
+
+
+    function ajaxsend(auid) {
+        var show = '';
+
+     // alert(auid + '  getTotBidsxml');
+
+ if (auid != null)
+        ////////     
+     {   var xml = typeof XMLHttpRequest == "undefined" ? new ActiveXObject() : new XMLHttpRequest();
+
+       
+        // xml.open("GET", "simplePage.aspx", true);  
+         xml.open("GET", "simpleSponsorPage.aspx?auid=" + auid, true); 
+        ////////     
+        //////////     
+       /// xml.open("GET", "simplePage.aspx?auid=" + auid, true);
+       ////// alert(xml + '  getTotBidsxml');
+        ////////     
+        xml.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        ////////
+        xml.onreadystatechange = function() {
+            if (xml.readyState == 4) {
+                //alert(xml + '  getTotBidsxmlreadyState');
+                ////////
+                show = xml.responseText;
+                //////////////// alert(show + '  show');
+
+                filTotBids(show);
+                return show;
+                ////alert(show + '  showgetTotBidsxmlreadyState'); return show;
+            }
+        }
+
+
+        ////////  
+
+        try {
+            xml.send();
+
+           /// alert(xml);
+            //////// 
+        }
+        catch (ex) {
+           //// alert(ex.message);
+        }
+        while (xml && !xml.onreadystatechange)
+
+        { var t = 1;  }
+      }
+       /////////////// alert(show + '  show');
+     return show;
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function ajaxvalue(show, val) {
+
+         /// alert(show + 'show');
+        var indx = show.indexOf(val);
+        //     alert(indx);
+        //   alert(val.substring(indx, indx + 30));
+        //     alert(indx);
+
+        var showq = show.substring(indx, indx + 30);
+        //    alert(showq + "showq");
+
+        var fshow = showq.substring(showq.indexOf('>') + 1, showq.indexOf('<'));
+        //  alert(fshow + "fshow");
+        return fshow;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function GetCounta(oldamounta, amounta, countera, countboxa) {
+
+
+        var out;
+
+       
+        try {
+            /// alert(out + '         out');
+          var xx=0;
+            
+            for (xx; xx<=3;  xx++)
+            { 
+            if(amounta[xx]<=0){amounta[xx] =0;}
+            out = calcamount(amounta[xx]);
+
+            var counter = document.getElementById(countera[xx]).value;
+
+          //////////////  var dvcountboxCover = document.getElementById(dvcountboxCover);
+           ///////////////// dvcountboxCover.style.left = auto;
+            
+
+            document.getElementById(countboxa[xx]).innerHTML = out;
+          //////////////////////  dvcountboxCover.style.left = -999;
+            }
+            
+            
+            
+        }
+        catch (ex) {
+    /////        alert(ex.message);
+        }
+
+
+        //              }
+
+        if (countera[xx] && countera[xx] != oldamounta[xx]) {
+            oldamounta[xx] = countera[xx];
+            //            alert(amount + '   amount');
+            //             alert(counter + '   counter');
+            amounta[xx] = countera[xx];
+            setTimeout("GetCount(" + oldamount + "," + amount + "," + auctionid + ")", 1000);
+            setTimeout(" getTotBids(" + auctionid + ")", 1000);
+
+            getTotBids(" + auctionid + ");
+             
+        }
+        else {
+            amount = amount - 1000;
+            setTimeout("GetCount(" + oldamount + "," + amount + "," + auctionid + ")", 1000);
+           // setTimeout(" getTotBids(" + auctionid + ")", 1000);
+
+            getTotBids(" + auctionid + ");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function elementIsEmpty(el) {
+    return (/^(\s|&nbsp;)*$/.test(el.innerHTML));
+}
+
+
+
+
+
+
+
+      </script>
+    
+    <asp:ContentPlaceHolder ID="Headers" runat="server"></asp:ContentPlaceHolder>
+     <asp:Literal ID="LtrHeadScript" runat="server"></asp:Literal>
+    
+
+  <%--  <script type="text/javascript">
+       
+        
+function handleError() {
+return true;
+}
+window.onerror = handleError;
+ 
+              
+       </script>
+
+--%>
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+    
+    
+</head>
+ <body    >
+    
+        
+<form id="form1"    method="post"    runat="server">  
+
+      
+      
+      <div class="div" >
+</div>
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+      
+      <%--
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     --%> 
+     <div id="layout">
+     
+     
+     
+     
+  <div id="header"> 
+  
+  <div  style="position:fixed; z-index:20000; " >
+  <a class="logo"   href="#"> <asp:Image  runat="server" src="imgs/logo.gif"  ID="imgLogo"/> 
+ 
+<%--  <img src="imgs/logo.gif" alt="" />--%> </a>
+ 
+     
+      
+   
+ 
+ <%-- <div><a href="#"   onclick= "window.open('Donate.aspx', 'width=350   height=250' );   "     >Donate</a></div> 
+ --%> 
+ 
+    <div  class="search_sec">
+      <ul>
+        <li " >
+         <asp:DropDownList runat="server" ID="drplstOrgs" AutoPostBack="true" class="search"
+               OnSelectedIndexChanged="refreshOrgs"  >
+    
+    </asp:DropDownList> 
+        
+       <%--   <input type="text"  value="Search Products" name="" class="search" />--%>
+        </li>
+        <li > <asp:TextBox runat="server"  Text="Search Within An Organization"   ID="txtItemSearch"  class="select" 
+          ></asp:TextBox>
+            
+         <%-- <input type="text"  ID="txtItemSearch"  value="Search Within An Organization" name="" class="select" />--%>
+         
+           <asp:imageButton runat="server"  ImageUrl="imgs/arrow05.gif"   class="select_btn" Text=">" OnClick="catSearch"   ID="Button2" 
+               Font-Bold="True"  ></asp:imageButton>
+               
+               <div  id="dvCatsGen"   runat="server"  style="  border:solid black 2px;position:absolute;     visibility:hidden;  
+           background-color:White; z-index:100; width:300px; height:300px" >
+      
+      <div style="  float:right;  position:absolute;    "  ><a     href="#"  onclick="javascript:closedvCatsGen(); "      >   Close  </a>  </div>      
+          <asp:ListBox  ID="lstvCatGeneral"  AutoPostBack="true"      OnSelectedIndexChanged="items_Search" runat="server" >       
+      </asp:ListBox>      
+      </div>
+               
+               
+               
+         <%-- <a href="#" class="select_btn"></a>--%></li>
+      </ul>
+    </div>
+  
+ <%--   <p class="top_row"  id="dvlogin" >   &nbsp; --%>
+      <%-- <span  id="spnlogin">   &nbsp; --%>
+       
+      
+           
+    <p  id="top_row" class="top_row">
+    
+     <strong>Welcome</strong>,  
+          <a href="#"  id="dvlogin"  ><span id="loginname1" ></span>
+         
+                  </a>!  (Not <span id="loginname" ></span> ? 
+                         
+              
+              
+              
+                <a href="#"    onclick="javascript:opnlog('logout')"    
+                   >
+           <span   class="spn_cover" id="login_cover" >
+           
+           
+           </span> <strong id="logout" style="text-decoration:underline;" >Log Out </strong>      </a> )           
+              
+              
+              
+      
+      
+      
+      
+   <%--    <a href="#">Red Cross</a>!  (Not Red Cross? <a href="#">Click Here</a>)
+       --%>
+       
+       
+       
+       </p>
+   
+   
+    <div class="menu">
+          <ul id="menu">
+        <li class="first"><a href="#"><span>How It Works</span></a></li>
+        
+        
+        
+        <li><a href="#"><span>Account </span></a>  </li>   
+        
+           <%--<ul class="menu" > 
+        
+        
+         <li class="menu" > 
+         <a  class="menus" href="#"><span>AccountTest </span></a></li> 
+         
+          </ul>     </li>   <%--</ul>         --%>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <%--
+        
+                    <div class="menu">
+
+                <ul id="nav">
+
+                    <li class="first"><a href="#"><span>How It Works</span></a></li>
+
+                    <li><a href="#"><span>Account </span></a>
+
+                        <ul>
+
+                            <li>Sublink</li>
+
+                        </ul>
+
+                        <div class="clear"></div>
+
+                    </li>   
+
+                
+
+                    <li  id="li1" ><a href="#"><span   > My <em> <em class="spn_cover" id="Em1" ></em>  <em  id="Em2" ></em></em> Credits </span></a></li> 
+
+                    <li class="auction"><a href="#"  onclick= "window.open('orgShopcart.aspx?  <%=  orgs().orgID %>'    , 'width=350   height=250' );   ">My &nbsp;<span id="Span1"></span>   &nbsp; Current Auctions</a></li>
+
+                    
+
+                    <asp:Label  runat="server"  Visible="false"  Width="148px" ID="Label1" Height="16px"></asp:Label>
+
+              </ul>
+
+            </div>
+
+            <div class="menu">
+
+                <ul id="nav">
+
+                    <li class="first"><a href="#"><span>How It Works</span></a></li>
+
+                    <li><a href="#"><span>Account </span></a>
+
+                        <ul>
+
+                            <li>Sublink</li>
+
+                        </ul>
+
+                        <div class="clear"></div>
+
+                    </li>   
+
+                
+
+                    <li  id="li2" ><a href="#"><span   > My <em> <em class="spn_cover" id="Em3" ></em>  <em  id="Em4" ></em></em> Credits </span></a></li> 
+
+                    <li class="auction"><a href="#"  onclick= "window.open('orgShopcart.aspx?  <%= items().ID %>'    , 'width=350   height=250' );   ">My &nbsp;<span id="Span2"></span>   &nbsp; Current Auctions</a></li>
+
+                    
+
+                    <asp:Label  runat="server"  Visible="false"  Width="148px" ID="Label2" Height="16px"></asp:Label>
+
+              </ul>
+
+            </div>
+
+
+        
+        --%>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <%--<img id="imgAlive" height="1" width="1" src="" style="left:-999px;" />
+        
+   
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+         <li  ><a href="#"   onclick="window.open('comment.aspx','', 'scrollbars=yes,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');"    runat="server" id="liMessages"    title="Messages">
+                        Messages</a></li>
+        
+        
+          <li      ><a href="orgWatch.aspx"    runat="server" id="liWatchlist"      title=" Watch List">
+                        Watch List</a></li>
+                                               
+        
+ 
+      
+ 
+      <li><a href="#"  title="Administration">Home</a>
+                <ul>
+                   <li     id="Li1"><a  href="#"  onclick="window.open('nonProfitHome.aspx','','scrollbars=no,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Home</a></li> 
+                     <li   runat="server"   id="li1"><a  href="orgHome.aspx" >                      
+                        Home</a></li>
+                        <li>  
+                           <a   runat="server" id="liBuycredits"  href="#"  onclick="window.open('BuyCredits.aspx','','scrollbars=yes,menubar=no,height=560,width=650,resizable=no,toolbar=no,location=no,status=no');
+                        "  title="Buy Credits">
+                        Buy Credits</a></li>
+                          <li  ><a href="default2.aspx"    runat="server" id="liSellitems"         title="Sell Items"></a></li>
+                        
+                </ul>
+            </li>   <%-- </ul> --%>
+            
+            <%--  </li> 
+            
+        </ul>--%>
+            
+         
+            
+            
+            
+           <%-- <li><a href="#" class="parent" title="Administration">Administration</a>
+                <ul>
+                    <li     id="Li4"><a  href="#"  onclick="window.open('Login.aspx?login=org','','scrollbars=no,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Log In</a></li>
+                    <li      id="Li5"><a href="SubingGmach.aspx?prm=4" title=" Approve Orgs">
+                        Approve Orgs</a></li>
+                    <%--<li      id="ulplace"><a href="SubingGmach.aspx?prm=5" title="View Placements">
+                        View Placements</a></li>  
+                  
+                </ul>
+            </li>
+            <li><a href="#"   title="Website Design">organizations</a>
+                <ul>
+                    <li><a href="#"  onclick="window.open('default.htm?prm=1','','scrollbars=no,menubar=no,height=680,width=560,resizable=no,toolbar=no,location=no,status=no'); " >
+                        Register</a></li> 
+                    <li>
+                     <a  href="#"  title="Org Register" onclick="window.open('OrgForm.aspx','','scrollbars=yes,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Register</a>
+                    </li>
+                         <li>
+                     <a  href="#"  title="Org Register" onclick="window.open('OrgForm.aspx','','scrollbars=yes,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Add Org Descriptions</a>
+                    </li>
+                        <li     id="Li6">
+                        <a  href="#"  onclick="window.open('Login.aspx?login=org','','scrollbars=no,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Log In</a>
+                        </li>
+                        
+                         <li  ><a href="default2.aspx"    runat="server" id="A1"         title="Sell Items">
+                        Sell Items</a></li>
+                </ul>
+            </li>       
+           <li><a href="#"   title="Website Design">Buyer</a>
+                <ul>
+                    <%--<li><a href="#"  onclick="window.open('default.htm?prm=1','','scrollbars=no,menubar=no,height=680,width=560,resizable=no,toolbar=no,location=no,status=no'); " >
+                        Register</a></li>--%>
+                      <%-- <li>
+                     <a  title="Register" href="#"   onclick="window.open('buyersForm.aspx','', 'scrollbars=yes,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Register</a>
+                    
+                   </li>
+                         
+                         <li     id="Li7"><a  href="#"  onclick="window.open('Login.aspx?login=buyer','','scrollbars=no,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Log In</a></li>
+                     
+                         <li><a href="Donate.aspx" title="Donate">
+                        Donate</a></li>
+                         
+                        <li>  
+                           <a   runat="server" id="A2"  href="#"  onclick="window.open('BuyCredits.aspx','','scrollbars=yes,menubar=no,height=560,width=650,resizable=no,toolbar=no,location=no,status=no');
+                        "  title="Buy Credits">
+                        Buy Credits</a></li>
+                        
+                         <li  ><a href="#"   onclick="window.open('comment.aspx','', 'scrollbars=yes,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');"    runat="server" id="A3"    title="Messages">
+                        Messages</a></li>
+                          
+                          
+                          <li      ><a href="orgWatch.aspx"    runat="server" id="A4"      title=" Watch List">
+                        Watch List</a></li>
+                                               
+                        
+                        
+                </ul>
+            </li>       
+          
+            <li><a href="#"   title="Website Design">Cart-Checkout</a>
+                <ul>
+                    <li><a href="#"  onclick="window.open('orgShopCart.aspx','','scrollbars=yes,menubar=yes,height=680,width=560,resizable=no,toolbar=no,location=no,status=no'); " >
+                        View cart</a></li>
+                     <li><a href="orgOrders.aspx" title="Donate">
+                        Orders</a></li>
+                        
+                </ul>
+            </li> --%>
+          
+          
+       
+   
+        
+        
+        
+        
+        
+        
+        
+
+        
+        
+        
+       <%--       </li></li>--%>
+          
+          
+  <%--      </ul>--%>
+        
+        
+        
+      <%--  </li>--%>
+       <li id="lispn_login"> &nbsp  <a id="logina"   href="#"  onclick="javascript:opnlog('login')"      ><span  id="login"> Log in</span> </a>          </li>
+        <li  id="lispn_credits" ><a href="#"><span   > My <em> <em    class="spn_cover" id="spn_credits_cover" ></em>  <em  id="spn_credits" ></em></em> Credits </span></a></li> 
+        <li  id="lispn_shop"  class="auction"><a href="#"  onclick= "window.open('orgShopcart.aspx?  <%= items().ID %>'    , '   height=250' );   ">My &nbsp;<span id="dvshop"></span>   &nbsp; Current Auctions</a></li>
+       
+     
+     
+      </ul>
+    </div>
+    
+   
+    
+  </div>
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  
+  <%-- <div id="body_container">
+    <div id="left_container">
+      <div class="read_cross"> <img src="images/cross.gif" alt="" /> <a href="#" class="denote"></a> </div>
+      <div class="address_box">
+        <p>American Red Cross National Headquarters<br />
+          2025 East Street, NW<br />
+          Washington, DC 20006 <br />
+          <br />
+          1 800 RED CROSS <a href="www.redcross.org">www.redcross.org</a></p>
+        <img src="images/thumb09.jpg" alt="" /> </div>
+    </div>
+    <div id="right_container">
+      <div class="top_row">
+        <ul class="links">
+          <li class="first"><a href="#"> NON PROFITS </a></li>
+          <li><a href="#">AMERICAN RED CROSS</a></li>
+        </ul>
+      </div>
+      <div class="title_row">
+        <h2>American Red Cross</h2>
+      </div>
+      <div class="about_us">
+        <p>Since its founding in 1881 by visionary leader Clara Barton, the American Red Cross has been the nation's premier emergency response organization. As part of a worldwide movement that offers neutral humanitarian care to the victims of war, the American Red Cross distinguishes itself by also aiding victims of devastating natural disasters. Over the years, the organization has expanded its services, always with the aim of preventing and relieving suffering.</p>
+        <p>Today, in addition to domestic disaster relief, the American Red Cross offers compassionate services in five other areas: community services that help the needy; support and comfort for military members and their families; the collection, processing and distribution of lifesaving blood and blood products; educational programs that promote health and safety; and international relief and development programs.</p>
+        <p>The American Red Cross is where people mobilize to help their neighbors—across the street, across the country, and across the world—in emergencies. Each year, in communities large and small, victims of some 70,000 disasters turn to neighbors familiar and new—the more than half a million volunteers and 35,000 employees of the Red Cross. Through nearly 700 locally supported chapters, more than 15 million people gain the skills they need to prepare for and respond to emergencies in their homes, communities and world.</p>
+        <p>Some four million people give blood—the gift of life—through the Red Cross, making it the largest supplier of blood and blood products in the United States. And the Red Cross helps thousands of U.S. service members separated from their families by military duty stay connected. As part of the International Red Cross and Red Crescent Movement, a global network of 186 national societies, the Red Cross helps restore hope and dignity to the world's most vulnerable people.</p>
+        <p>An average of 91 cents of every dollar the Red Cross spends is invested in humanitarian services and programs. The Red Cross is not a government agency; it relies on donations of time, money, and blood to do its work.</p>
+        <p>The American National Red Cross is headquartered in Washington, Gail J. McGovern is President and CEO, and Bonnie McElveen-Hunter is Chairman of the Board of Governors.</p>
+        <p>Read more about the American Red Cross at <a href=" http://www.redcross.org">http://www.redcross.org</a>.</p>
+      </div>
+    </div>
+    
+    
+    
+    
+    
+   
+    <div id="home_page" >
+      <div id="auction_row" class="border_none">
+        <h2>Ongoing Auctions</h2>
+        <ul>
+          <li><img src="images/thumb01.jpg" alt="" />
+            <h3>Ipod Touch 4th Generation + Protective Case</h3>
+            <p class="timer">1:02:03</p>
+            <p class="price">$24.23</p>
+            <a href="#" class="btn"></a> </li>
+          <li><img src="images/thumb02.jpg" alt="" />
+            <h3>Ipod Touch 4th Generation + Protective Case</h3>
+            <p class="timer">1:02:03</p>
+            <p class="price">$24.23</p>
+            <a href="#" class="btn"></a> </li>
+          <li><img src="images/thumb03.jpg" alt="" />
+            <h3>Ipod Touch 4th Generation + Protective Case</h3>
+            <p class="timer">1:02:03</p>
+            <p class="price">$24.23</p>
+            <a href="#" class="btn"></a> </li>
+          <li><img src="images/thumb04.jpg" alt="" />
+            <h3>Ipod Touch 4th Generation + Protective Case</h3>
+            <p class="timer">1:02:03</p>
+            <p class="price">$24.23</p>
+            <a href="#" class="btn"></a> </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+    <p><a href="#"><img src="images/f_icon01.gif" alt="" /></a><a href="#"><img src="images/t_icon01.gif" alt="" /></a></p>
+    <ul>
+      <li class="bg_none"><a href="#">About Us</a></li>
+      <li><a href="#">Policies </a></li>
+      <li><a href="#">Site Map </a></li>
+      <li><a href="#">Orders &amp; Returns</a></li>
+      <li><a href="#">Register </a></li>
+      <li><a href="#">Feedback</a></li>
+    </ul>
+    <p>&copy; 2011-2012 Nonprofit Inc. All rights reserved. Designated trademarks and brands are the property of their respective owners. Use of this websites<br  />
+      constitutes acceptance of the Nonprofit Inc. <a href="#">User Agreement</a> and <a href="#">Privacy Policy</a>. </p>
+  </div>--%>
+
+      
+      
+      <%--
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     --%> 
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+       <asp:ScriptManager ID="ScriptManager3" runat="server"></asp:ScriptManager> 
+      
+      
+      
+      
+      
+          
+      
+     <%--<ul id="Ul1"  style="border:solid 3px  black;"          >
+      <li><a href="#"  title="Administration">Home</a>
+                <ul>
+                    <%--<li     id="Li1"><a  href="#"  onclick="window.open('nonProfitHome.aspx','','scrollbars=no,menubar=no,height=260,width=260,resizable=no,toolbar=no,location=no,status=no');" >
+                        Home</a></li> 
+                     <li   runat="server"   id="li4"><a  href="orgHome.aspx" >    Home</a></li>                     
+                        <li   runat="server"   id="li5"><a  href="orgHome.aspx" >    Home</a></li>   
+                        
+                           <li   runat="server"   id="li6"><a  href="orgHome.aspx" >    Home</a> 
+                           <ul> <li>Gevald </li>  <li>Gevald </li> <li>Gevald </li>   </ul>
+                           
+                             </li>   
+                </ul>
+            </li>    </ul> --%>
+      
+      
+      
+    <%--  <div style=" height:200px ; border:solid 15px white; width:1220; position:relative;"> 
+      
+      
+       <div  style=" width:250px; float:left;" > --%>
+    <%--
+    <h1>Non Profit Site</h1>--%>
+ <%-- <h2>  <asp:Image  runat="server"  Height="85"  Width="75"  ID="imgLogo"/></h2> --%>
+          <%--     <a href="#"   onclick= "window.open('Donate.aspx', 'width=350   height=250' );   "     >
+               <span style=" background-image:url('Images/rzdo29.jpg'); height:36px; width:162px;" >
+               <span style=" background-image:url('Images/rzdo29.jpg'); height:50px; width:50px;" >
+      
+      
+      
+               Donate</span></span></a><br />
+    --%>
+   <%-- <a href="Donate.aspx"><span style=" background-image:url( Images/rzco29.jpg  <%=messages.orgLogo %>  ); height:30px; width:50px;" >Donate</span></a>
+   
+   
+     <%--  </div>--%>
+      
+      
+      <%--   <div id="pOtherViews"  runat="server" >  
+           you have a total of &nbsp  <span  id="spn_credits" ></span> --%>
+         
+         <%--  </div>--%>
+     <%-- 
+       <div  style=" width:350px;display:inline;  float:left;" > 
+   
+    <div  style=" width:50px;  display:inline; float:left;" > 
+       <%-- <asp:TextBox runat="server"   Width="400" ID="txtItemSearch" 
+            style="margin-top: 0px"></asp:TextBox>- &nbsp   &nbsp   
+       &nbsp   &nbsp    </div>
+    &nbsp   &nbsp 
+    
+    
+    
+    
+               <a href="#"   onclick= "window.open('Donate.aspx', 'width=350   height=250' );   "     >
+               <span style=" background-image:url('Images/rzdo29.jpg'); height:50px; width:50px;" ><asp:Button ID="btnReset"  Visible="false" Text="Reset Dates" runat="server" OnClick="ResetDates" /></span></a>
+      
+    
+    
+    </div>--%>
+      <%--  <asp:Button runat="server"  Text="Item Search" OnClick="itemSearch" ID="TextBox1"></asp:Button>--%>
+      
+     <%-- <asp:DropDownList runat="server" ID="drplstOrgs" AutoPostBack="true" 
+               OnSelectedIndexChanged="refreshOrgs"  >
+    
+    </asp:DropDownList>--%>
+    
+    
+    
+    <%--
+       
+        
+       &nbsp;<div  
+               style=" text-align:center; vertical-align:text-bottom; width:163px;  float:left; height: 43px;" > 
+     
+     
+          <asp:Button runat="server"  Text="Search" OnClick="catSearch"   ID="Button1" 
+              BorderStyle="Solid" BorderWidth="1px" Font-Bold="True" Width="88px"></asp:Button>
+        
+    
+       
+       
+       
+        </div>
+       
+      
+     --%>
+     
+      
+      <%--
+      
+           <a href="#"   onclick= "window.open('Donate.aspx', 'width=350   height=250' );   "     >
+               <span style=" background-image:url('Images/rzdo29.jpg'); height:74px; width:239px;" ></span> 
+               <span style=" background-image:url('Images/rzdo29.jpg'); height:50px; width:50px;" ></span> </a>
+      
+      
+      
+       <div  style="float:left; font-size:smaller; height: 23px; width: 219px; margin-left: 0px;">
+      
+     <%-- <div  id="dvshop">  
+       <span> you have &nbsp; 
+        <a href="#"   onclick= "window.open('orgShopcart.aspx?  <%= items().ID %>'    , 'width=350   height=250' );   "
+       <%--  <a href="Shoppingcart.aspx?  <%=messages.itemID %>                  >
+           <asp:Label  runat="server"   Width="148px" ID="cartitems" Height="16px"></asp:Label>    </a>  
+           &nbsp; in your shopping cart</span> 
+ <%--    </div> --%>
+      <%--  "window.open('Login.aspx?login=buyer'    , 'width=350   height=250' );   " 
+      
+      <br /><br />
+        <div   id="dvlogin" style="  border:solid black 4px;   width:75px; height:20px;">   &nbsp; </div>
+       <span  id="spnlogin">   &nbsp; 
+        <a href="#"   onclick="javascript:opnlog('login')"    
+                   >
+           <strong id="login" > </strong>      </a>  
+           &nbsp;  </span> 
+     
+     
+     
+    <br />
+         
+     
+    
+    
+       </div>--%>
+      
+      
+            <%--
+        
+       <div></div>
+      
+       --%>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+   
+     <%-- <div style=" height:125px; width:110px;"></div>
+      
+                  <div  id="dvCart" style="position:absolute; ">
+                    <asp:ContentPlaceHolder ID="CartPlaceHolder" runat="server"></asp:ContentPlaceHolder>
+                 </div>--%>
+                 
+                 
+                  <asp:ContentPlaceHolder ID="Body" runat="server"></asp:ContentPlaceHolder>
+    
+    
+    <div id="footer"><asp:Label  runat="server"  Visible="false"  Width="148px" ID="cartitems" Height="16px"></asp:Label> 
+    <p><a href="#"><img src="imgs/f_icon01.gif" alt="" /></a><a href="#"><img src="imgs/t_icon01.gif" alt="" /></a></p>
+    <ul>
+      <li class="bg_none"><a href="#">About Us</a></li>
+      
+        <li class="bg_none"> <asp:ImageButton ID="btnReset"  runat="server"   ImageUrl="imgs/check_box1.gif"   OnClick="ResetDates" /></li>
+      
+      <li><a href="#">Policies </a></li>
+      <li><a href="#">Site Map </a></li>
+      <li><a href="#">Orders &amp; Returns</a></li>
+      <li><a href="#">Register </a></li>
+      <li><a href="#">Feedback</a></li>
+    </ul>
+    <p>&copy; 2011-2012 Nonprofit Inc. All rights reserved. Designated trademarks and brands are the property of their respective owners. Use of this websites<br  />
+      constitutes acceptance of the Nonprofit Inc. <a href="#">User Agreement</a> and <a href="#">Privacy Policy</a>. </p>
+  </div>
+  </div>
+    
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   <%--
+   
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+   
+   
+      <script>
+          $(document).ready(function() {
+              $('#nav li').hover(
+                    function() {
+                        //show its submenu
+                        $('ul', this).slideDown(100);
+                    },
+                    function() {
+                        //hide its submenu
+                        $('ul', this).slideUp(100);
+                    }
+                );
+          });
+      </script>--%>
+   
+   
+   
+   
+   
+   
+   <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+
+       function closedvCatsGen() {
+
+           var dvCatsGen = document.getElementById('<%=dvCatsGen.ClientID%>');
+           dvCatsGen.style.visibility = 'hidden';
+       }
+
+       function changeCat(catname) {
+        //   alert(catname + '           catname');
+           var dvCatsGen = document.getElementById('<%=dvCatsGen.ClientID%>');
+           //alert(dvCatsGen);
+           dvCatsGen.style.visibility = 'hidden';
+
+
+           var txtItemSearch = document.getElementById('<%=txtItemSearch.ClientID%>');
+         ///  alert(txtItemSearch);
+           txtItemSearch.nodeValue = catname;
+
+
+       }
+        
+        var amount = 0;   
+   
+   </script>
+
+       <asp:ContentPlaceHolder ID="Scripts"  runat="server"></asp:ContentPlaceHolder>
+
+</form>  
+  <p>
+      &nbsp;</p>
+</body>
+</html>

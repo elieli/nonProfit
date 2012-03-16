@@ -1,0 +1,100 @@
+<%@ Control Language="c#" Inherits="Shof.modules.home" CodeFile="home.ascx.cs" %>
+<div align="left">
+</div>
+<asp:panel id="FProductPanel" runat="server">
+	<div style="FONT-WEIGHT: bold; FONT-SIZE: 100%; MARGIN-BOTTOM: 5px; COLOR: #505050; MARGIN-RIGHT: 5px"
+		align="right">FEATURED ITEM</div>
+	<table cellspacing="0" cellpadding="0" width="428" border="0">
+		<TR>
+			<td><IMG height="1" alt="" src="../main/img/dot_white.gif" width="5"/></td>
+			<td valign="top" width="418">
+				<table cellspacing="0" cellpadding="0" width="100%" border="0">
+					<TR align="left">
+						<td valign="top" colspan="2"><a id="aFPrdImg" href="#" runat="server"><IMG id="imgFPrdImage" hspace="18"  alt="alt" src="ImageGallery/prod2.jpg" align="left" border="0"
+									runat="server"></a> <a class="LeftMenuL1" id="aFPrdName" href="#" runat="server">
+								Epson Stylus Photo 960 Inkjet Printer</a>
+							</BR>
+							</BR>
+							<span class="detaildesc" id="spanFPrdDescription" runat="server">Description 
+								1234567890 Test Test Test Test Test Test Test Test Test Test Test Test Test 
+								Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test 
+								Test Test Test Test Test Test Test Test Test Test Test Test Test</span>
+							<BR/>
+							<BR/>
+							<a id="aFPrdMore" href="#" runat="server">click for more info</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td><IMG height="1" src="../main/img/dot_white.gif" width="5"/></td>
+		</tr>
+	</table>
+	<hr color="#006496" noShade SIZE="1"/>
+</asp:panel>
+<div style="FONT-WEIGHT: bold; FONT-SIZE: 100%; MARGIN-BOTTOM: 5px; COLOR: #505050; MARGIN-RIGHT: 5px"
+	align="right"><asp:literal id="lListhead" runat="server">FEATURED ITEMS</asp:literal>
+</div>
+<asp:panel id="Itemspanel" runat="server">
+	<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+		<TR>
+			<td><IMG height="1" alt="" src="/img/transparent.gif" width="20" border="0"></td>
+			<td align="left" width="100%">
+				<asp:datalist id="rptProductList" runat="server" repeatcolumns="3" cellpadding="4" cellspacing="0"
+					onitemdatabound="rptProductList_OnItemDataBound">
+					<ItemStyle Width="100px" VerticalAlign="Top"></ItemStyle>
+					<ItemTemplate>
+						<table cellspacing="0" cellpadding="0" width="120" border="0">
+							<TR>
+								<td bgcolor="#006496" colspan="5"><IMG height="1" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+							</tr>
+							<TR>
+								<td bgcolor="#006496"><IMG height="1" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+								<td bgcolor="#ffffff" colspan="3"><IMG height="4" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+								<td bgcolor="#006496"><IMG height="1" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+							</tr>
+							<TR>
+								<td bgcolor="#006496" rowspan="3"><IMG height="224" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+								<td bgcolor="#ffffff" rowspan="3"><IMG height="1" alt="" src="/img/transparent.gif" width="3" border="0"></td>
+								<td valign="top">
+									<table cellspacing="0" cellpadding="0" width="85" align="center" border="0">
+										<TR>
+											<td><IMG height="84" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+											<td align="center" width="84"><a id="aPrdDetailhref" href="#" runat="server"><IMG id="imgPrdImage" src="ImageGallery/prod1list.jpg" border="0" runat="server"></a></td>
+											<td></td>
+										</tr>
+									</table>
+								</td>
+								<td bgcolor="#ffffff" rowspan="3"><IMG height="1" alt="" src="/img/transparent.gif" width="3" border="0"></td>
+								<td bgcolor="#006496" rowspan="3"><IMG height="1" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+							</tr>
+							<TR height="70">
+								<td valign="top" align="left" height="50"><a class="LeftMenuL1" id="aPrdNameDetailhref" style="FONT-SIZE: 12px" href="#" runat="server">Israel 
+										Family Ties</a> <!--a><span id="spanPrdDescription" runat="server"></span></a--></td>
+							</tr>
+							<TR>
+								<td valign="bottom" align="right">
+									<table cellspacing="0" cellpadding="0" width="100%" align="right" border="0">
+										<TR>
+											<td valign="top" noWrap></td>
+											<td align="right">Price:&nbsp;<FONT color="red">$<span class="number" id="spanPrdPrice" runat="server"></span></FONT>
+												<asp:panel id="RRPPanel" runat="server" visible="False">&nbsp;<S id="id_s" runat="server">
+														$<span class="number" id="spanPrdRegPrice" runat="server"></span></S></asp:panel></td>
+										</tr>
+										<TR>
+											<td id="tdAddToCart" align="center" runat="server"><a id="aAddToCart" href="#" runat="server"><IMG alt="Place Directly Into Cart For More Options Click More Info" hspace="5" src="img/blue_basket.gif"
+														vspace="5" border="0"></a></td>
+											<td align="right"><a id="aPrdMore" style="FONT-WEIGHT: bolder" href="" runat="server">More 
+													Info <IMG alt="" src="img/more_arrow.gif" border="0"></a></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<TR>
+								<td bgcolor="#006496" colspan="6"><IMG height="1" alt="" src="/img/transparent.gif" width="1" border="0"></td>
+							</tr>
+						</table>
+					</ItemTemplate>
+				</asp:datalist></td>
+		</tr>
+	</table>
+</asp:panel>

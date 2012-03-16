@@ -1,0 +1,612 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections.Generic;
+using System.Net;
+using System.Web.Security;
+
+
+
+/// <summary>
+/// Summary description for CrediCardProscessing
+/// </summary>
+public class CrediCardProscessing
+{
+    public CrediCardProscessing()
+    {
+        isLive = false;
+    }
+
+    private TransactionMode currTranType = TransactionMode.AUTH_CAPTURE;
+
+    /// <summary>
+    /// The Current Transaction Mode
+    /// </summary>
+    /// <value>AUTH_CAPTURE</value>
+    public TransactionMode CurrentTransactionMode
+    {
+        set {currTranType = value;}
+        get { return currTranType;}
+    }
+
+    private LineItemCollection LineItems = new LineItemCollection();
+
+    public LineItemCollection Items
+    {
+        get{return LineItems;}        
+    }
+
+    /// <summary>
+    /// Constructor For CC Prossecing
+    /// </summary>
+    /// <param name="Live">True for live transactions</param>
+    public CrediCardProscessing(bool Live)
+    {        
+        isLive = Live;
+    }
+
+    private string strAuthorCode;
+
+    public string AuthorizationCode
+    {
+        get { return strAuthorCode; }
+    }
+    private string strTransactionID = string.Empty;
+
+    /// <summary>
+    /// Transaction ID Needs to be set for dealing with prev. Transactions
+    /// </summary>
+    public string TransactionID
+    {
+        get { return strTransactionID; }
+        set { strTransactionID = value; }
+    }
+    private bool isLive = false;
+    private string ErrMessage;
+    private string AuthNetLoginID = "62HBr9nV9P";
+    private string AuthNetPassword = "9tN538768Mku2S5W";
+    private string AuthNetTransKey = "9tN538768Mku2S5W";
+    /// <summary>
+    /// Error Message if any
+    /// </summary>
+    public string ErrorMessage
+    {
+        get { return ErrMessage; }
+    }
+
+    private string strFirstName;
+
+    /// <summary>
+    /// Get or Set Payer's First Name
+    /// </summary>    
+    public string FirstName
+    {
+        get { return strFirstName; }
+        set { strFirstName = value; }
+    }
+    private string strLastName;
+
+    /// <summary>
+    /// Get or Set Payer's Last Name
+    /// </summary>
+    public string LastName
+    {
+        get { return strLastName; }
+        set { strLastName = value; }
+    }
+    private string strAddress;
+
+    /// <summary>
+    /// Get or Set Payer's Address
+    /// </summary>
+    public string Address
+    {
+        get { return strAddress; }
+        set { strAddress = value; }
+    }
+    private string strCity;
+
+    /// <summary>
+    /// Get or Set Payer's City
+    /// </summary>
+    public string City
+    {
+        get { return strCity; }
+        set { strCity = value; }
+    }
+    private string strState;
+
+    /// <summary>
+    /// Get or Set Payer's City
+    /// </summary>
+    public string State
+    {
+        get { return strState; }
+        set { strState = value; }
+    }
+    private string strZIP;
+
+    /// <summary>
+    /// Get or Set Payer's Zip Code or Provincial Code
+    /// </summary>
+    public string ZIP
+    {
+        get { return strZIP; }
+        set { strZIP = value; }
+    }
+    private string strCountry;
+
+
+    /// <summary>
+    /// Get or Set Payer's Country
+    /// </summary>
+    public string Country
+    {
+        get { return strCountry; }
+        set { strCountry = value; }
+    }
+    private double dblAmount;
+
+    /// <summary>
+    /// Get or Set Transaction Amount
+    /// </summary>
+    public double Amount
+    {
+        get { return dblAmount; }
+        set { dblAmount = value; }
+    }
+    private string strCardNumber;
+
+    /// <summary>
+    /// Get or Set Credit Card Number
+    /// </summary>
+    public string CardNumber
+    {
+        get { return strCardNumber; }
+        set { strCardNumber = value.Replace(" ","").Replace("-","").Trim(); }
+    }
+    private string strExpiration;
+
+    /// <summary>
+    /// Get or Set Credit Card Expiration Date
+    /// </summary>
+    /// <example>MMYY or MM/YY or MM-YY or MMYYYY etc.</example>
+    public string Expiration
+    {
+        get { return strExpiration; }
+        set { strExpiration = value; }
+    }
+    private string strCVV;
+
+    /// <summary>
+    /// Get or Set CVV2 or CVC2 or CID
+    /// </summary>
+    public string CVV
+    {
+        get { return strCVV; }
+        set { strCVV = value.Trim(); }
+    }
+
+    private string strCutomerIP = string.Empty;
+
+    /// <summary>
+    /// Get or Set Customer IP Address
+    /// </summary>
+    /// <exception cref="System.FormatException">Thrown when not a valid IP</exception>
+    public string CustomerIP
+    {
+        set 
+        {
+            IPAddress.Parse(value);
+            strCutomerIP = value; 
+        }
+        get { return strCutomerIP; }
+    }
+
+    private string strPurchaseOrder;
+
+    public string PurchaseOrder
+    {
+        get { return strPurchaseOrder; }
+        set { strPurchaseOrder = value; }
+    }
+
+    private decimal? dcTax = null;
+
+
+    public decimal? Tax
+    {
+        set { dcTax = value; }
+        get { return dcTax; }
+    }
+
+    private decimal? dcFrieght =null;
+
+    public decimal? Frieght
+    {
+        set { dcFrieght = value; }
+        get { return dcFrieght; }
+    }
+    /// <summary>
+    /// Submit Payment to be prosseced
+    /// </summary>
+    /// <param name="Description">The tranaction description</param>
+    /// <returns>true if Successful</returns>
+    public bool SubmitPayment(string Description)
+    {
+        return AuthorizePayment(strFirstName, strLastName, strAddress, strCity, strState, strZIP,
+            strCountry, dblAmount, strCardNumber,strExpiration,strCVV, Description);
+    }
+
+    /// <summary>
+    /// Submit Payment to be prosseced
+    /// </summary>
+    /// <returns>true if Successful</returns>
+    public bool SubmitPayment()
+    {
+        return AuthorizePayment(strFirstName, strLastName, strAddress, strCity, strState, strZIP,
+            strCountry, dblAmount, strCardNumber, strExpiration, strCVV, string.Empty);
+    }
+    private bool AuthorizePayment(string FirstName, string LastName, string Address,
+        string City, string State, string ZIP, string Country, double Amount, string CardNumber,
+        string Expiration, string CVV, string Description)
+    {
+        string AuthNetVersion = "3.1"; // Contains CCV support        
+        // Get this from your authorize.net merchant interface        
+
+        WebClient objRequest = new WebClient();
+        System.Collections.Specialized.NameValueCollection objInf =
+          new System.Collections.Specialized.NameValueCollection(30);
+        System.Collections.Specialized.NameValueCollection objRetInf =
+          new System.Collections.Specialized.NameValueCollection(30);
+        byte[] objRetBytes;
+        string[] objRetVals;
+        string strError;
+
+        objInf.Add("x_version", AuthNetVersion);
+        objInf.Add("x_delim_data", "True");
+        objInf.Add("x_login", AuthNetLoginID);
+        objInf.Add("x_password", AuthNetPassword);
+        objInf.Add("x_tran_key", AuthNetTransKey);
+        objInf.Add("x_relay_response", "False");
+
+        //TranactionID
+        if (strTransactionID.Length > 0)
+            objInf.Add("x_trans_id", strTransactionID);
+
+        // Switch this to False once you go live
+        objInf.Add("x_test_request", Convert.ToString(!isLive));
+
+        objInf.Add("x_delim_char", ",");
+        objInf.Add("x_encap_char", "|");
+
+        // Billing Address
+        objInf.Add("x_first_name", FirstName);
+        objInf.Add("x_last_name", LastName);
+        objInf.Add("x_address", Address);
+        objInf.Add("x_city", City);
+        objInf.Add("x_state", State);
+        objInf.Add("x_zip", ZIP);
+        objInf.Add("x_country", Country);
+
+        if(Description.Length >0)
+            objInf.Add("x_description", Description);
+
+        // Card Details
+        objInf.Add("x_card_num", CardNumber);
+        objInf.Add("x_exp_date", Expiration);
+
+        // Authorisation code of the card (CCV)
+        objInf.Add("x_card_code", CVV);
+
+        objInf.Add("x_method", "CC");
+        objInf.Add("x_type", Enum.GetName(typeof(TransactionMode), currTranType));
+        objInf.Add("x_amount", Amount.ToString());
+
+        //not required
+        if (strCutomerIP.Length > 0)
+        {
+            objInf.Add("x_customer_ip", strCutomerIP);
+        }
+
+        if (LineItems.Count > 0)
+        {
+            foreach (LineItem Item in LineItems)
+            {
+                objInf.Add("x_line_item", Item.ToString());
+            }
+        }
+        // Currency setting. Check the guide for other supported currencies
+        objInf.Add("x_currency_code", "USD");
+
+        try
+        {
+            if (!isLive)
+            {
+                // Pure Test Server
+                objRequest.BaseAddress =
+                  "https://certification.authorize.net/gateway/transact.dll";
+            }
+            else
+            {
+                // Actual Server
+                //(uncomment the following line and also set above Testmode=off to go live)
+                objRequest.BaseAddress =
+                  "https://secure.authorize.net/gateway/transact.dll";
+            }
+            objRetBytes =
+              objRequest.UploadValues(objRequest.BaseAddress, "POST", objInf);
+            objRetVals =
+              System.Text.Encoding.ASCII.GetString(objRetBytes).Split(",".ToCharArray());
+
+            if (objRetVals[0].Trim(char.Parse("|")) == "1")
+            {
+                // Returned Authorisation Code
+                this.strAuthorCode = objRetVals[4].Trim(char.Parse("|"));
+                // Returned Transaction ID
+                this.strTransactionID = objRetVals[6].Trim(char.Parse("|"));
+
+                return true;
+            }
+            else
+            {
+                // Error!
+                strError = objRetVals[3].Trim(char.Parse("|")) + " (" +
+                  objRetVals[2].Trim(char.Parse("|")) + ")";
+
+                if (objRetVals[2].Trim(char.Parse("|")) == "44")
+                {
+                    // CCV transaction decline
+                    strError += "Our Card Code Verification (CCV) returned " +
+                      "the following error: ";
+
+                    switch (objRetVals[38].Trim(char.Parse("|")))
+                    {
+                        case "N":
+                            strError += "Card Code does not match.";
+                            break;
+                        case "P":
+                            strError += "Card Code was not processed.";
+                            break;
+                        case "S":
+                            strError += "Card Code should be on card but was not indicated.";
+                            break;
+                        case "U":
+                            strError += "Issuer was not certified for Card Code.";
+                            break;
+                    }
+                }
+
+                if (objRetVals[2].Trim(char.Parse("|")) == "45")
+                {
+                    if (strError.Length > 1)
+                        strError += "<br />n";
+
+                    // AVS transaction decline
+                    strError += "Our Address Verification System (AVS) " +
+                      "returned the following error: ";
+
+                    switch (objRetVals[5].Trim(char.Parse("|")))
+                    {
+                        case "A":
+                            strError += " the zip code entered does not match " +
+                              "the billing address.";
+                            break;
+                        case "B":
+                            strError += " no information was provided for the AVS check.";
+                            break;
+                        case "E":
+                            strError += " a general error occurred in the AVS system.";
+                            break;
+                        case "G":
+                            strError += " the credit card was issued by a non-US bank.";
+                            break;
+                        case "N":
+                            strError += " neither the entered street address nor zip " +
+                              "code matches the billing address.";
+                            break;
+                        case "P":
+                            strError += " AVS is not applicable for this transaction.";
+                            break;
+                        case "R":
+                            strError += " please retry the transaction; the AVS system " +
+                              "was unavailable or timed out.";
+                            break;
+                        case "S":
+                            strError += " the AVS service is not supported by your " +
+                              "credit card issuer.";
+                            break;
+                        case "U":
+                            strError += " address information is unavailable for the " +
+                              "credit card.";
+                            break;
+                        case "W":
+                            strError += " the 9 digit zip code matches, but the " +
+                              "street address does not.";
+                            break;
+                        case "Z":
+                            strError += " the zip code matches, but the address does not.";
+                            break;
+                    }
+                }
+                
+                // strError contains the actual error
+                ErrMessage = strError;
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrMessage = ex.Message;
+            throw ex;
+        }
+    }
+
+    /// <summary>
+    /// Authoriztion Mode
+    /// </summary>
+    public enum TransactionMode
+    {
+        /// <summary>
+        /// Authorize and finalize transaction
+        /// </summary>
+        AUTH_CAPTURE,
+        /// <summary>
+        /// Only Authorize but do not proscess
+        /// </summary>
+        AUTH_ONLY,
+        /// <summary>
+        /// Capture without authorization
+        /// </summary>
+        CAPTURE_ONLY,
+        /// <summary>
+        /// Refund
+        /// </summary>
+        CREDIT,
+        /// <summary>
+        /// Cancel
+        /// </summary>
+        VOID,
+        /// <summary>
+        /// Prossescs Previuosly Captured
+        /// </summary>
+        PRIOR_AUTH_CAPTURE
+    }
+
+    /// <summary>
+    /// Itemized Order Information
+    /// </summary>
+    public class LineItem
+    {
+        private string ItemID;
+        private string ItemName;
+        private string ItemDescription;
+        private int ItemQuantity;
+        private decimal ItemPrice;
+        private bool ItemTaxable;
+
+        /// <summary>
+        /// Default Cunstructor
+        /// </summary>
+        public LineItem() { }
+
+        /// <summary>
+        /// Initilization Constructor
+        /// </summary>
+        /// <param name="ID">Product ID</param>
+        /// <param name="Name">Product Name</param>
+        /// <param name="Description">Product Desctiption</param>
+        /// <param name="Quantity">Quantity</param>
+        /// <param name="Price">Price</param>
+        /// <param name="Taxable">Is Taxable</param>
+        public LineItem(string ID, string Name, string Description, int Quantity,
+            decimal Price, bool Taxable)
+        {
+            this.ID = ID;
+            this.Name = Name;
+            this.Description = Description;
+            this.Quantity = Quantity;
+            this.Price = Price;
+            this.Taxable = Taxable;
+        }
+        /// <summary>
+        /// Item ID
+        /// </summary>
+        public string ID
+        {
+            set
+            {
+                if (value.Length <= 31)
+                    ItemID = value;
+                else
+                    throw new ArgumentOutOfRangeException("ItemID", "ItemID is only allowed to be 31 Characters.");
+            }
+            get { return ItemID; }
+        }
+
+        /// <summary>
+        /// Item Name
+        /// </summary>
+        public string Name
+        {
+            set
+            {
+                if (value.Length <= 31)
+                    ItemName = value;
+                else
+                    throw new ArgumentOutOfRangeException("ItemName", "ItemName is only allowed to be 31 Characters.");
+            }
+            get { return ItemName; }
+        }
+
+        /// <summary>
+        /// Item Description
+        /// </summary>
+        public string Description
+        {
+            set
+            {
+                if (value.Length <= 255)
+                    ItemDescription = value;
+                else
+                    throw new ArgumentOutOfRangeException("Item Description", "Item Description Can only be 255 characters long");
+            }
+            get { return ItemDescription; }
+        }
+
+        /// <summary>
+        /// Item Quantity
+        /// </summary>
+        public int Quantity
+        {
+            set { ItemQuantity = value; }
+            get { return ItemQuantity; }
+        }
+
+
+        /// <summary>
+        /// Item Price excluding tax, frieght and duty
+        /// </summary>
+        public decimal Price
+        {
+            set { ItemPrice = value; }
+            get { return ItemPrice; }
+        }
+
+        /// <summary>
+        /// Is item taxable
+        /// </summary>
+        public bool Taxable
+        {
+            set { ItemTaxable = value; }
+            get { return ItemTaxable; }
+        }
+
+        public override string ToString()
+        {
+            string Tax = (ItemTaxable ? "YES" : "NO");
+            string RetVal = string.Format("{0}<|>{1}<|>{2}<|>{3}<|>{4:.00}<|>{5}",
+                ItemID, ItemName, ItemDescription, ItemQuantity, ItemPrice, Tax);
+
+            return RetVal;
+        }
+    }
+
+    public class LineItemCollection : List<LineItem>
+    {
+        public void Add(LineItem Item)
+        {
+            if (base.Count < 30)
+                base.Add(Item);
+            else
+                throw new OverflowException("Can Only have 30 Line Items");
+        }
+
+        public void AddNewLineItem(string ID, string Name, string Description, int Quantity,
+            decimal Price, bool Taxable)
+        {
+            LineItem Item = new LineItem(ID, Name, Description, Quantity, Price, Taxable);
+            Add(Item);
+        }
+    }
+}

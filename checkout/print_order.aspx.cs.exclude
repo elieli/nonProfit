@@ -1,0 +1,29 @@
+﻿/*
+'=====================================================
+' Project:      JomaDeals.com
+' Programmer:   Derek Souers
+' File:         print_order.aspx.cs
+' Description:  
+' Created:		08/05/09 
+' Last Updated: 08/06/09
+'
+'=====================================================
+*/
+
+using System;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+using MainStreet.BusinessFlow.SDK;
+using MainStreet.BusinessFlow.SDK.Web;
+using MainStreet.BusinessFlow.SDK.Ws;
+
+public partial class checkout_print_order : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        
+    }
+}
