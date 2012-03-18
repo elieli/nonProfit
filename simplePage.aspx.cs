@@ -27,13 +27,13 @@ public partial class simplePage : System.Web.UI.Page
         String auctiontype ="";
         int auctionid=     qry==null || qry == "" ?   0 :    (int) Convert.ToInt16 ( qry ) ;
 
-        if (Application["cust"] == null)
+        if (Session["cust"] == null)
         {
 
             BLCustomer cust = new BLCustomer(0);
 
            
-            Application["cust"] = cust;
+            Session["cust"] = cust;
 
 
             
@@ -127,14 +127,14 @@ public partial class simplePage : System.Web.UI.Page
 
     public BLItems items()
     {
-        return (BLItems)((BLCustomer)Application["cust"]).Organization.Orgitems;
+        return (BLItems)((BLCustomer)Session["cust"]).Organization.Orgitems;
     }
 
 
 
     public BLOrganization orgs()
     {
-        return (BLOrganization)((BLCustomer)Application["cust"]).Organization;
+        return (BLOrganization)((BLCustomer)Session["cust"]).Organization;
     }
 
 
@@ -142,7 +142,7 @@ public partial class simplePage : System.Web.UI.Page
 
     public BLCustomer custs()
     {
-        return ((BLCustomer)Application["cust"]);
+        return ((BLCustomer)Session["cust"]);
     }
 
 
@@ -150,7 +150,7 @@ public partial class simplePage : System.Web.UI.Page
 
     public BLItem item()
     {
-        return ((BLCustomer)Application["cust"]).Organization.Orgitems.Item;
+        return ((BLCustomer)Session["cust"]).Organization.Orgitems.Item;
     }
 
 
