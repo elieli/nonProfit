@@ -439,7 +439,7 @@ public partial class LoginAuth : System.Web.UI.Page
 
                           
               int buyerID = Convert.ToInt16(ds.Tables[0].Rows[0]["buyerid"].ToString());
-            if (Application["cust"] == null)
+            if (Session["cust"] == null)
             {
                 
 
@@ -447,7 +447,7 @@ public partial class LoginAuth : System.Web.UI.Page
                 custs().CustName = ds.Tables[0].Rows[0]["buyer_name"].ToString();
 
                 
-                Application["cust"] = cust;
+                Session["cust"] = cust;
                 
                 
 
@@ -578,7 +578,7 @@ public partial class LoginAuth : System.Web.UI.Page
     public BLItems items()
     { 
 
-            return (BLItems)((BLCustomer)Application["cust"]).Organization.Orgitems;
+            return (BLItems)((BLCustomer)Session["cust"]).Organization.Orgitems;
         
     }
 
@@ -586,7 +586,7 @@ public partial class LoginAuth : System.Web.UI.Page
 
     public BLOrganization orgs ()
     {  
-        return (BLOrganization)((BLCustomer)Application["cust"]).Organization;
+        return (BLOrganization)((BLCustomer)Session["cust"]).Organization;
          
 
     }
@@ -597,7 +597,7 @@ public partial class LoginAuth : System.Web.UI.Page
     public BLCustomer custs ()
     {
          
-            return ((BLCustomer)Application["cust"]);
+            return ((BLCustomer)Session["cust"]);
          
 
     }
@@ -607,7 +607,7 @@ public partial class LoginAuth : System.Web.UI.Page
 
     public BLItem item()
     {
-        return ((BLCustomer)Application["cust"]).Organization.Orgitems.Item;
+        return ((BLCustomer)Session["cust"]).Organization.Orgitems.Item;
     }
 
 
@@ -665,7 +665,7 @@ public partial class LoginAuth : System.Web.UI.Page
         
         set
         {
-            (Application["cust"]) = value;
+            (Session["cust"]) = value;
         }
 
     }
